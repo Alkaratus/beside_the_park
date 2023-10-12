@@ -1,0 +1,61 @@
+
+type Test{
+    id: ID!
+    name: String!
+    questions: [Question!]!
+}
+
+interface Question{
+    id: ID!
+    content: String!
+}
+
+type SingleChoiceQuestion implements Question{
+    id: ID!
+    content: String!
+    answers: [ChoiceAnswer!]!
+}
+
+type MultipleChoiceQuestion implements Question{
+    id: ID!
+    content: String!
+    answers: [ChoiceAnswer!]!
+}
+
+type OrderQuestion implements Question{
+    id: ID!
+    content: String!
+    answers: [OrderAnswer!]!
+}
+
+type TextQuestion implements Question{
+    id: ID!
+    content: String!
+    answers: [TextAnswer!]!
+}
+
+type ChoiceAnswer{
+    id: ID!
+    content: String!
+    correct: Boolean!
+}
+
+type OrderAnswer{
+    id: ID!
+    content: String!
+    position: Int!
+}
+
+type TextAnswer{
+    id: ID!
+    correct: String!
+}
+
+type Query{
+    tests: [Test!]
+}
+
+type Mutation{
+    createTest(newTest: NewTest):Test
+    submitAnswers(answers:QuestionAnswers):TestResults
+}

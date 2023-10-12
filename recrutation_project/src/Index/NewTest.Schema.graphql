@@ -1,0 +1,43 @@
+
+
+input NewTest{
+    name: String!
+    singleChoiceQuestions: [NewSingleChoiceQuestion!]
+    multipleChoiceQuestions: [NewMultipleChoiceQuestion!]
+    orderQuestions: [NewOrderQuestion!]
+    textQuestions:[NewTextQuestion!]
+}
+
+input NewSingleChoiceQuestion{
+    content: String!
+    answers: [NewChoiceAnswer!]!
+}
+
+input NewMultipleChoiceQuestion{
+    content: String!
+    answers: [NewChoiceAnswer!]!
+}
+
+input NewChoiceAnswer{
+    content: String!
+    correct: Boolean!
+}
+
+input NewOrderQuestion{
+    content: String!
+    answers: [NewOrderAnswer!]!
+}
+
+input NewOrderAnswer{
+    content: String!
+    position: Int!
+}
+
+input NewTextQuestion{
+    content: String!
+    answers: [NewTextAnswer!]!
+}
+
+input NewTextAnswer{
+    correct: String!
+}

@@ -1,0 +1,31 @@
+
+type TestResults{
+    testID: ID!
+    numberOfCorrect: Int!
+}
+
+
+
+type SingleChoiceQuestionResult{
+    questionID: ID!
+    correct: Boolean!
+    correctAnswerID:ID
+}
+
+type MultipleChoiceQuestionResult{
+    questionID: ID!
+    correct: Boolean!
+    correctAnswerID: [ID]
+}
+
+type OrderChoiceQuestionResult{
+    questionID: ID!
+    correct: Boolean!
+    correctAnswersIDOrder: [ID!]
+}
+
+type TextQuestionResult{
+    questionID: ID!
+    correct: Boolean!
+    correctAnswersID: [ID!]
+}

@@ -1,13 +1,26 @@
 import {Injectable} from "@nestjs/common"
-
+import {NewTest, Test} from "src/graphql"
 @Injectable()
 export class IndexService{
-    getIndex():string{
-        return "Choose account type<form method='post' action='/'><br>" +
-            "<input name=\'body\' type=\"submit\" value=\'Teacher\'><br>" +
-            "<input name=\'body\' type=\"submit\" value=\'Student\'>" +
-            "</form>"
+    tests: Test[]=[];
+    constructor(){
+
     }
 
+    importDataToGraphQL(){
+
+    }
+
+    getTests(){
+        return this.tests;
+    }
+
+    createNewTest(newTest: NewTest){
+
+    }
+
+    checkAnswers(){
+
+    }
 
 }
