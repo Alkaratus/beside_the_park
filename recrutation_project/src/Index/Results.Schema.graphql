@@ -1,31 +1,34 @@
 
 type TestResults{
-    testID: ID!
+    testID: Int!
     numberOfCorrect: Int!
 }
 
+interface QuestionResults{
+    questionID: Int!
+    correct: Boolean!
+}
 
-
-type SingleChoiceQuestionResult{
-    questionID: ID!
+type SingleChoiceQuestionResult implements QuestionResults{
+    questionID: Int!
     correct: Boolean!
     correctAnswerID:ID
 }
 
-type MultipleChoiceQuestionResult{
-    questionID: ID!
+type MultipleChoiceQuestionResult implements QuestionResults{
+    questionID: Int!
     correct: Boolean!
     correctAnswerID: [ID]
 }
 
-type OrderChoiceQuestionResult{
-    questionID: ID!
+type OrderChoiceQuestionResult implements QuestionResults{
+    questionID: Int!
     correct: Boolean!
     correctAnswersIDOrder: [ID!]
 }
 
-type TextQuestionResult{
-    questionID: ID!
+type TextQuestionResult implements QuestionResults{
+    questionID: Int!
     correct: Boolean!
     correctAnswersID: [ID!]
 }

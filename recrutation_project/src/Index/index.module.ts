@@ -5,6 +5,8 @@ import {GraphQLModule} from "@nestjs/graphql";
 import {ApolloDriver, ApolloDriverConfig} from "@nestjs/apollo";
 import {join} from "path";
 import { TypeOrmModule } from '@nestjs/typeorm';
+import {Test} from "../DataBaseEntities/Test";
+import {DATA_BASE_ENTITIES} from "../DataBaseEntities/database.entities";
 
 
 @Module({
@@ -16,7 +18,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
             username: 'root',
             password: 'password',
             database: 'beside_the_park',
-            entities: [],
+            entities: DATA_BASE_ENTITIES,
             synchronize: true,
         }),
         GraphQLModule.forRoot<ApolloDriverConfig>({

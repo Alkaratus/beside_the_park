@@ -1,53 +1,53 @@
 
 type Test{
-    id: ID!
+    id: Int!
     name: String!
     questions: [Question!]!
 }
 
 interface Question{
-    id: ID!
+    id: Int!
     content: String!
 }
 
 type SingleChoiceQuestion implements Question{
-    id: ID!
+    id: Int!
     content: String!
     answers: [ChoiceAnswer!]!
 }
 
 type MultipleChoiceQuestion implements Question{
-    id: ID!
+    id: Int!
     content: String!
     answers: [ChoiceAnswer!]!
 }
 
 type OrderQuestion implements Question{
-    id: ID!
+    id: Int!
     content: String!
     answers: [OrderAnswer!]!
 }
 
 type TextQuestion implements Question{
-    id: ID!
+    id: Int!
     content: String!
     answers: [TextAnswer!]!
 }
 
 type ChoiceAnswer{
-    id: ID!
+    id: Int!
     content: String!
     correct: Boolean!
 }
 
 type OrderAnswer{
-    id: ID!
+    id: Int!
     content: String!
     position: Int!
 }
 
 type TextAnswer{
-    id: ID!
+    id: Int!
     correct: String!
 }
 

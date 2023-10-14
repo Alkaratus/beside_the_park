@@ -8,6 +8,14 @@
 /* tslint:disable */
 /* eslint-disable */
 
+export class NewTest {
+    name: string;
+    singleChoiceQuestions?: Nullable<NewSingleChoiceQuestion[]>;
+    multipleChoiceQuestions?: Nullable<NewMultipleChoiceQuestion[]>;
+    orderQuestions?: Nullable<NewOrderQuestion[]>;
+    textQuestions?: Nullable<NewTextQuestion[]>;
+}
+
 export class NewSingleChoiceQuestion {
     content: string;
     answers: NewChoiceAnswer[];
@@ -42,17 +50,12 @@ export class NewTextAnswer {
     correct: string;
 }
 
-export class NewTest {
-    name: string;
-    singleChoiceQuestions?: Nullable<NewSingleChoiceQuestion[]>;
-    multipleChoiceQuestions?: Nullable<NewMultipleChoiceQuestion[]>;
-    orderQuestions?: Nullable<NewOrderQuestion[]>;
-    textQuestions?: Nullable<NewTextQuestion[]>;
-}
-
 export class QuestionAnswers {
+    testID: string;
     singleChoiceQuestionsAnswers?: Nullable<SingleChoiceQuestionsAnswer[]>;
     multipleChoiceQuestionsAnswers?: Nullable<MultipleChoiceQuestionAnswer[]>;
+    orderQuestionsAnswers?: Nullable<OrderQuestionAnswer[]>;
+    textQuestionsAnswers?: Nullable<TextQuestionAnswer[]>;
 }
 
 export class SingleChoiceQuestionsAnswer {
@@ -75,55 +78,89 @@ export class TextQuestionAnswer {
     answer?: Nullable<string>;
 }
 
+export interface QuestionResults {
+    questionID: number;
+    correct: boolean;
+}
+
 export interface Question {
-    id: string;
+    id: number;
     content: string;
 }
 
+export class TestResults {
+    testID: number;
+    numberOfCorrect: number;
+}
+
+export class SingleChoiceQuestionResult implements QuestionResults {
+    questionID: number;
+    correct: boolean;
+    correctAnswerID?: Nullable<string>;
+}
+
+export class MultipleChoiceQuestionResult implements QuestionResults {
+    questionID: number;
+    correct: boolean;
+    correctAnswerID?: Nullable<Nullable<string>[]>;
+}
+
+export class OrderChoiceQuestionResult implements QuestionResults {
+    questionID: number;
+    correct: boolean;
+    correctAnswersIDOrder?: Nullable<string[]>;
+}
+
+export class TextQuestionResult implements QuestionResults {
+    questionID: number;
+    correct: boolean;
+    correctAnswersID?: Nullable<string[]>;
+}
+
 export class Test {
-    id: string;
+    id: number;
     name: string;
     questions: Question[];
 }
 
 export class SingleChoiceQuestion implements Question {
-    id: string;
+    id: number;
     content: string;
     answers: ChoiceAnswer[];
 }
 
 export class MultipleChoiceQuestion implements Question {
-    id: string;
+    id: number;
     content: string;
     answers: ChoiceAnswer[];
 }
 
 export class OrderQuestion implements Question {
-    id: string;
+    id: number;
     content: string;
     answers: OrderAnswer[];
 }
 
 export class TextQuestion implements Question {
-    id: string;
+    id: number;
     content: string;
     answers: TextAnswer[];
 }
 
 export class ChoiceAnswer {
-    id: string;
+    id: number;
     content: string;
     correct: boolean;
 }
 
 export class OrderAnswer {
-    id: string;
+    id: number;
     content: string;
     position: number;
 }
 
 export class TextAnswer {
-    id: string;
+    id: number;
     correct: string;
 }
 
@@ -134,7 +171,7 @@ export abstract class IQuery {
 export abstract class IMutation {
     abstract createTest(newTest?: Nullable<NewTest>): Nullable<Test> | Promise<Nullable<Test>>;
 
-    abstract submitAnswers(id?: Nullable<string>): Nullable<boolean> | Promise<Nullable<boolean>>;
+    abstract submitAnswers(answers?: Nullable<QuestionAnswers>): Nullable<TestResults> | Promise<Nullable<TestResults>>;
 }
 
 type Nullable<T> = T | null;
