@@ -6,6 +6,7 @@ import {DataBaseServiceService} from "./DataBaseService.service";
 
 @Module({
     imports:[TypeOrmModule.forFeature(DATA_BASE_ENTITIES)],
-    providers:[DataBaseServiceService]
+    providers:[DataBaseServiceService],
+    exports:[DataBaseServiceService]
 })
 export class DataBaseServiceModule{}

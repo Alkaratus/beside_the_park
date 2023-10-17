@@ -1,4 +1,4 @@
-import {TestDTO} from "./TestDTO";
+import {Test} from "./Test";
 import {OrderAnswer} from "./OrderAnswer";
 
 export class OrderQuestion {

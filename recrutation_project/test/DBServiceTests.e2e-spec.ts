@@ -2,10 +2,15 @@ import {DataBaseServiceService} from "../src/DataBaseService/DataBaseService.ser
 import {Test, TestingModule} from "@nestjs/testing";
 import {getRepositoryToken, TypeOrmModule} from "@nestjs/typeorm";
 import {Test as TestEntity} from "../src/DataBaseEntities/Test"
-import {DataSource, Repository} from "typeorm";
+import {Repository} from "typeorm";
 import {DATA_BASE_ENTITIES} from "../src/DataBaseEntities/database.entities";
-import {exit} from "@nestjs/cli/actions";
-import {TestDTO} from "../src/DTOs/TestDTO";
+import {Test as TestDTO} from "../src/DTOs/Test";
+import {ChoiceQuestion as ChoiceQuestionDTO} from "../src/DTOs/ChoiceQuestion";
+import {ChoiceAnswer as ChoiceAnswerDTO} from "../src/DTOs/ChoiceAnswer";
+import {TextQuestion as TextQuestionDTO} from "../src/DTOs/TextQuestion";
+import {TextAnswer as TextAnswerDTO} from "../src/DTOs/TextAnswer";
+import {OrderQuestion as OrderQuestionDTO} from "../src/DTOs/OrderQuestion";
+import {OrderAnswer as OrderAnswerDTO} from "../src/DTOs/OrderAnswer";
 
 const TypeORMMySqlTestingModule = TypeOrmModule.forRoot({
     type: 'mysql',
@@ -13,7 +18,7 @@ const TypeORMMySqlTestingModule = TypeOrmModule.forRoot({
     port: 3306,
     username: 'root',
     password: 'password',
-    database: 'beside_the_park',
+    database: 'beside_the_park_test',
     entities: DATA_BASE_ENTITIES,
     synchronize: true,
 });
@@ -27,7 +32,6 @@ describe("DB tests",()=>{
     const TEST_REPOSITORY_TOKEN= getRepositoryToken(TestEntity);
 
     beforeAll(async ()=>{
-
         testingModule= await Test.createTestingModule({
             imports: [
                 TypeORMMySqlTestingModule,
@@ -37,7 +41,6 @@ describe("DB tests",()=>{
         }).compile();
         service= testingModule.get<DataBaseServiceService>(DataBaseServiceService);
         testRepository= testingModule.get<Repository<TestEntity>>(TEST_REPOSITORY_TOKEN)
-
     });
 
     afterAll(async ()=>{
@@ -53,14 +56,43 @@ describe("DB tests",()=>{
         expect(testRepository).toBeDefined();
     })
 
-    it("should add new test to database", ()=>{
-            let testDTO:TestDTO= new TestDTO();
-            testDTO.name="Test test";
-            testDTO.choiceQuestions=[];
-            testDTO.textQuestions=[];
-            testDTO.orderQuestions=[];
-            let createdTest=service.addNewTest(testDTO)
-            expect(createdTest.name==testDTO.name);
+    it("New test should be add to database",async ()=>{
+        let testDTO:TestDTO= new TestDTO();
+        testDTO.name="Test test";
+        let choiceQuestion: ChoiceQuestionDTO= new ChoiceQuestionDTO();
+        choiceQuestion.content="What is the capital of France?";
+        choiceQuestion.multiple=false;
+        choiceQuestion.answers=[
+            new ChoiceAnswerDTO("London",false),
+            new ChoiceAnswerDTO("Paris",true),
+            new ChoiceAnswerDTO("Rome",false),
+            new ChoiceAnswerDTO("Madrid",false)
+        ];
+        testDTO.choiceQuestions=[choiceQuestion];
+
+        let textQuestion: TextQuestionDTO= new TextQuestionDTO();
+        textQuestion.content="What is the famous phrase from Star Wars";
+        textQuestion.answers=[
+            new TextAnswerDTO("May the force be with you"),
+            new TextAnswerDTO("I have bad feelings about this")
+        ]
+        testDTO.textQuestions=[textQuestion];
+
+        let orderQuestion: OrderQuestionDTO= new OrderQuestionDTO();
+        orderQuestion.content="Arrange the following events in chronological order"
+        orderQuestion.answers=[
+            new OrderAnswerDTO("Declaration of Independence",1),
+            new OrderAnswerDTO("World War II",1),
+            new OrderAnswerDTO("First Moon Landing",1)
+        ]
+        testDTO.orderQuestions=[orderQuestion];
+
+        let createdTest=await service.addNewTest(testDTO);
+
+        expect(createdTest.name).toBe(testDTO.name);
+        expect(createdTest.choiceQuestions.length).toBe(1);
+        expect(createdTest.orderQuestions.length).toBe(1);
+        expect(createdTest.textQuestions.length).toBe(1);
     })
 
 

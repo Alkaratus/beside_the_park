@@ -7,6 +7,7 @@ import {join} from "path";
 import { TypeOrmModule } from '@nestjs/typeorm';
 import {Test} from "../DataBaseEntities/Test";
 import {DATA_BASE_ENTITIES} from "../DataBaseEntities/database.entities";
+import {DataBaseServiceModule} from "../DataBaseService/DataBaseService.module";
 
 
 @Module({
@@ -29,7 +30,9 @@ import {DATA_BASE_ENTITIES} from "../DataBaseEntities/database.entities";
                 outputAs: "class",
 
             }
-        }),],
+        }),
+        DataBaseServiceModule,
+    ],
     providers:[IndexService, IndexResolver],
 })
 export class IndexModule{}
