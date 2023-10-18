@@ -15,6 +15,9 @@ export class TextQuestion{
     @ManyToOne(()=>Test, (test:Test)=>test.textQuestions)
     test:Test
 
-    @OneToMany(()=>TextAnswer,(textAnswer:TextAnswer)=>textAnswer.question)
+    @OneToMany(()=>TextAnswer,(textAnswer:TextAnswer)=>textAnswer.question,
+        {
+            cascade:["insert"]
+        })
     answers: TextAnswer[]
 }

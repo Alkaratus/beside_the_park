@@ -9,6 +9,11 @@ export class IndexResolver{
         this.indexService=indexService;
     }
 
+    @Query("tests")
+    async getTests(){
+        return await this.indexService.getTests();
+    }
+
 
 
 }

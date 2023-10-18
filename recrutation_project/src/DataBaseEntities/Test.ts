@@ -12,12 +12,21 @@ export class Test {
     @Column()
     name: string;
 
-    @OneToMany(()=>ChoiceQuestion, (choiceQuestion)=>choiceQuestion.test)
+    @OneToMany(()=>ChoiceQuestion, (choiceQuestion)=>choiceQuestion.test,
+        {
+            cascade:["insert"]
+        })
     choiceQuestions: ChoiceQuestion[]
 
-    @OneToMany(()=>OrderQuestion, (orderQuestion)=>orderQuestion.test)
+    @OneToMany(()=>OrderQuestion, (orderQuestion)=>orderQuestion.test,
+        {
+            cascade:["insert"]
+        })
     orderQuestions: OrderQuestion[]
 
-    @OneToMany(()=>TextQuestion,(textQuestion:TextQuestion)=>textQuestion.test)
+    @OneToMany(()=>TextQuestion,(textQuestion:TextQuestion)=>textQuestion.test,
+        {
+            cascade:["insert"]
+        })
     textQuestions: TextQuestion[]
 }

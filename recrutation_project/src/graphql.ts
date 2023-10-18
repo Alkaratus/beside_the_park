@@ -123,16 +123,11 @@ export class Test {
     questions: Question[];
 }
 
-export class SingleChoiceQuestion implements Question {
+export class ChoiceQuestion implements Question {
     id: number;
     content: string;
     answers: ChoiceAnswer[];
-}
-
-export class MultipleChoiceQuestion implements Question {
-    id: number;
-    content: string;
-    answers: ChoiceAnswer[];
+    multiple: boolean;
 }
 
 export class OrderQuestion implements Question {

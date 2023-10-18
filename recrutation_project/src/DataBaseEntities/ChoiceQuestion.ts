@@ -17,6 +17,9 @@ export class ChoiceQuestion {
     @ManyToOne(()=>Test,(test)=>test.choiceQuestions)
     test: Test
 
-    @OneToMany(()=>ChoiceAnswer, (choiseAnswer)=>choiseAnswer.question)
+    @OneToMany(()=>ChoiceAnswer, (choiseAnswer)=>choiseAnswer.question,
+        {
+            cascade:["insert"]
+        })
     answers: ChoiceAnswer[]
 }

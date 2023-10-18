@@ -1,24 +1,27 @@
 import {Injectable} from "@nestjs/common"
-import {
-    NewTest,
-    Test,
-    TestResults,
+import { NewTest, Test, TestResults,
 } from "src/graphql"
 import {DataBaseServiceService} from "../DataBaseService/DataBaseService.service";
+import {EntityToGraphQLConverter} from "../Converters/EntityToGraphQLConverter";
 
 @Injectable()
 export class IndexService{
     tests: Test[]=[];
     databaseService: DataBaseServiceService;
-    constructor(databaseService: DataBaseServiceService){
-        this.databaseService=databaseService;
+    constructor(databaseService: DataBaseServiceService) {
+        this.databaseService = databaseService;
     }
 
-    async importDataFromDB(){
-        await this.databaseService.getAllTests();
+    private async importDataFromDB(){
+        let testsFromDb=await this.databaseService.getAllTests();
+        let converter: EntityToGraphQLConverter= new EntityToGraphQLConverter();
+        testsFromDb.forEach((test)=>{
+            this.tests.push(converter.convertTest(test));
+        })
     }
 
-    getTests(){
+    async getTests(){
+        await this.importDataFromDB();
         return this.tests;
     }
 

@@ -10,16 +10,11 @@ interface Question{
     content: String!
 }
 
-type SingleChoiceQuestion implements Question{
+type ChoiceQuestion implements Question{
     id: Int!
     content: String!
     answers: [ChoiceAnswer!]!
-}
-
-type MultipleChoiceQuestion implements Question{
-    id: Int!
-    content: String!
-    answers: [ChoiceAnswer!]!
+    multiple: Boolean!
 }
 
 type OrderQuestion implements Question{

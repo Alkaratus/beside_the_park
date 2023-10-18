@@ -82,8 +82,8 @@ describe("DB tests",()=>{
         orderQuestion.content="Arrange the following events in chronological order"
         orderQuestion.answers=[
             new OrderAnswerDTO("Declaration of Independence",1),
-            new OrderAnswerDTO("World War II",1),
-            new OrderAnswerDTO("First Moon Landing",1)
+            new OrderAnswerDTO("World War II",2),
+            new OrderAnswerDTO("First Moon Landing",3)
         ]
         testDTO.orderQuestions=[orderQuestion];
 
@@ -95,5 +95,12 @@ describe("DB tests",()=>{
         expect(createdTest.textQuestions.length).toBe(1);
     })
 
+    it("Read data from database", async()=>{
+        let tests= await service.getAllTests();
+        expect(tests.length).toBeGreaterThanOrEqual(1);
+        expect(tests[0].textQuestions.length).toBe(1);
+        expect(tests[0].orderQuestions.length).toBe(1);
+        expect(tests[0].choiceQuestions.length).toBe(1);
+    })
 
 })

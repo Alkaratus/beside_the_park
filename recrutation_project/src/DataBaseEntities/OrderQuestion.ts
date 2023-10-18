@@ -14,6 +14,9 @@ export class OrderQuestion {
     @ManyToOne(()=>Test,(test:Test)=>test.orderQuestions)
     test:Test;
 
-    @OneToMany(()=>OrderAnswer,(orderAnswer:OrderAnswer)=>orderAnswer.question)
+    @OneToMany(()=>OrderAnswer,(orderAnswer:OrderAnswer)=>orderAnswer.question,
+        {
+            cascade:["insert"]
+        })
     answers:OrderAnswer[]
 }
