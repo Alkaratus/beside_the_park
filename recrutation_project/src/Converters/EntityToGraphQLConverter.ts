@@ -42,6 +42,7 @@ export class EntityToGraphQLConverter{
 
     convertChoiceQuestion(choiceQuestion: ChoiceQuestionEntity):ChoiceQuestionQL{
         let convertedQuestion: ChoiceQuestionQL= new ChoiceQuestionQL();
+        convertedQuestion.id= choiceQuestion.id;
         convertedQuestion.content = choiceQuestion.content;
         convertedQuestion.multiple = choiceQuestion.multiple;
         convertedQuestion.answers = this.convertChoiceAnswers(choiceQuestion.answers);
@@ -58,6 +59,7 @@ export class EntityToGraphQLConverter{
 
     convertChoiceAnswer(choiceAnswer:ChoiceAnswerEntity):ChoiceAnswerQL{
         let convertedAnswer: ChoiceAnswerQL= new ChoiceAnswerQL();
+        convertedAnswer.id= choiceAnswer.id
         convertedAnswer.content= choiceAnswer.content;
         convertedAnswer.correct= choiceAnswer.correct;
         return convertedAnswer;
@@ -73,6 +75,7 @@ export class EntityToGraphQLConverter{
 
     convertOrderQuestion(orderQuestion: OrderQuestionEntity):OrderQuestionQL{
         let convertedQuestion: OrderQuestionQL= new OrderQuestionQL();
+        convertedQuestion.id= orderQuestion.id;
         convertedQuestion.content = orderQuestion.content
         convertedQuestion.answers = this.convertOrderAnswers(orderQuestion.answers);
         return convertedQuestion;
@@ -88,6 +91,7 @@ export class EntityToGraphQLConverter{
 
     convertOrderAnswer(orderAnswer:OrderAnswerEntity):OrderAnswerQL{
         let convertedAnswer: OrderAnswerQL= new OrderAnswerQL();
+        convertedAnswer.id= orderAnswer.id
         convertedAnswer.content= orderAnswer.content;
         convertedAnswer.position= orderAnswer.order;
         return convertedAnswer;
@@ -103,6 +107,7 @@ export class EntityToGraphQLConverter{
 
     convertTextQuestion(textQuestion: TextQuestionEntity):TextQuestionQL{
         let convertedQuestion: TextQuestionQL= new TextQuestionQL();
+        convertedQuestion.id= textQuestion.id;
         convertedQuestion.content = textQuestion.content
         convertedQuestion.answers = this.convertTextAnswers(textQuestion.answers);
         return convertedQuestion;
@@ -118,6 +123,7 @@ export class EntityToGraphQLConverter{
 
     convertTextAnswer(textAnswer:TextAnswerQL):TextAnswerQL{
         let convertedAnswer: TextAnswerQL= new TextAnswerQL();
+        convertedAnswer.id= textAnswer.id
         convertedAnswer.correct=textAnswer.correct;
         return convertedAnswer;
     }

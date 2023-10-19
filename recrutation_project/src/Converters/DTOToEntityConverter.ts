@@ -44,6 +44,9 @@ export class DTOToEntityConverter{
     convertChoiceAnswers(choiceAnswers:ChoiceAnswerDTO[], multiple:boolean=false):ChoiceAnswerEntity[]{
         let convertedChoiceAnswers: ChoiceAnswerEntity[]=[];
         let correctCounter=0;
+        if(choiceAnswers.length<2){
+            throw "Question have not enough answers";
+        }
         choiceAnswers.forEach((choiceAnswer)=>{
             if (choiceAnswer.correct){
                 correctCounter++;
@@ -80,6 +83,9 @@ export class DTOToEntityConverter{
 
     convertOrderAnswers(orderAnswers:OrderAnswerDTO[]):OrderAnswerEntity[]{
         let convertedOrderAnswers: OrderAnswerEntity[]=[];
+        if(orderAnswers.length<2){
+            throw "Question have not enough answers";
+        }
         orderAnswers.forEach((orderAnswer)=>{
             convertedOrderAnswers.push(this.convertOrderAnswer(orderAnswer))
         })
@@ -110,6 +116,9 @@ export class DTOToEntityConverter{
 
     convertTextAnswers(textAnswers:TextAnswerDTO[]):TextAnswerEntity[]{
         let convertedTextAnswers: TextAnswerEntity[]=[];
+        if(textAnswers.length==0){
+            throw "Question have not enough answers";
+        }
         textAnswers.forEach((textAnswer)=>{
             convertedTextAnswers.push(this.convertTextAnswer(textAnswer))
         })
