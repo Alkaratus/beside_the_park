@@ -1,12 +1,12 @@
 input QuestionAnswers{
     testID:ID!
-    singleChoiceQuestionsAnswers: [SingleChoiceQuestionsAnswer!]
+    singleChoiceQuestionsAnswers: [SingleChoiceQuestionAnswer!]
     multipleChoiceQuestionsAnswers: [MultipleChoiceQuestionAnswer!]
     orderQuestionsAnswers: [OrderQuestionAnswer!]
     textQuestionsAnswers: [TextQuestionAnswer!]
 }
 
-input SingleChoiceQuestionsAnswer{
+input SingleChoiceQuestionAnswer{
     questionID: ID!
     answerID: ID!
 }

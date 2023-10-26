@@ -10,20 +10,15 @@
 
 export class NewTest {
     name: string;
-    singleChoiceQuestions?: Nullable<NewSingleChoiceQuestion[]>;
-    multipleChoiceQuestions?: Nullable<NewMultipleChoiceQuestion[]>;
+    choiceQuestions?: Nullable<NewChoiceQuestion[]>;
     orderQuestions?: Nullable<NewOrderQuestion[]>;
     textQuestions?: Nullable<NewTextQuestion[]>;
 }
 
-export class NewSingleChoiceQuestion {
+export class NewChoiceQuestion {
     content: string;
     answers: NewChoiceAnswer[];
-}
-
-export class NewMultipleChoiceQuestion {
-    content: string;
-    answers: NewChoiceAnswer[];
+    multiple?: Nullable<boolean>;
 }
 
 export class NewChoiceAnswer {
@@ -38,7 +33,7 @@ export class NewOrderQuestion {
 
 export class NewOrderAnswer {
     content: string;
-    position: number;
+    order: number;
 }
 
 export class NewTextQuestion {
@@ -52,13 +47,13 @@ export class NewTextAnswer {
 
 export class QuestionAnswers {
     testID: string;
-    singleChoiceQuestionsAnswers?: Nullable<SingleChoiceQuestionsAnswer[]>;
+    singleChoiceQuestionsAnswers?: Nullable<SingleChoiceQuestionAnswer[]>;
     multipleChoiceQuestionsAnswers?: Nullable<MultipleChoiceQuestionAnswer[]>;
     orderQuestionsAnswers?: Nullable<OrderQuestionAnswer[]>;
     textQuestionsAnswers?: Nullable<TextQuestionAnswer[]>;
 }
 
-export class SingleChoiceQuestionsAnswer {
+export class SingleChoiceQuestionAnswer {
     questionID: string;
     answerID: string;
 }
@@ -91,55 +86,61 @@ export interface Question {
 export class TestResults {
     testID: number;
     numberOfCorrect: number;
+    singleChoiceQuestionResults?: Nullable<SingleChoiceQuestionResult[]>;
+    multipleChoiceQuestionResults?: Nullable<MultipleChoiceQuestionResult[]>;
+    orderQuestionResults?: Nullable<OrderQuestionResult[]>;
+    textQuestionResults?: Nullable<TextQuestionResult[]>;
 }
 
 export class SingleChoiceQuestionResult implements QuestionResults {
     questionID: number;
     correct: boolean;
-    correctAnswerID?: Nullable<string>;
+    correctAnswerID?: Nullable<number>;
 }
 
 export class MultipleChoiceQuestionResult implements QuestionResults {
     questionID: number;
     correct: boolean;
-    correctAnswerID?: Nullable<Nullable<string>[]>;
+    correctAnswerID?: Nullable<number[]>;
 }
 
-export class OrderChoiceQuestionResult implements QuestionResults {
+export class OrderQuestionResult implements QuestionResults {
     questionID: number;
     correct: boolean;
-    correctAnswersIDOrder?: Nullable<string[]>;
+    correctAnswersIDOrder?: Nullable<number[]>;
 }
 
 export class TextQuestionResult implements QuestionResults {
     questionID: number;
     correct: boolean;
-    correctAnswersID?: Nullable<string[]>;
+    correctAnswersID?: Nullable<number[]>;
 }
 
 export class Test {
     id: number;
     name: string;
-    questions: Question[];
+    choiceQuestions?: Nullable<ChoiceQuestion[]>;
+    orderQuestions?: Nullable<OrderQuestion[]>;
+    textQuestions?: Nullable<TextQuestion[]>;
 }
 
 export class ChoiceQuestion implements Question {
     id: number;
     content: string;
-    answers: ChoiceAnswer[];
+    choiceAnswers: ChoiceAnswer[];
     multiple: boolean;
 }
 
 export class OrderQuestion implements Question {
     id: number;
     content: string;
-    answers: OrderAnswer[];
+    orderAnswers: OrderAnswer[];
 }
 
 export class TextQuestion implements Question {
     id: number;
     content: string;
-    answers: TextAnswer[];
+    textAnswers: TextAnswer[];
 }
 
 export class ChoiceAnswer {

@@ -19,16 +19,9 @@ export class EntityToGraphQLConverter{
         let convertedTest:TestQL= new TestQL();
         convertedTest.id=test.id;
         convertedTest.name=test.name;
-        convertedTest.questions=[]
-        for(let i=0;i<test.choiceQuestions.length;i++){
-            convertedTest.questions.push(this.convertChoiceQuestion(test.choiceQuestions[i]));
-        }
-        for(let i=0;i<test.orderQuestions.length;i++){
-            convertedTest.questions.push(this.convertOrderQuestion(test.orderQuestions[i]));
-        }
-        for(let i=0;i<test.textQuestions.length;i++){
-            convertedTest.questions.push(this.convertTextQuestion(test.textQuestions[i]));
-        }
+        convertedTest.choiceQuestions=this.convertChoiceQuestions(test.choiceQuestions);
+        convertedTest.orderQuestions=this.convertOrderQuestions(test.orderQuestions);
+        convertedTest.textQuestions=this.convertTextQuestions(test.textQuestions);
         return convertedTest;
     }
 
@@ -45,7 +38,7 @@ export class EntityToGraphQLConverter{
         convertedQuestion.id= choiceQuestion.id;
         convertedQuestion.content = choiceQuestion.content;
         convertedQuestion.multiple = choiceQuestion.multiple;
-        convertedQuestion.answers = this.convertChoiceAnswers(choiceQuestion.answers);
+        convertedQuestion.choiceAnswers = this.convertChoiceAnswers(choiceQuestion.answers);
         return convertedQuestion;
     }
 
@@ -77,7 +70,7 @@ export class EntityToGraphQLConverter{
         let convertedQuestion: OrderQuestionQL= new OrderQuestionQL();
         convertedQuestion.id= orderQuestion.id;
         convertedQuestion.content = orderQuestion.content
-        convertedQuestion.answers = this.convertOrderAnswers(orderQuestion.answers);
+        convertedQuestion.orderAnswers = this.convertOrderAnswers(orderQuestion.answers);
         return convertedQuestion;
     }
 
@@ -109,7 +102,7 @@ export class EntityToGraphQLConverter{
         let convertedQuestion: TextQuestionQL= new TextQuestionQL();
         convertedQuestion.id= textQuestion.id;
         convertedQuestion.content = textQuestion.content
-        convertedQuestion.answers = this.convertTextAnswers(textQuestion.answers);
+        convertedQuestion.textAnswers = this.convertTextAnswers(textQuestion.answers);
         return convertedQuestion;
     }
 

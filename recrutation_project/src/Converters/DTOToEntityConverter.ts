@@ -15,13 +15,18 @@ import {TextAnswer as TextAnswerEntity} from "../DataBaseEntities/TextAnswer";
 
 
 export class DTOToEntityConverter{
+    numberOfQuestions: number;
 
     convertTest(test:TestDTO):TestEntity{
         let convertedTest= new TestEntity();
         convertedTest.name=test.name;
+        this.numberOfQuestions=0;
         convertedTest.choiceQuestions=this.convertChoiceQuestions(test.choiceQuestions)
         convertedTest.orderQuestions=this.convertOrderQuestions(test.orderQuestions)
         convertedTest.textQuestions=this.convertTextQuestions(test.textQuestions)
+        if (this.numberOfQuestions==0){
+            throw "Test have no questions";
+        }
         return convertedTest;
     }
 
@@ -30,6 +35,7 @@ export class DTOToEntityConverter{
         choiceQuestions.forEach((choiceQuestion)=>{
             convertedChoiceQuestions.push(this.convertChoiceQuestion(choiceQuestion))
         });
+        this.numberOfQuestions+=convertedChoiceQuestions.length;
         return convertedChoiceQuestions;
     }
 
@@ -71,6 +77,7 @@ export class DTOToEntityConverter{
         orderQuestions.forEach((orderQuestion)=>{
             convertedOrderQuestions.push(this.convertOrderQuestion(orderQuestion))
         });
+        this.numberOfQuestions+=convertedOrderQuestions.length;
         return convertedOrderQuestions;
     }
 
@@ -104,6 +111,7 @@ export class DTOToEntityConverter{
         textQuestions.forEach((textQuestion)=>{
             convertedTextQuestions.push(this.convertTextQuestion(textQuestion))
         });
+        this.numberOfQuestions+=convertedTextQuestions.length;
         return convertedTextQuestions;
     }
 

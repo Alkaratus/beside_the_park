@@ -2,6 +2,10 @@
 type TestResults{
     testID: Int!
     numberOfCorrect: Int!
+    singleChoiceQuestionResults: [SingleChoiceQuestionResult!]
+    multipleChoiceQuestionResults:[MultipleChoiceQuestionResult!]
+    orderQuestionResults:[OrderQuestionResult!]
+    textQuestionResults:[TextQuestionResult!]
 }
 
 interface QuestionResults{
@@ -12,23 +16,23 @@ interface QuestionResults{
 type SingleChoiceQuestionResult implements QuestionResults{
     questionID: Int!
     correct: Boolean!
-    correctAnswerID:ID
+    correctAnswerID:Int
 }
 
 type MultipleChoiceQuestionResult implements QuestionResults{
     questionID: Int!
     correct: Boolean!
-    correctAnswerID: [ID]
+    correctAnswerID: [Int!]
 }
 
-type OrderChoiceQuestionResult implements QuestionResults{
+type OrderQuestionResult implements QuestionResults{
     questionID: Int!
     correct: Boolean!
-    correctAnswersIDOrder: [ID!]
+    correctAnswersIDOrder: [Int!]
 }
 
 type TextQuestionResult implements QuestionResults{
     questionID: Int!
     correct: Boolean!
-    correctAnswersID: [ID!]
+    correctAnswersID: [Int!]
 }

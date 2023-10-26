@@ -175,7 +175,7 @@ describe("Entity to GraphQL Converter Tests",()=>{
         expect(convertedQuestion.id).toBe(choiceQuestion.id)
         expect(convertedQuestion.content).toBe(choiceQuestion.content)
         expect(convertedQuestion.multiple).toBe(choiceQuestion.multiple)
-        expect(convertedQuestion.answers.length).toBe(choiceQuestion.answers.length)
+        expect(convertedQuestion.choiceAnswers.length).toBe(choiceQuestion.answers.length)
     })
 
     it("Convert Order Question",()=>{
@@ -197,7 +197,7 @@ describe("Entity to GraphQL Converter Tests",()=>{
         let convertedQuestion= entityToGraphQLConverter.convertOrderQuestion(orderQuestion)
         expect(convertedQuestion.id).toBe(orderQuestion.id)
         expect(convertedQuestion.content).toBe(orderQuestion.content)
-        expect(convertedQuestion.answers.length).toBe(orderQuestion.answers.length)
+        expect(convertedQuestion.orderAnswers.length).toBe(orderQuestion.answers.length)
     })
 
     it("Convert Text Question",()=>{
@@ -214,7 +214,7 @@ describe("Entity to GraphQL Converter Tests",()=>{
         let convertedQuestion=entityToGraphQLConverter.convertTextQuestion(textQuestion)
         expect(convertedQuestion.id).toBe(textQuestion.id)
         expect(convertedQuestion.content).toBe(textQuestion.content)
-        expect(convertedQuestion.answers.length).toBe(textQuestion.answers.length)
+        expect(convertedQuestion.textAnswers.length).toBe(textQuestion.answers.length)
     })
 
     it("Convert Choice Answer",()=>{

@@ -2,7 +2,9 @@
 type Test{
     id: Int!
     name: String!
-    questions: [Question!]!
+    choiceQuestions:[ChoiceQuestion!]
+    orderQuestions:[OrderQuestion!]
+    textQuestions:[TextQuestion!]
 }
 
 interface Question{
@@ -13,20 +15,20 @@ interface Question{
 type ChoiceQuestion implements Question{
     id: Int!
     content: String!
-    answers: [ChoiceAnswer!]!
+    choiceAnswers: [ChoiceAnswer!]!
     multiple: Boolean!
 }
 
 type OrderQuestion implements Question{
     id: Int!
     content: String!
-    answers: [OrderAnswer!]!
+    orderAnswers: [OrderAnswer!]!
 }
 
 type TextQuestion implements Question{
     id: Int!
     content: String!
-    answers: [TextAnswer!]!
+    textAnswers: [TextAnswer!]!
 }
 
 type ChoiceAnswer{
