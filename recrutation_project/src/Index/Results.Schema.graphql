@@ -1,0 +1,38 @@
+
+type TestResults{
+    testID: Int!
+    numberOfCorrect: Int!
+    singleChoiceQuestionResults: [SingleChoiceQuestionResult!]
+    multipleChoiceQuestionResults:[MultipleChoiceQuestionResult!]
+    orderQuestionResults:[OrderQuestionResult!]
+    textQuestionResults:[TextQuestionResult!]
+}
+
+interface QuestionResults{
+    questionID: Int!
+    correct: Boolean!
+}
+
+type SingleChoiceQuestionResult implements QuestionResults{
+    questionID: Int!
+    correct: Boolean!
+    correctAnswerID:Int
+}
+
+type MultipleChoiceQuestionResult implements QuestionResults{
+    questionID: Int!
+    correct: Boolean!
+    correctAnswerID: [Int!]
+}
+
+type OrderQuestionResult implements QuestionResults{
+    questionID: Int!
+    correct: Boolean!
+    correctAnswersIDOrder: [Int!]
+}
+
+type TextQuestionResult implements QuestionResults{
+    questionID: Int!
+    correct: Boolean!
+    correctAnswersID: [Int!]
+}

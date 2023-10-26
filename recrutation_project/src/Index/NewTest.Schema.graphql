@@ -1,0 +1,38 @@
+
+
+input NewTest{
+    name: String!
+    choiceQuestions: [NewChoiceQuestion!]
+    orderQuestions: [NewOrderQuestion!]
+    textQuestions:[NewTextQuestion!]
+}
+
+input NewChoiceQuestion{
+    content: String!
+    answers: [NewChoiceAnswer!]!
+    multiple: Boolean
+}
+
+input NewChoiceAnswer{
+    content: String!
+    correct: Boolean!
+}
+
+input NewOrderQuestion{
+    content: String!
+    answers: [NewOrderAnswer!]!
+}
+
+input NewOrderAnswer{
+    content: String!
+    order: Int!
+}
+
+input NewTextQuestion{
+    content: String!
+    answers: [NewTextAnswer!]!
+}
+
+input NewTextAnswer{
+    correct: String!
+}
