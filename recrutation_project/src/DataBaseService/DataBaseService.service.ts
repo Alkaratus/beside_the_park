@@ -12,14 +12,14 @@ export class DataBaseServiceService{
     getAllTests():Promise<TestEntity[]>{
         return this.testsRepository.find({
             relations: {
-                choiceQuestions: {
-                    answers: true,
+                choiceQuestions:{
+                    answers:true
                 },
-                orderQuestions: {
-                    answers: true,
+                orderQuestions:{
+                    answers:true
                 },
-                textQuestions: {
-                    answers: true,
+                textQuestions:{
+                    answers:true
                 }
             },
         });

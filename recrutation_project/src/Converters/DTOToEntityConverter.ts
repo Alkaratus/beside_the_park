@@ -12,6 +12,8 @@ import {TextQuestion as TextQuestionDTO} from "../DTOs/TextQuestion";
 import {TextQuestion as TextQuestionEntity} from "../DataBaseEntities/TextQuestion";
 import {TextAnswer as TextAnswerDTO} from "../DTOs/TextAnswer";
 import {TextAnswer as TextAnswerEntity} from "../DataBaseEntities/TextAnswer";
+import {SingleChoiceQuestion as SingleChoiceQuestionEntity} from "../DataBaseEntities/SingleChoiceQuestion";
+import {MultipleChoiceQuestion as MultipleChoiceQuestionEntity} from "../DataBaseEntities/MultipleChoiceQuestion";
 
 
 export class DTOToEntityConverter{
@@ -40,10 +42,11 @@ export class DTOToEntityConverter{
     }
 
     convertChoiceQuestion(choiceQuestion: ChoiceQuestionDTO):ChoiceQuestionEntity{
-        let convertedQuestion: ChoiceQuestionEntity= new ChoiceQuestionEntity();
+        let convertedQuestion: ChoiceQuestionEntity= choiceQuestion.multiple? new SingleChoiceQuestionEntity(): new MultipleChoiceQuestionEntity();
+        //let convertedQuestion= new ChoiceQuestionEntity();
         convertedQuestion.content = choiceQuestion.content;
-        convertedQuestion.multiple = choiceQuestion.multiple;
-        convertedQuestion.answers = this.convertChoiceAnswers(choiceQuestion.answers);
+        convertedQuestion.answers = this.convertChoiceAnswers(choiceQuestion.answers,choiceQuestion.multiple);
+        convertedQuestion.multiple=choiceQuestion.multiple
         return convertedQuestion;
     }
 

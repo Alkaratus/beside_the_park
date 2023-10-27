@@ -37,7 +37,7 @@ export class EntityToGraphQLConverter{
         let convertedQuestion: ChoiceQuestionQL= new ChoiceQuestionQL();
         convertedQuestion.id= choiceQuestion.id;
         convertedQuestion.content = choiceQuestion.content;
-        convertedQuestion.multiple = choiceQuestion.multiple;
+        //convertedQuestion.multiple = choiceQuestion.multiple;
         convertedQuestion.choiceAnswers = this.convertChoiceAnswers(choiceQuestion.answers);
         return convertedQuestion;
     }

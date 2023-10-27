@@ -1,16 +1,11 @@
-import {Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn} from "typeorm";
+import {Entity, ManyToOne, OneToMany} from "typeorm";
 import {TextAnswer} from "./TextAnswer";
 import {Test} from "./Test";
+import {Question} from "./Question";
 
 
 @Entity()
-export class TextQuestion{
-
-    @PrimaryGeneratedColumn()
-    id: number
-
-    @Column()
-    content: string
+export class TextQuestion extends Question{
 
     @ManyToOne(()=>Test, (test:Test)=>test.textQuestions)
     test:Test

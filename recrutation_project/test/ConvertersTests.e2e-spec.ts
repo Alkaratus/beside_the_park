@@ -12,13 +12,13 @@ import {OrderQuestion as OrderQuestionEntity} from "../src/DataBaseEntities/Orde
 import {OrderAnswer as OrderAnswerEntity} from "../src/DataBaseEntities/OrderAnswer";
 import {TextQuestion as TextQuestionEntity} from "../src/DataBaseEntities/TextQuestion";
 import {TextAnswer as TextAnswerEntity} from "../src/DataBaseEntities/TextAnswer";
-
+import {SingleChoiceQuestion as SingleChoiceQuestionEntity} from "../src/DataBaseEntities/SingleChoiceQuestion";
 
 const dtoToEntityConverter: DTOToEntityConverter= new DTOToEntityConverter();
 const entityToGraphQLConverter: EntityToGraphQLConverter= new EntityToGraphQLConverter();
 
 describe("DTO to Entity Converter Tests",()=>{
-    it("Convert Choice Question",()=>{
+    it("Convert Single Choice Question",()=>{
         let choiceQuestion: ChoiceQuestionDTO= new ChoiceQuestionDTO();
         choiceQuestion.content="What is the capital of France?";
         choiceQuestion.multiple=false;
@@ -31,7 +31,22 @@ describe("DTO to Entity Converter Tests",()=>{
         let convertedQuestion=dtoToEntityConverter.convertChoiceQuestion(choiceQuestion);
         expect(convertedQuestion.answers.length).toBe(choiceQuestion.answers.length);
         expect(convertedQuestion.content).toBe(choiceQuestion.content)
-        expect(convertedQuestion.multiple).toBe(choiceQuestion.multiple)
+        //expect(convertedQuestion.multiple).toBe(choiceQuestion.multiple)
+    })
+
+    it("Convert Multiple Choice Question",()=>{
+        let choiceQuestion: ChoiceQuestionDTO= new ChoiceQuestionDTO();
+        choiceQuestion.content="Which of the following programming languages are object-oriented?"
+        choiceQuestion.multiple=true;
+        choiceQuestion.answers=[
+            new ChoiceAnswerDTO("Java,",true),
+            new ChoiceAnswerDTO("C",false),
+            new ChoiceAnswerDTO("Python",true),
+            new ChoiceAnswerDTO("Ruby",true)
+        ];
+        let convertedQuestion=dtoToEntityConverter.convertChoiceQuestion(choiceQuestion);
+        expect(convertedQuestion.answers.length).toBe(choiceQuestion.answers.length);
+        expect(convertedQuestion.content).toBe(choiceQuestion.content)
     })
 
     it("Convert order question",()=>{
@@ -156,10 +171,10 @@ describe("DTO to Entity Converter Tests",()=>{
 
 describe("Entity to GraphQL Converter Tests",()=>{
     it("Convert Choice Question",()=>{
-        let choiceQuestion: ChoiceQuestionEntity= new ChoiceQuestionEntity();
+        let choiceQuestion: ChoiceQuestionEntity= new SingleChoiceQuestionEntity();
         choiceQuestion.id=1;
         choiceQuestion.content="Arrange the following events in chronological order";
-        choiceQuestion.multiple=false;
+        //choiceQuestion.multiple=false;
         choiceQuestion.answers=[{
             id:1,
             content:"London",
@@ -174,7 +189,7 @@ describe("Entity to GraphQL Converter Tests",()=>{
         let convertedQuestion= entityToGraphQLConverter.convertChoiceQuestion(choiceQuestion)
         expect(convertedQuestion.id).toBe(choiceQuestion.id)
         expect(convertedQuestion.content).toBe(choiceQuestion.content)
-        expect(convertedQuestion.multiple).toBe(choiceQuestion.multiple)
+        //expect(convertedQuestion.multiple).toBe(choiceQuestion.multiple)
         expect(convertedQuestion.choiceAnswers.length).toBe(choiceQuestion.answers.length)
     })
 
