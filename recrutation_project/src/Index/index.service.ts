@@ -1,5 +1,5 @@
 import {Injectable} from "@nestjs/common"
-import { Test as TestQL, TestResults} from "src/graphql"
+import { Test as TestQL} from "src/graphql"
 import {DataBaseServiceService} from "../DataBaseService/DataBaseService.service";
 import {EntityToGraphQLConverter} from "../Converters/EntityToGraphQLConverter";
 import {Test as TestDTO} from "../Abstracts/Test";

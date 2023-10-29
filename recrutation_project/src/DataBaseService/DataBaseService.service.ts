@@ -2,7 +2,6 @@ import {Injectable} from "@nestjs/common";
 import {InjectRepository} from "@nestjs/typeorm";
 import {Repository} from "typeorm";
 import {Test as TestEntity} from "../DataBaseEntities/Test";
-import {Test as TestDTO} from "../Abstracts/Test";
 import {GraphQLInputToEntityConverter} from "../Converters/GraphQLInputToEntityConverter";
 import {NewTest} from "../graphql";
 

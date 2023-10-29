@@ -1,5 +1,6 @@
 import {
-    ChoiceQuestion, MultipleChoiceQuestionResult, OrderQuestion, OrderQuestionResult, SingleChoiceQuestionResult,
+    ChoiceQuestion,
+    MultipleChoiceQuestionResult, OrderQuestion, OrderQuestionResult, SingleChoiceQuestion, SingleChoiceQuestionResult,
     Test as TestQL, TestResults, TextQuestion, TextQuestionResult
 } from "../graphql"
 import {TestAnswers as TestAnswersDTO} from "./Answers/TestAnswers";
@@ -19,18 +20,20 @@ export class TestChecker{
         testResults.orderQuestionResults=[]
         testResults.textQuestionResults=[]
 
-        test.choiceQuestions.forEach((question)=>{
+
+        test.singleChoiceQuestions.forEach((question)=>{
             let questionAnswer=answers.singleChoiceQuestionsAnswers.find((answer)=>answer.questionID==question.id)
             if(questionAnswer!=undefined){
                 this.checkSingleChoiceQuestionAnswer(question,questionAnswer)
             }
-            else{
-                let questionAnswer=answers.multipleChoiceQuestionsAnswers.find((answer)=> {
-                    answer.questionID = question.id;
-                })
-                if(questionAnswer!=undefined){
-                    this.checkMultipleChoiceQuestionAnswer(question,questionAnswer)
-                }
+        })
+
+        test.multipleChoiceQuestions.forEach((question)=>{
+            let questionAnswer=answers.multipleChoiceQuestionsAnswers.find((answer)=> {
+                answer.questionID = question.id;
+            })
+            if(questionAnswer!=undefined){
+                this.checkMultipleChoiceQuestionAnswer(question,questionAnswer)
             }
         })
 
@@ -55,7 +58,7 @@ export class TestChecker{
         return testResults;
     }
 
-    checkSingleChoiceQuestionAnswer(question:ChoiceQuestion,answer:SingleChoiceQuestionAnswer):SingleChoiceQuestionResult{
+    checkSingleChoiceQuestionAnswer(question:SingleChoiceQuestion,answer:SingleChoiceQuestionAnswer):SingleChoiceQuestionResult{
         let correctAnswer=question.choiceAnswers.find((answer)=>answer.correct)
         let result= new SingleChoiceQuestionResult();
         result.questionID=question.id;
@@ -72,7 +75,7 @@ export class TestChecker{
 
     }
 
-    checkMultipleChoiceQuestionAnswer(question:ChoiceQuestion,answer:MultipleChoiceQuestionAnswer):MultipleChoiceQuestionResult{
+    checkMultipleChoiceQuestionAnswer(question:SingleChoiceQuestion,answer:MultipleChoiceQuestionAnswer):MultipleChoiceQuestionResult{
         let correctAnswers= question.choiceAnswers.filter(answer=>answer.correct==true)
         let numberOfCorrectAnswers= correctAnswers.length;
         let result= new MultipleChoiceQuestionResult();

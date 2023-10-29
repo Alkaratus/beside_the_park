@@ -1,5 +1,5 @@
 import {
-    ChoiceQuestion, OrderQuestion, TextQuestion,
+    MultipleChoiceQuestion, OrderQuestion, SingleChoiceQuestion, TextQuestion,
 } from "../src/graphql"
 import {TestChecker} from "../src/TestChecker/TestChecker";
 import {SingleChoiceQuestionAnswer} from "../src/TestChecker/Answers/SingleChoiceQuestionAnswer";
@@ -9,19 +9,17 @@ import {TextQuestionAnswer} from "../src/TestChecker/Answers/TextQuestionAnswer"
 
 const testChecker= new TestChecker();
 
-const testSingleChoiceQuestion=new ChoiceQuestion()
+const testSingleChoiceQuestion=new SingleChoiceQuestion()
 testSingleChoiceQuestion.id=1;
-testSingleChoiceQuestion.multiple=false;
 testSingleChoiceQuestion.content="";
 testSingleChoiceQuestion.choiceAnswers=[
     {id:1, content:"", correct:true},
     {id:2, content:"", correct:false}
 ];
 
-const testMultipleChoiceQuestion=new ChoiceQuestion()
+const testMultipleChoiceQuestion=new MultipleChoiceQuestion()
 testMultipleChoiceQuestion.id=1;
 testMultipleChoiceQuestion.content="";
-testMultipleChoiceQuestion.multiple=true;
 testMultipleChoiceQuestion.choiceAnswers=[
     {id:1, content:"", correct:true},
     {id:2, content:"", correct:false},
