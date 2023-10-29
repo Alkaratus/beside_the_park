@@ -2,7 +2,8 @@
 type Test{
     id: Int!
     name: String!
-    choiceQuestions:[ChoiceQuestion!]
+    singleChoiceQuestions:[SingleChoiceQuestion!]
+    multipleChoiceQuestions:[MultipleChoiceQuestion!]
     orderQuestions:[OrderQuestion!]
     textQuestions:[TextQuestion!]
 }
@@ -12,11 +13,22 @@ interface Question{
     content: String!
 }
 
-type ChoiceQuestion implements Question{
+interface ChoiceQuestion implements Question{
     id: Int!
     content: String!
     choiceAnswers: [ChoiceAnswer!]!
-    multiple: Boolean!
+}
+
+type SingleChoiceQuestion implements Question & ChoiceQuestion{
+    id: Int!
+    content: String!
+    choiceAnswers: [ChoiceAnswer!]!
+}
+
+type MultipleChoiceQuestion implements Question & ChoiceQuestion{
+    id: Int!
+    content: String!
+    choiceAnswers: [ChoiceAnswer!]!
 }
 
 type OrderQuestion implements Question{
@@ -48,11 +60,3 @@ type TextAnswer{
     correct: String!
 }
 
-type Query{
-    tests: [Test!]
-}
-
-type Mutation{
-    createTest(newTest: NewTest):Test
-    submitAnswers(answers:QuestionAnswers):TestResults
-}

@@ -2,8 +2,9 @@ import {Injectable} from "@nestjs/common";
 import {InjectRepository} from "@nestjs/typeorm";
 import {Repository} from "typeorm";
 import {Test as TestEntity} from "../DataBaseEntities/Test";
-import {Test as TestDTO} from "../DTOs/Test";
-import {DTOToEntityConverter} from "../Converters/DTOToEntityConverter";
+import {Test as TestDTO} from "../Abstracts/Test";
+import {GraphQLInputToEntityConverter} from "../Converters/GraphQLInputToEntityConverter";
+import {NewTest} from "../graphql";
 
 @Injectable()
 export class DataBaseServiceService{
@@ -25,8 +26,8 @@ export class DataBaseServiceService{
         });
     }
 
-    async addNewTest(newTest: TestDTO): Promise<TestEntity> {
-        let converter: DTOToEntityConverter= new DTOToEntityConverter();
+    async addNewTest(newTest: NewTest): Promise<TestEntity> {
+        let converter: GraphQLInputToEntityConverter= new GraphQLInputToEntityConverter();
         let createdTest: TestEntity = this.testsRepository.create(converter.convertTest(newTest));
         await this.testsRepository.save(createdTest);
         return createdTest;

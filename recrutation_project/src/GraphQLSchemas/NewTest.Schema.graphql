@@ -1,16 +1,20 @@
 
-
 input NewTest{
     name: String!
-    choiceQuestions: [NewChoiceQuestion!]
+    singleChoiceQuestions: [NewSingleChoiceQuestion!]
+    multipleChoiceQuestions:[NewMultipleChoiceQuestion!]
     orderQuestions: [NewOrderQuestion!]
     textQuestions:[NewTextQuestion!]
 }
 
-input NewChoiceQuestion{
+input NewSingleChoiceQuestion{
     content: String!
     answers: [NewChoiceAnswer!]!
-    multiple: Boolean
+}
+
+input NewMultipleChoiceQuestion{
+    content: String!
+    answers: [NewChoiceAnswer!]!
 }
 
 input NewChoiceAnswer{

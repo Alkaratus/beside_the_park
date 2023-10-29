@@ -10,15 +10,20 @@
 
 export class NewTest {
     name: string;
-    choiceQuestions?: Nullable<NewChoiceQuestion[]>;
+    singleChoiceQuestions?: Nullable<NewSingleChoiceQuestion[]>;
+    multipleChoiceQuestions?: Nullable<NewMultipleChoiceQuestion[]>;
     orderQuestions?: Nullable<NewOrderQuestion[]>;
     textQuestions?: Nullable<NewTextQuestion[]>;
 }
 
-export class NewChoiceQuestion {
+export class NewSingleChoiceQuestion {
     content: string;
     answers: NewChoiceAnswer[];
-    multiple?: Nullable<boolean>;
+}
+
+export class NewMultipleChoiceQuestion {
+    content: string;
+    answers: NewChoiceAnswer[];
 }
 
 export class NewChoiceAnswer {
@@ -83,6 +88,22 @@ export interface Question {
     content: string;
 }
 
+export interface ChoiceQuestion extends Question {
+    id: number;
+    content: string;
+    choiceAnswers: ChoiceAnswer[];
+}
+
+export abstract class IQuery {
+    abstract tests(): Nullable<Test[]> | Promise<Nullable<Test[]>>;
+}
+
+export abstract class IMutation {
+    abstract createTest(newTest?: Nullable<NewTest>): Nullable<Test> | Promise<Nullable<Test>>;
+
+    abstract submitAnswers(answers?: Nullable<QuestionAnswers>): Nullable<TestResults> | Promise<Nullable<TestResults>>;
+}
+
 export class TestResults {
     testID: number;
     numberOfCorrect: number;
@@ -119,16 +140,22 @@ export class TextQuestionResult implements QuestionResults {
 export class Test {
     id: number;
     name: string;
-    choiceQuestions?: Nullable<ChoiceQuestion[]>;
+    singleChoiceQuestions?: Nullable<SingleChoiceQuestion[]>;
+    multipleChoiceQuestions?: Nullable<MultipleChoiceQuestion[]>;
     orderQuestions?: Nullable<OrderQuestion[]>;
     textQuestions?: Nullable<TextQuestion[]>;
 }
 
-export class ChoiceQuestion implements Question {
+export class SingleChoiceQuestion implements Question, ChoiceQuestion {
     id: number;
     content: string;
     choiceAnswers: ChoiceAnswer[];
-    multiple: boolean;
+}
+
+export class MultipleChoiceQuestion implements Question, ChoiceQuestion {
+    id: number;
+    content: string;
+    choiceAnswers: ChoiceAnswer[];
 }
 
 export class OrderQuestion implements Question {
@@ -158,16 +185,6 @@ export class OrderAnswer {
 export class TextAnswer {
     id: number;
     correct: string;
-}
-
-export abstract class IQuery {
-    abstract tests(): Nullable<Test[]> | Promise<Nullable<Test[]>>;
-}
-
-export abstract class IMutation {
-    abstract createTest(newTest?: Nullable<NewTest>): Nullable<Test> | Promise<Nullable<Test>>;
-
-    abstract submitAnswers(answers?: Nullable<QuestionAnswers>): Nullable<TestResults> | Promise<Nullable<TestResults>>;
 }
 
 type Nullable<T> = T | null;

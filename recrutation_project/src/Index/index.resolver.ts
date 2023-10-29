@@ -1,6 +1,6 @@
 import {IndexService} from "./index.service";
 import {Resolver, Query, ResolveField, Mutation, Args} from "@nestjs/graphql";
-import {Test as TestDTO} from "../DTOs/Test"
+import {Test as TestDTO} from "../Abstracts/Test"
 import {TestAnswers as TestAnswersDTO} from "../TestChecker/Answers/TestAnswers";
 
 @Resolver('Test')

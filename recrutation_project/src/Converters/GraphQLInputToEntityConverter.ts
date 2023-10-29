@@ -1,29 +1,29 @@
-import {Test as TestDTO} from "../DTOs/Test"
+import {NewTest} from "../graphql";
 import {Test as TestEntity} from "../DataBaseEntities/Test";
-import {ChoiceQuestion as ChoiceQuestionDTO} from "../DTOs/ChoiceQuestion";
-import {ChoiceQuestion as ChoiceQuestionEntity} from "../DataBaseEntities/ChoiceQuestion";
-import {ChoiceAnswer as ChoiceAnswerDTO} from "../DTOs/ChoiceAnswer";
+import {NewSingleChoiceQuestion, NewMultipleChoiceQuestion} from "../graphql";
+import {NewChoiceAnswer} from "../graphql";
 import {ChoiceAnswer as ChoiceAnswerEntity} from "../DataBaseEntities/ChoiceAnswer";
-import {OrderQuestion as OrderQuestionDTO} from "../DTOs/OrderQuestion";
+import {NewOrderQuestion} from "../graphql";
 import {OrderQuestion as OrderQuestionEntity} from "../DataBaseEntities/OrderQuestion";
-import {OrderAnswer as OrderAnswerDTO} from "../DTOs/OrderAnswer";
+import {NewOrderAnswer} from "../graphql";
 import {OrderAnswer as OrderAnswerEntity} from "../DataBaseEntities/OrderAnswer";
-import {TextQuestion as TextQuestionDTO} from "../DTOs/TextQuestion";
+import {NewTextQuestion} from "../graphql"
 import {TextQuestion as TextQuestionEntity} from "../DataBaseEntities/TextQuestion";
-import {TextAnswer as TextAnswerDTO} from "../DTOs/TextAnswer";
+import {NewTextAnswer} from "../graphql";
 import {TextAnswer as TextAnswerEntity} from "../DataBaseEntities/TextAnswer";
 import {SingleChoiceQuestion as SingleChoiceQuestionEntity} from "../DataBaseEntities/SingleChoiceQuestion";
 import {MultipleChoiceQuestion as MultipleChoiceQuestionEntity} from "../DataBaseEntities/MultipleChoiceQuestion";
 
 
-export class DTOToEntityConverter{
+export class GraphQLInputToEntityConverter {
     numberOfQuestions: number;
 
-    convertTest(test:TestDTO):TestEntity{
+    convertTest(test:NewTest):TestEntity{
         let convertedTest= new TestEntity();
         convertedTest.name=test.name;
         this.numberOfQuestions=0;
-        convertedTest.choiceQuestions=this.convertChoiceQuestions(test.choiceQuestions)
+        convertedTest.choiceQuestions=this.convertSingleChoiceQuestions(test.singleChoiceQuestions)
+        convertedTest.choiceQuestions.concat(this.convertMultipleChoiceQuestions(test.multipleChoiceQuestions));
         convertedTest.orderQuestions=this.convertOrderQuestions(test.orderQuestions)
         convertedTest.textQuestions=this.convertTextQuestions(test.textQuestions)
         if (this.numberOfQuestions==0){
@@ -32,25 +32,39 @@ export class DTOToEntityConverter{
         return convertedTest;
     }
 
-    convertChoiceQuestions(choiceQuestions: ChoiceQuestionDTO[]):ChoiceQuestionEntity[]{
-        let convertedChoiceQuestions: ChoiceQuestionEntity[]=[];
+    convertSingleChoiceQuestions(choiceQuestions: NewSingleChoiceQuestion[]):SingleChoiceQuestionEntity[]{
+        let convertedChoiceQuestions: SingleChoiceQuestionEntity[]=[];
         choiceQuestions.forEach((choiceQuestion)=>{
-            convertedChoiceQuestions.push(this.convertChoiceQuestion(choiceQuestion))
+            convertedChoiceQuestions.push(this.convertSingleChoiceQuestion(choiceQuestion))
         });
         this.numberOfQuestions+=convertedChoiceQuestions.length;
         return convertedChoiceQuestions;
     }
 
-    convertChoiceQuestion(choiceQuestion: ChoiceQuestionDTO):ChoiceQuestionEntity{
-        let convertedQuestion: ChoiceQuestionEntity= choiceQuestion.multiple? new SingleChoiceQuestionEntity(): new MultipleChoiceQuestionEntity();
-        //let convertedQuestion= new ChoiceQuestionEntity();
+    convertMultipleChoiceQuestions(choiceQuestions: NewMultipleChoiceQuestion[]):MultipleChoiceQuestionEntity[]{
+        let convertedChoiceQuestions: MultipleChoiceQuestionEntity[]=[];
+        choiceQuestions.forEach((choiceQuestion)=>{
+            convertedChoiceQuestions.push(this.convertMultipleChoiceQuestion(choiceQuestion))
+        });
+        this.numberOfQuestions+=convertedChoiceQuestions.length;
+        return convertedChoiceQuestions;
+    }
+
+    convertSingleChoiceQuestion(choiceQuestion: NewMultipleChoiceQuestion):SingleChoiceQuestionEntity{
+        let convertedQuestion= new SingleChoiceQuestionEntity();
         convertedQuestion.content = choiceQuestion.content;
-        convertedQuestion.answers = this.convertChoiceAnswers(choiceQuestion.answers,choiceQuestion.multiple);
-        convertedQuestion.multiple=choiceQuestion.multiple
+        convertedQuestion.answers = this.convertChoiceAnswers(choiceQuestion.answers);
         return convertedQuestion;
     }
 
-    convertChoiceAnswers(choiceAnswers:ChoiceAnswerDTO[], multiple:boolean=false):ChoiceAnswerEntity[]{
+    convertMultipleChoiceQuestion(choiceQuestion: NewMultipleChoiceQuestion):MultipleChoiceQuestionEntity{
+        let convertedQuestion= new MultipleChoiceQuestionEntity();
+        convertedQuestion.content = choiceQuestion.content;
+        convertedQuestion.answers = this.convertChoiceAnswers(choiceQuestion.answers,true);
+        return convertedQuestion;
+    }
+
+    convertChoiceAnswers(choiceAnswers:NewChoiceAnswer[], multiple:boolean=false):ChoiceAnswerEntity[]{
         let convertedChoiceAnswers: ChoiceAnswerEntity[]=[];
         let correctCounter=0;
         if(choiceAnswers.length<2){
@@ -68,14 +82,14 @@ export class DTOToEntityConverter{
         return convertedChoiceAnswers;
     }
 
-    convertChoiceAnswer(choiceAnswer:ChoiceAnswerDTO):ChoiceAnswerEntity{
+    convertChoiceAnswer(choiceAnswer:NewChoiceAnswer):ChoiceAnswerEntity{
         let convertedAnswer: ChoiceAnswerEntity= new ChoiceAnswerEntity();
         convertedAnswer.content= choiceAnswer.content;
         convertedAnswer.correct= choiceAnswer.correct;
         return convertedAnswer;
     }
 
-    convertOrderQuestions(orderQuestions:OrderQuestionDTO[]){
+    convertOrderQuestions(orderQuestions:NewOrderQuestion[]){
         let convertedOrderQuestions: OrderQuestionEntity[]=[];
         orderQuestions.forEach((orderQuestion)=>{
             convertedOrderQuestions.push(this.convertOrderQuestion(orderQuestion))
@@ -84,14 +98,14 @@ export class DTOToEntityConverter{
         return convertedOrderQuestions;
     }
 
-    convertOrderQuestion(orderQuestion: OrderQuestionDTO):OrderQuestionEntity{
+    convertOrderQuestion(orderQuestion: NewOrderQuestion):OrderQuestionEntity{
         let convertedQuestion: OrderQuestionEntity= new OrderQuestionEntity();
         convertedQuestion.content = orderQuestion.content
         convertedQuestion.answers = this.convertOrderAnswers(orderQuestion.answers);
         return convertedQuestion;
     }
 
-    convertOrderAnswers(orderAnswers:OrderAnswerDTO[]):OrderAnswerEntity[]{
+    convertOrderAnswers(orderAnswers:NewOrderAnswer[]):OrderAnswerEntity[]{
         let convertedOrderAnswers: OrderAnswerEntity[]=[];
         if(orderAnswers.length<2){
             throw "Question have not enough answers";
@@ -102,14 +116,14 @@ export class DTOToEntityConverter{
         return convertedOrderAnswers;
     }
 
-    convertOrderAnswer(orderAnswer:OrderAnswerDTO):OrderAnswerEntity{
+    convertOrderAnswer(orderAnswer:NewOrderAnswer):OrderAnswerEntity{
         let convertedAnswer: OrderAnswerEntity= new OrderAnswerEntity();
         convertedAnswer.content= orderAnswer.content;
         convertedAnswer.order= orderAnswer.order;
         return convertedAnswer;
     }
 
-    convertTextQuestions(textQuestions:TextQuestionDTO[]){
+    convertTextQuestions(textQuestions:NewTextQuestion[]){
         let convertedTextQuestions: TextQuestionEntity[]=[];
         textQuestions.forEach((textQuestion)=>{
             convertedTextQuestions.push(this.convertTextQuestion(textQuestion))
@@ -118,14 +132,14 @@ export class DTOToEntityConverter{
         return convertedTextQuestions;
     }
 
-    convertTextQuestion(textQuestion: TextQuestionDTO):TextQuestionEntity{
+    convertTextQuestion(textQuestion: NewTextQuestion):TextQuestionEntity{
         let convertedQuestion: TextQuestionEntity= new TextQuestionEntity();
         convertedQuestion.content = textQuestion.content
         convertedQuestion.answers = this.convertTextAnswers(textQuestion.answers);
         return convertedQuestion;
     }
 
-    convertTextAnswers(textAnswers:TextAnswerDTO[]):TextAnswerEntity[]{
+    convertTextAnswers(textAnswers:NewTextAnswer[]):TextAnswerEntity[]{
         let convertedTextAnswers: TextAnswerEntity[]=[];
         if(textAnswers.length==0){
             throw "Question have not enough answers";
@@ -136,7 +150,7 @@ export class DTOToEntityConverter{
         return convertedTextAnswers;
     }
 
-    convertTextAnswer(textAnswer:TextAnswerDTO):TextAnswerEntity{
+    convertTextAnswer(textAnswer:NewTextAnswer):TextAnswerEntity{
         let convertedAnswer: TextAnswerEntity= new TextAnswerEntity();
         convertedAnswer.correct=textAnswer.correct;
         return convertedAnswer;

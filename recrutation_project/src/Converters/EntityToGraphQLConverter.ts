@@ -1,7 +1,8 @@
 import {Test as TestEntity} from "../DataBaseEntities/Test"
 import {Test as TestQL} from "../graphql"
 import {ChoiceQuestion as ChoiceQuestionEntity} from "../DataBaseEntities/ChoiceQuestion";
-import {ChoiceQuestion as ChoiceQuestionQL} from "../graphql"
+import {SingleChoiceQuestion as SingleChoiceQuestionQL} from "../graphql"
+import {MultipleChoiceQuestion as MultipleChoiceQuestionQL} from "../graphql"
 import {ChoiceAnswer as ChoiceAnswerEntity} from "../DataBaseEntities/ChoiceAnswer";
 import {ChoiceAnswer as ChoiceAnswerQL} from "../graphql"
 import {OrderQuestion as OrderQuestionEntity} from "../DataBaseEntities/OrderQuestion";
@@ -15,29 +16,47 @@ import {TextAnswer as TextAnswerQL} from "../graphql"
 
 
 export class EntityToGraphQLConverter{
+    singleChoiceQuestions: SingleChoiceQuestionQL[]
+    multipleChoiceQuestions: MultipleChoiceQuestionQL[]
+
     convertTest(test:TestEntity):TestQL{
+        this.singleChoiceQuestions=[]
+        this.multipleChoiceQuestions=[]
         let convertedTest:TestQL= new TestQL();
         convertedTest.id=test.id;
         convertedTest.name=test.name;
-        convertedTest.choiceQuestions=this.convertChoiceQuestions(test.choiceQuestions);
+        this.convertChoiceQuestions(test.choiceQuestions)
+        convertedTest.singleChoiceQuestions=this.singleChoiceQuestions
+        convertedTest.multipleChoiceQuestions=this.multipleChoiceQuestions
         convertedTest.orderQuestions=this.convertOrderQuestions(test.orderQuestions);
         convertedTest.textQuestions=this.convertTextQuestions(test.textQuestions);
         return convertedTest;
     }
 
-    convertChoiceQuestions(choiceQuestions: ChoiceQuestionEntity[]):ChoiceQuestionQL[]{
-        let convertedChoiceQuestions: ChoiceQuestionQL[]=[];
+    convertChoiceQuestions(choiceQuestions: ChoiceQuestionEntity[]):void{
         choiceQuestions.forEach((choiceQuestion)=>{
-            convertedChoiceQuestions.push(this.convertChoiceQuestion(choiceQuestion))
+            if(choiceQuestion.multiple){
+                this.convertMultipleChoiceQuestion(choiceQuestion);
+            }
+            else{
+                this.convertSingleChoiceQuestion(choiceQuestion)
+            }
+
         });
-        return convertedChoiceQuestions;
     }
 
-    convertChoiceQuestion(choiceQuestion: ChoiceQuestionEntity):ChoiceQuestionQL{
-        let convertedQuestion: ChoiceQuestionQL= new ChoiceQuestionQL();
+    convertSingleChoiceQuestion(choiceQuestion: ChoiceQuestionEntity){
+        let convertedQuestion= new SingleChoiceQuestionQL();
         convertedQuestion.id= choiceQuestion.id;
         convertedQuestion.content = choiceQuestion.content;
-        //convertedQuestion.multiple = choiceQuestion.multiple;
+        convertedQuestion.choiceAnswers = this.convertChoiceAnswers(choiceQuestion.answers);
+        return convertedQuestion;
+    }
+
+    convertMultipleChoiceQuestion(choiceQuestion: ChoiceQuestionEntity){
+        let convertedQuestion= new MultipleChoiceQuestionQL();
+        convertedQuestion.id= choiceQuestion.id;
+        convertedQuestion.content = choiceQuestion.content;
         convertedQuestion.choiceAnswers = this.convertChoiceAnswers(choiceQuestion.answers);
         return convertedQuestion;
     }
