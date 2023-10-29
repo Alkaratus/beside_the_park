@@ -1,5 +1,4 @@
 import {
-    ChoiceQuestion,
     MultipleChoiceQuestionResult, OrderQuestion, OrderQuestionResult, SingleChoiceQuestion, SingleChoiceQuestionResult,
     Test as TestQL, TestResults, TextQuestion, TextQuestionResult
 } from "../graphql"
