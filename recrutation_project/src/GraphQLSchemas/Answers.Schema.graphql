@@ -1,5 +1,5 @@
-input QuestionAnswers{
-    testID:ID!
+input TestAnswers{
+    testID:Int!
     singleChoiceQuestionsAnswers: [SingleChoiceQuestionAnswer!]
     multipleChoiceQuestionsAnswers: [MultipleChoiceQuestionAnswer!]
     orderQuestionsAnswers: [OrderQuestionAnswer!]
@@ -7,21 +7,21 @@ input QuestionAnswers{
 }
 
 input SingleChoiceQuestionAnswer{
-    questionID: ID!
-    answerID: ID!
+    questionID: Int!
+    answerID: Int!
 }
 
 input MultipleChoiceQuestionAnswer{
-    questionID: ID!
-    answersID: [ID!]
+    questionID: Int!
+    answersIDs: [Int!]
 }
 
 input OrderQuestionAnswer{
-    questionID: ID!
-    answersID: [ID!]!
+    questionID: Int!
+    answersIDsOrder: [Int!]!
 }
 
 input TextQuestionAnswer{
-    questionID: ID!
+    questionID: Int!
     answer: String
 }

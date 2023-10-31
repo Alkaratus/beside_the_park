@@ -1,16 +1,13 @@
 import {
     MultipleChoiceQuestionResult, OrderQuestion, OrderQuestionResult, SingleChoiceQuestion, SingleChoiceQuestionResult,
-    Test as TestQL, TestResults, TextQuestion, TextQuestionResult
+    Test as TestQL, TestResults, TextQuestion, TextQuestionResult, TestAnswers, SingleChoiceQuestionAnswer,
+    MultipleChoiceQuestionAnswer, OrderQuestionAnswer, TextQuestionAnswer
 } from "../graphql"
-import {TestAnswers as TestAnswersDTO} from "./Answers/TestAnswers";
-import {SingleChoiceQuestionAnswer} from "./Answers/SingleChoiceQuestionAnswer";
-import {MultipleChoiceQuestionAnswer} from "./Answers/MultipleChoiceQuestionAnswer";
-import {OrderQuestionAnswer} from "./Answers/OrderQuestionAnswer";
-import {TextQuestionAnswer} from "./Answers/TextQuestionAnswer";
+
 
 export class TestChecker{
     correctAnswers: number;
-    checkTestAnswers(test:TestQL,answers:TestAnswersDTO):TestResults{
+    checkTestAnswers(test:TestQL,answers:TestAnswers):TestResults{
         this.correctAnswers=0;
         let testResults= new TestResults();
         testResults.testID=test.id;
@@ -105,8 +102,8 @@ export class TestChecker{
         let result= new OrderQuestionResult();
         result.questionID=question.id;
         let correct=true;
-        for (let i=0; i<answer.answersIDs.length;i++){
-            if(answer.answersIDs[i]!=question.orderAnswers[i].id){
+        for (let i=0; i<answer.answersIDsOrder.length; i++){
+            if(answer.answersIDsOrder[i]!=question.orderAnswers[i].id){
                 correct=false;
             }
         }

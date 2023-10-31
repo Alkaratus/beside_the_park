@@ -8,6 +8,34 @@
 /* tslint:disable */
 /* eslint-disable */
 
+export class TestAnswers {
+    testID: number;
+    singleChoiceQuestionsAnswers?: Nullable<SingleChoiceQuestionAnswer[]>;
+    multipleChoiceQuestionsAnswers?: Nullable<MultipleChoiceQuestionAnswer[]>;
+    orderQuestionsAnswers?: Nullable<OrderQuestionAnswer[]>;
+    textQuestionsAnswers?: Nullable<TextQuestionAnswer[]>;
+}
+
+export class SingleChoiceQuestionAnswer {
+    questionID: number;
+    answerID: number;
+}
+
+export class MultipleChoiceQuestionAnswer {
+    questionID: number;
+    answersIDs?: Nullable<number[]>;
+}
+
+export class OrderQuestionAnswer {
+    questionID: number;
+    answersIDsOrder: number[];
+}
+
+export class TextQuestionAnswer {
+    questionID: number;
+    answer?: Nullable<string>;
+}
+
 export class NewTest {
     name: string;
     singleChoiceQuestions?: Nullable<NewSingleChoiceQuestion[]>;
@@ -50,34 +78,6 @@ export class NewTextAnswer {
     correct: string;
 }
 
-export class QuestionAnswers {
-    testID: string;
-    singleChoiceQuestionsAnswers?: Nullable<SingleChoiceQuestionAnswer[]>;
-    multipleChoiceQuestionsAnswers?: Nullable<MultipleChoiceQuestionAnswer[]>;
-    orderQuestionsAnswers?: Nullable<OrderQuestionAnswer[]>;
-    textQuestionsAnswers?: Nullable<TextQuestionAnswer[]>;
-}
-
-export class SingleChoiceQuestionAnswer {
-    questionID: string;
-    answerID: string;
-}
-
-export class MultipleChoiceQuestionAnswer {
-    questionID: string;
-    answersID?: Nullable<string[]>;
-}
-
-export class OrderQuestionAnswer {
-    questionID: string;
-    answersID: string[];
-}
-
-export class TextQuestionAnswer {
-    questionID: string;
-    answer?: Nullable<string>;
-}
-
 export interface QuestionResults {
     questionID: number;
     correct: boolean;
@@ -101,7 +101,7 @@ export abstract class IQuery {
 export abstract class IMutation {
     abstract createTest(newTest?: Nullable<NewTest>): Nullable<Test> | Promise<Nullable<Test>>;
 
-    abstract submitAnswers(answers?: Nullable<QuestionAnswers>): Nullable<TestResults> | Promise<Nullable<TestResults>>;
+    abstract submitAnswers(answers?: Nullable<TestAnswers>): Nullable<TestResults> | Promise<Nullable<TestResults>>;
 }
 
 export class TestResults {

@@ -36,10 +36,10 @@ export class EntityToGraphQLConverter{
     convertChoiceQuestions(choiceQuestions: ChoiceQuestionEntity[]):void{
         choiceQuestions.forEach((choiceQuestion)=>{
             if(choiceQuestion.multiple){
-                this.convertMultipleChoiceQuestion(choiceQuestion);
+                this.multipleChoiceQuestions.push(this.convertMultipleChoiceQuestion(choiceQuestion));
             }
             else{
-                this.convertSingleChoiceQuestion(choiceQuestion)
+                this.singleChoiceQuestions.push(this.convertSingleChoiceQuestion(choiceQuestion))
             }
 
         });
