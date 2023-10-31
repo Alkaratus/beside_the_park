@@ -4,5 +4,5 @@ type Query{
 
 type Mutation{
     createTest(newTest: NewTest):Test
-    submitAnswers(answers:QuestionAnswers):TestResults
+    submitAnswers(answers:TestAnswers):TestResults
 }

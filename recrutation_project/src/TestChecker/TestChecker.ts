@@ -1,16 +1,23 @@
-import {
-    MultipleChoiceQuestionResult, OrderQuestion, OrderQuestionResult, SingleChoiceQuestion, SingleChoiceQuestionResult,
-    Test as TestQL, TestResults, TextQuestion, TextQuestionResult
-} from "../graphql"
-import {TestAnswers as TestAnswersDTO} from "./Answers/TestAnswers";
-import {SingleChoiceQuestionAnswer} from "./Answers/SingleChoiceQuestionAnswer";
-import {MultipleChoiceQuestionAnswer} from "./Answers/MultipleChoiceQuestionAnswer";
-import {OrderQuestionAnswer} from "./Answers/OrderQuestionAnswer";
-import {TextQuestionAnswer} from "./Answers/TextQuestionAnswer";
+import {Test as TestQL} from "../GraphQLSchemas/Test/Test"
+import {MultipleChoiceQuestion} from "../GraphQLSchemas/Test/MultipleChoiceQuestion";
+import {MultipleChoiceQuestionAnswer} from "../GraphQLSchemas/QuestionAnswers/MultipleChoiceQuestionAnswer";
+import {MultipleChoiceQuestionResult} from "../GraphQLSchemas/Results/MultipleChoiceQuestionResult";
+import {OrderQuestion} from "../GraphQLSchemas/Test/OrderQuestion";
+import {OrderQuestionAnswer} from "../GraphQLSchemas/QuestionAnswers/OrderQuestionAnswer";
+import {OrderQuestionResult} from "../GraphQLSchemas/Results/OrderQuestionResult";
+import {SingleChoiceQuestion} from "../GraphQLSchemas/Test/SingleChoiceQuestion";
+import {SingleChoiceQuestionAnswer} from "../GraphQLSchemas/QuestionAnswers/SingleChoiceQuestionAnswer";
+import {SingleChoiceQuestionResult} from "../GraphQLSchemas/Results/SingleChoiceQuestionResult";
+import {TestAnswers} from "../GraphQLSchemas/QuestionAnswers/TestAnswers";
+import {TestResults} from "../GraphQLSchemas/Results/TestResults";
+import {TextQuestion} from "../GraphQLSchemas/Test/TextQuestion";
+import {TextQuestionAnswer} from "../GraphQLSchemas/QuestionAnswers/TextQuestionAnswer";
+import {TextQuestionResult} from "../GraphQLSchemas/Results/TextQuestionResult";
+
 
 export class TestChecker{
     correctAnswers: number;
-    checkTestAnswers(test:TestQL,answers:TestAnswersDTO):TestResults{
+    checkTestAnswers(test:TestQL,answers:TestAnswers):TestResults{
         this.correctAnswers=0;
         let testResults= new TestResults();
         testResults.testID=test.id;
@@ -74,7 +81,7 @@ export class TestChecker{
 
     }
 
-    checkMultipleChoiceQuestionAnswer(question:SingleChoiceQuestion,answer:MultipleChoiceQuestionAnswer):MultipleChoiceQuestionResult{
+    checkMultipleChoiceQuestionAnswer(question:MultipleChoiceQuestion,answer:MultipleChoiceQuestionAnswer):MultipleChoiceQuestionResult{
         let correctAnswers= question.choiceAnswers.filter(answer=>answer.correct==true)
         let numberOfCorrectAnswers= correctAnswers.length;
         let result= new MultipleChoiceQuestionResult();
@@ -89,13 +96,13 @@ export class TestChecker{
         }
         if(correct){
             result.correct=true;
-            result.correctAnswerID=null;
+            result.correctAnswersIDs=null;
         }
         else{
             result.correct=false;
-            result.correctAnswerID=[]
+            result.correctAnswersIDs=[]
             correctAnswers.forEach((answer)=>{
-                result.correctAnswerID.push(answer.id);
+                result.correctAnswersIDs.push(answer.id);
             })
         }
         return result;
@@ -105,20 +112,20 @@ export class TestChecker{
         let result= new OrderQuestionResult();
         result.questionID=question.id;
         let correct=true;
-        for (let i=0; i<answer.answersIDs.length;i++){
-            if(answer.answersIDs[i]!=question.orderAnswers[i].id){
+        for (let i=0; i<answer.answersIDsOrder.length;i++){
+            if(answer.answersIDsOrder[i]!=question.orderAnswers[i].id){
                 correct=false;
             }
         }
         if(correct){
             result.correct=true;
-            result.correctAnswersIDOrder=null;
+            result.correctAnswersIDsOrder=null;
         }
         else{
             result.correct=false
-            result.correctAnswersIDOrder=[]
+            result.correctAnswersIDsOrder=[]
             question.orderAnswers.forEach((answer)=>{
-                result.correctAnswersIDOrder.push(answer.id);
+                result.correctAnswersIDsOrder.push(answer.id);
             })
         }
         return result;
@@ -130,13 +137,13 @@ export class TestChecker{
         let correct= question.textAnswers.find((questionAnswer)=>questionAnswer.correct==answer.answer)!=undefined;
         if(correct){
             result.correct=true;
-            result.correctAnswersID=null;
+            result.correctAnswersIDs =null;
         }
         else{
             result.correct=false;
-            result.correctAnswersID=[];
+            result.correctAnswersIDs=[];
             question.textAnswers.forEach((answer)=>{
-                result.correctAnswersID.push(answer.id);
+                result.correctAnswersIDs.push(answer.id);
             })
         }
         return result;

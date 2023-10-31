@@ -8,30 +8,30 @@ type TestResults{
     textQuestionResults:[TextQuestionResult!]
 }
 
-interface QuestionResults{
+interface QuestionResult{
     questionID: Int!
     correct: Boolean!
 }
 
-type SingleChoiceQuestionResult implements QuestionResults{
+type SingleChoiceQuestionResult implements QuestionResult{
     questionID: Int!
     correct: Boolean!
     correctAnswerID:Int
 }
 
-type MultipleChoiceQuestionResult implements QuestionResults{
+type MultipleChoiceQuestionResult implements QuestionResult{
     questionID: Int!
     correct: Boolean!
-    correctAnswerID: [Int!]
+    correctAnswersIDs: [Int!]
 }
 
-type OrderQuestionResult implements QuestionResults{
+type OrderQuestionResult implements QuestionResult{
     questionID: Int!
     correct: Boolean!
-    correctAnswersIDOrder: [Int!]
+    correctAnswersIDsOrder: [Int!]
 }
 
-type TextQuestionResult implements QuestionResults{
+type TextQuestionResult implements QuestionResult{
     questionID: Int!
     correct: Boolean!
     correctAnswersID: [Int!]

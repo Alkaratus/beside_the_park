@@ -63,21 +63,21 @@ describe("Test Checker Test",()=>{
         let answer=new MultipleChoiceQuestionAnswer(1,[1,4]);
         let result=testChecker.checkMultipleChoiceQuestionAnswer(testMultipleChoiceQuestion,answer);
         expect(result.correct)
-        expect(result.correctAnswerID).toBeNull()
+        expect(result.correctAnswersIDs).toBeNull()
     })
 
     it("Check incorrect number multiple question answer",()=>{
         let answer=new MultipleChoiceQuestionAnswer(1,[1]);
         let result=testChecker.checkMultipleChoiceQuestionAnswer(testMultipleChoiceQuestion,answer);
         expect(!result.correct)
-        expect(result.correctAnswerID.length).toBe(2);
+        expect(result.correctAnswersIDs.length).toBe(2);
     })
 
     it("Check incorrect answers multiple question answer",()=>{
         let answer=new MultipleChoiceQuestionAnswer(1,[1,2]);
         let result=testChecker.checkMultipleChoiceQuestionAnswer(testMultipleChoiceQuestion,answer);
         expect(!result.correct)
-        expect(result.correctAnswerID.join()).toBe([1,4].join())
+        expect(result.correctAnswersIDs.join()).toBe([1,4].join())
 
     })
 
@@ -85,14 +85,14 @@ describe("Test Checker Test",()=>{
         let answer=new OrderQuestionAnswer(1,[1,2,3]);
         let result=testChecker.checkOrderQuestionAnswer(testOrderQuestion,answer);
         expect(result.correct)
-        expect(result.correctAnswersIDOrder).toBeNull()
+        expect(result.correctAnswersIDsOrder).toBeNull()
     })
 
     it("Check incorrect order question answer",()=>{
         let answer=new OrderQuestionAnswer(1,[1,3,2]);
         let result=testChecker.checkOrderQuestionAnswer(testOrderQuestion,answer);
         expect(!result.correct)
-        expect(result.correctAnswersIDOrder.join()).toBe([1,2,3].join())
+        expect(result.correctAnswersIDsOrder.join()).toBe([1,2,3].join())
     })
 
     it("Check correct text question answer",()=>{

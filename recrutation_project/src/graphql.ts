@@ -50,8 +50,8 @@ export class NewTextAnswer {
     correct: string;
 }
 
-export class QuestionAnswers {
-    testID: string;
+export class TestAnswers {
+    testID: number;
     singleChoiceQuestionsAnswers?: Nullable<SingleChoiceQuestionAnswer[]>;
     multipleChoiceQuestionsAnswers?: Nullable<MultipleChoiceQuestionAnswer[]>;
     orderQuestionsAnswers?: Nullable<OrderQuestionAnswer[]>;
@@ -59,22 +59,22 @@ export class QuestionAnswers {
 }
 
 export class SingleChoiceQuestionAnswer {
-    questionID: string;
-    answerID: string;
+    questionID: number;
+    answerID: number;
 }
 
 export class MultipleChoiceQuestionAnswer {
-    questionID: string;
-    answersID?: Nullable<string[]>;
+    questionID: number;
+    answersIDs?: Nullable<number[]>;
 }
 
 export class OrderQuestionAnswer {
-    questionID: string;
-    answersID: string[];
+    questionID: number;
+    answersIDs: number[];
 }
 
 export class TextQuestionAnswer {
-    questionID: string;
+    questionID: number;
     answer?: Nullable<string>;
 }
 
@@ -101,7 +101,7 @@ export abstract class IQuery {
 export abstract class IMutation {
     abstract createTest(newTest?: Nullable<NewTest>): Nullable<Test> | Promise<Nullable<Test>>;
 
-    abstract submitAnswers(answers?: Nullable<QuestionAnswers>): Nullable<TestResults> | Promise<Nullable<TestResults>>;
+    abstract submitAnswers(answers?: Nullable<TestAnswers>): Nullable<TestResults> | Promise<Nullable<TestResults>>;
 }
 
 export class TestResults {
@@ -122,13 +122,13 @@ export class SingleChoiceQuestionResult implements QuestionResults {
 export class MultipleChoiceQuestionResult implements QuestionResults {
     questionID: number;
     correct: boolean;
-    correctAnswerID?: Nullable<number[]>;
+    correctAnswersIDs?: Nullable<number[]>;
 }
 
 export class OrderQuestionResult implements QuestionResults {
     questionID: number;
     correct: boolean;
-    correctAnswersIDOrder?: Nullable<number[]>;
+    correctAnswersIDsOrder?: Nullable<number[]>;
 }
 
 export class TextQuestionResult implements QuestionResults {

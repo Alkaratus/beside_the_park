@@ -1,18 +1,18 @@
-import {Test as TestEntity} from "../DataBaseEntities/Test"
-import {Test as TestQL} from "../graphql"
+import {Test as TestEntity} from "../DataBaseEntities/Test";
+import {Test as TestQL} from "../GraphQLSchemas/Test/Test";
 import {ChoiceQuestion as ChoiceQuestionEntity} from "../DataBaseEntities/ChoiceQuestion";
-import {SingleChoiceQuestion as SingleChoiceQuestionQL} from "../graphql"
-import {MultipleChoiceQuestion as MultipleChoiceQuestionQL} from "../graphql"
+import {SingleChoiceQuestion as SingleChoiceQuestionQL} from "../GraphQLSchemas/Test/SingleChoiceQuestion";
+import {MultipleChoiceQuestion as MultipleChoiceQuestionQL} from "../GraphQLSchemas/Test/MultipleChoiceQuestion";
 import {ChoiceAnswer as ChoiceAnswerEntity} from "../DataBaseEntities/ChoiceAnswer";
-import {ChoiceAnswer as ChoiceAnswerQL} from "../graphql"
+import {ChoiceAnswer as ChoiceAnswerQL} from "../GraphQLSchemas/Test/ChoiceAnswer";
 import {OrderQuestion as OrderQuestionEntity} from "../DataBaseEntities/OrderQuestion";
-import {OrderQuestion as OrderQuestionQL} from "../graphql"
+import {OrderQuestion as OrderQuestionQL} from "../GraphQLSchemas/Test/OrderQuestion"
 import {OrderAnswer as OrderAnswerEntity} from "../DataBaseEntities/OrderAnswer";
-import {OrderAnswer as OrderAnswerQL} from "../graphql"
+import {OrderAnswer as OrderAnswerQL} from "../GraphQLSchemas/Test/OrderAnswer";
 import {TextQuestion as TextQuestionEntity} from "../DataBaseEntities/TextQuestion";
-import {TextQuestion as TextQuestionQL} from "../graphql"
+import {TextQuestion as TextQuestionQL} from "../GraphQLSchemas/Test/TextQuestion"
 import {TextAnswer as TextAnswerEntity} from "../DataBaseEntities/TextAnswer";
-import {TextAnswer as TextAnswerQL} from "../graphql"
+import {TextAnswer as TextAnswerQL} from "../GraphQLSchemas/Test/TextAnswer";
 
 
 export class EntityToGraphQLConverter{
@@ -36,12 +36,11 @@ export class EntityToGraphQLConverter{
     convertChoiceQuestions(choiceQuestions: ChoiceQuestionEntity[]):void{
         choiceQuestions.forEach((choiceQuestion)=>{
             if(choiceQuestion.multiple){
-                this.convertMultipleChoiceQuestion(choiceQuestion);
+                this.multipleChoiceQuestions.push(this.convertMultipleChoiceQuestion(choiceQuestion));
             }
             else{
-                this.convertSingleChoiceQuestion(choiceQuestion)
+                this.singleChoiceQuestions.push(this.convertSingleChoiceQuestion(choiceQuestion))
             }
-
         });
     }
 
@@ -105,7 +104,7 @@ export class EntityToGraphQLConverter{
         let convertedAnswer: OrderAnswerQL= new OrderAnswerQL();
         convertedAnswer.id= orderAnswer.id
         convertedAnswer.content= orderAnswer.content;
-        convertedAnswer.position= orderAnswer.order;
+        convertedAnswer.order= orderAnswer.order;
         return convertedAnswer;
     }
 
