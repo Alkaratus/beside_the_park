@@ -3,9 +3,8 @@ import {IndexResolver} from "./index.resolver";
 import {IndexService} from "./index.service";
 import {GraphQLModule} from "@nestjs/graphql";
 import {ApolloDriver, ApolloDriverConfig} from "@nestjs/apollo";
-import {join} from "path";
+
 import { TypeOrmModule } from '@nestjs/typeorm';
-import {Test} from "../DataBaseEntities/Test";
 import {DATA_BASE_ENTITIES} from "../DataBaseEntities/database.entities";
 import {DataBaseServiceModule} from "../DataBaseService/DataBaseService.module";
 
@@ -24,12 +23,8 @@ import {DataBaseServiceModule} from "../DataBaseService/DataBaseService.module";
         }),
         GraphQLModule.forRoot<ApolloDriverConfig>({
             driver: ApolloDriver,
-            typePaths:['./src/**/*.graphql'],
-            definitions:{
-                path: join(process.cwd(),'src/graphql.ts'),
-                outputAs: "class",
-
-            }
+            autoSchemaFile: 'schema.gql',
+            //transformSchema: schema => upperDirectiveTransformer(schema, 'upper'),
         }),
         DataBaseServiceModule,
     ],

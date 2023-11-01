@@ -2,8 +2,9 @@ import {Injectable} from "@nestjs/common";
 import {InjectRepository} from "@nestjs/typeorm";
 import {Repository} from "typeorm";
 import {Test as TestEntity} from "../DataBaseEntities/Test";
-import {Test as TestDTO} from "../DTOs/Test";
-import {DTOToEntityConverter} from "../Converters/DTOToEntityConverter";
+import {GraphQLInputToEntityConverter} from "../Converters/GraphQLInputToEntityConverter";
+import {NewTest} from "../GraphQLSchemas/NewTest/NewTest";
+
 
 @Injectable()
 export class DataBaseServiceService{
@@ -12,21 +13,21 @@ export class DataBaseServiceService{
     getAllTests():Promise<TestEntity[]>{
         return this.testsRepository.find({
             relations: {
-                choiceQuestions: {
-                    answers: true,
+                choiceQuestions:{
+                    answers:true
                 },
-                orderQuestions: {
-                    answers: true,
+                orderQuestions:{
+                    answers:true
                 },
-                textQuestions: {
-                    answers: true,
+                textQuestions:{
+                    answers:true
                 }
             },
         });
     }
 
-    async addNewTest(newTest: TestDTO): Promise<TestEntity> {
-        let converter: DTOToEntityConverter= new DTOToEntityConverter();
+    async addNewTest(newTest: NewTest): Promise<TestEntity> {
+        let converter: GraphQLInputToEntityConverter= new GraphQLInputToEntityConverter();
         let createdTest: TestEntity = this.testsRepository.create(converter.convertTest(newTest));
         await this.testsRepository.save(createdTest);
         return createdTest;

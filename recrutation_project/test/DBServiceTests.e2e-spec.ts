@@ -4,13 +4,10 @@ import {getRepositoryToken, TypeOrmModule} from "@nestjs/typeorm";
 import {Test as TestEntity} from "../src/DataBaseEntities/Test"
 import {Repository} from "typeorm";
 import {DATA_BASE_ENTITIES} from "../src/DataBaseEntities/database.entities";
-import {Test as TestDTO} from "../src/DTOs/Test";
-import {ChoiceQuestion as ChoiceQuestionDTO} from "../src/DTOs/ChoiceQuestion";
-import {ChoiceAnswer as ChoiceAnswerDTO} from "../src/DTOs/ChoiceAnswer";
-import {TextQuestion as TextQuestionDTO} from "../src/DTOs/TextQuestion";
-import {TextAnswer as TextAnswerDTO} from "../src/DTOs/TextAnswer";
-import {OrderQuestion as OrderQuestionDTO} from "../src/DTOs/OrderQuestion";
-import {OrderAnswer as OrderAnswerDTO} from "../src/DTOs/OrderAnswer";
+import {NewTest} from "../src/GraphQLSchemas/NewTest/NewTest";
+import {NewSingleChoiceQuestion} from "../src/GraphQLSchemas/NewTest/NewSingleChoiceQuestion";
+import {NewTextQuestion} from "../src/GraphQLSchemas/NewTest/NewTextQuestion";
+import {NewOrderQuestion} from "../src/GraphQLSchemas/NewTest/NewOrderQuestion";
 
 const TypeORMMySqlTestingModule = TypeOrmModule.forRoot({
     type: 'mysql',
@@ -57,39 +54,40 @@ describe("DB tests",()=>{
     })
 
     it("New test should be add to database",async ()=>{
-        let testDTO:TestDTO= new TestDTO();
-        testDTO.name="Test test";
-        let choiceQuestion: ChoiceQuestionDTO= new ChoiceQuestionDTO();
+        let newTest= new NewTest();
+        newTest.name="Test test";
+        let choiceQuestion= new NewSingleChoiceQuestion();
         choiceQuestion.content="What is the capital of France?";
-        choiceQuestion.multiple=false;
         choiceQuestion.answers=[
-            new ChoiceAnswerDTO("London",false),
-            new ChoiceAnswerDTO("Paris",true),
-            new ChoiceAnswerDTO("Rome",false),
-            new ChoiceAnswerDTO("Madrid",false)
+            {content:"London",correct:false},
+            {content:"Paris",correct:true},
+            {content:"Rome",correct:false},
+            {content:"Madrid",correct:false}
         ];
-        testDTO.choiceQuestions=[choiceQuestion];
+        newTest.singleChoiceQuestions=[choiceQuestion];
 
-        let textQuestion: TextQuestionDTO= new TextQuestionDTO();
+        newTest.multipleChoiceQuestions=[];
+
+        let textQuestion= new NewTextQuestion();
         textQuestion.content="What is the famous phrase from Star Wars";
         textQuestion.answers=[
-            new TextAnswerDTO("May the force be with you"),
-            new TextAnswerDTO("I have bad feelings about this")
+            {correct:"May the force be with you"},
+            {correct:"I have bad feelings about this"}
         ]
-        testDTO.textQuestions=[textQuestion];
+        newTest.textQuestions=[textQuestion];
 
-        let orderQuestion: OrderQuestionDTO= new OrderQuestionDTO();
+        let orderQuestion= new NewOrderQuestion();
         orderQuestion.content="Arrange the following events in chronological order"
         orderQuestion.answers=[
-            new OrderAnswerDTO("Declaration of Independence",1),
-            new OrderAnswerDTO("World War II",2),
-            new OrderAnswerDTO("First Moon Landing",3)
+            {content:"Declaration of Independence",order:1},
+            {content:"World War II",order:2},
+            {content:"First Moon Landing",order:3},
         ]
-        testDTO.orderQuestions=[orderQuestion];
+        newTest.orderQuestions=[orderQuestion];
 
-        let createdTest=await service.addNewTest(testDTO);
+        let createdTest=await service.addNewTest(newTest);
 
-        expect(createdTest.name).toBe(testDTO.name);
+        expect(createdTest.name).toBe(newTest.name);
         expect(createdTest.choiceQuestions.length).toBe(1);
         expect(createdTest.orderQuestions.length).toBe(1);
         expect(createdTest.textQuestions.length).toBe(1);

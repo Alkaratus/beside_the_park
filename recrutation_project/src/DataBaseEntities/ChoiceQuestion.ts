@@ -1,15 +1,10 @@
-import {Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn,} from "typeorm";
+import {Column, Entity, ManyToOne, OneToMany} from "typeorm";
 import {Test} from "./Test";
 import {ChoiceAnswer} from "./ChoiceAnswer";
+import {Question} from "./Question";
 
 @Entity()
-export class ChoiceQuestion {
-
-    @PrimaryGeneratedColumn()
-    id: number
-
-    @Column()
-    content: string
+export abstract class ChoiceQuestion extends Question{
 
     @Column()
     multiple: boolean
