@@ -3,7 +3,8 @@ import {InjectRepository} from "@nestjs/typeorm";
 import {Repository} from "typeorm";
 import {Test as TestEntity} from "../DataBaseEntities/Test";
 import {GraphQLInputToEntityConverter} from "../Converters/GraphQLInputToEntityConverter";
-import {NewTest} from "../graphql";
+import {NewTest} from "../GraphQLSchemas/NewTest/NewTest";
+
 
 @Injectable()
 export class DataBaseServiceService{

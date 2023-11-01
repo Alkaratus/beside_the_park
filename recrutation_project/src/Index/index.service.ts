@@ -1,8 +1,10 @@
 import {Injectable} from "@nestjs/common"
-import {NewTest, Test as TestQL, TestAnswers} from "src/graphql"
 import {DataBaseServiceService} from "../DataBaseService/DataBaseService.service";
 import {EntityToGraphQLConverter} from "../Converters/EntityToGraphQLConverter";
 import {TestChecker} from "../TestChecker/TestChecker";
+import {Test as TestQL} from "../GraphQLSchemas/Test/Test";
+import {NewTest} from "../GraphQLSchemas/NewTest/NewTest";
+import {TestAnswers} from "../GraphQLSchemas/QuestionAnswers/TestAnswers"
 
 @Injectable()
 export class IndexService{

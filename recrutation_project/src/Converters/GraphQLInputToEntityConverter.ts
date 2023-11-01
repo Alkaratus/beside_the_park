@@ -1,15 +1,16 @@
-import {NewTest} from "../graphql";
+import {NewTest} from "../GraphQLSchemas/NewTest/NewTest";
 import {Test as TestEntity} from "../DataBaseEntities/Test";
-import {NewSingleChoiceQuestion, NewMultipleChoiceQuestion} from "../graphql";
-import {NewChoiceAnswer} from "../graphql";
+import {NewSingleChoiceQuestion} from "../GraphQLSchemas/NewTest/NewSingleChoiceQuestion";
+import {NewMultipleChoiceQuestion} from "../GraphQLSchemas/NewTest/NewMultipleChoiceQuestion";
+import {NewChoiceAnswer} from "../GraphQLSchemas/NewTest/NewChoiceAnswer";
 import {ChoiceAnswer as ChoiceAnswerEntity} from "../DataBaseEntities/ChoiceAnswer";
-import {NewOrderQuestion} from "../graphql";
+import {NewOrderQuestion} from "../GraphQLSchemas/NewTest/NewOrderQuestion";
 import {OrderQuestion as OrderQuestionEntity} from "../DataBaseEntities/OrderQuestion";
-import {NewOrderAnswer} from "../graphql";
+import {NewOrderAnswer} from "../GraphQLSchemas/NewTest/NewOrderAnswer";
 import {OrderAnswer as OrderAnswerEntity} from "../DataBaseEntities/OrderAnswer";
-import {NewTextQuestion} from "../graphql"
+import {NewTextQuestion} from "../GraphQLSchemas/NewTest/NewTextQuestion"
 import {TextQuestion as TextQuestionEntity} from "../DataBaseEntities/TextQuestion";
-import {NewTextAnswer} from "../graphql";
+import {NewTextAnswer} from "../GraphQLSchemas/NewTest/NewTextAnswer";
 import {TextAnswer as TextAnswerEntity} from "../DataBaseEntities/TextAnswer";
 import {SingleChoiceQuestion as SingleChoiceQuestionEntity} from "../DataBaseEntities/SingleChoiceQuestion";
 import {MultipleChoiceQuestion as MultipleChoiceQuestionEntity} from "../DataBaseEntities/MultipleChoiceQuestion";

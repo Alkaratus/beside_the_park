@@ -1,8 +1,11 @@
 import {IndexService} from "./index.service";
 import {Resolver, Query, Mutation, Args} from "@nestjs/graphql";
-import {NewTest, TestAnswers} from "../graphql";
+import {Test} from "../GraphQLSchemas/Test/Test";
+import {NewTest} from "../GraphQLSchemas/NewTest/NewTest";
+import {TestAnswers} from "../GraphQLSchemas/QuestionAnswers/TestAnswers";
+import {TestResults} from "../GraphQLSchemas/Results/TestResults";
 
-@Resolver('Test')
+@Resolver()
 export class IndexResolver{
     indexService: IndexService;
 
@@ -10,17 +13,17 @@ export class IndexResolver{
         this.indexService=indexService;
     }
 
-    @Query("tests")
+    @Query(()=>[Test])
     async getTests(){
         return await this.indexService.getTests();
     }
 
-    @Mutation("createTest")
+    @Mutation(() => Test)
     async createTest(@Args('newTest') newTest:NewTest){
         return await this.indexService.createNewTest(newTest);
     }
 
-    @Mutation("submitAnswers")
+    @Mutation(()=>TestResults)
     async submitAnswers(@Args('answers') testAnswers:TestAnswers){
         return await this.indexService.checkAnswers(testAnswers);
     }

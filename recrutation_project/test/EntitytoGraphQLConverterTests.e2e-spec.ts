@@ -1,11 +1,11 @@
 import {EntityToGraphQLConverter} from "../src/Converters/EntityToGraphQLConverter";
 import {ChoiceQuestion} from "../src/DataBaseEntities/ChoiceQuestion";
-import {ChoiceAnswer as ChoiceAnswerEntity} from "../src/DataBaseEntities/ChoiceAnswer";
-import {OrderQuestion as OrderQuestionEntity} from "../src/DataBaseEntities/OrderQuestion";
-import {OrderAnswer as OrderAnswerEntity} from "../src/DataBaseEntities/OrderAnswer";
-import {TextQuestion as TextQuestionEntity} from "../src/DataBaseEntities/TextQuestion";
-import {TextAnswer as TextAnswerEntity} from "../src/DataBaseEntities/TextAnswer";
-import {SingleChoiceQuestion,} from "../src/DataBaseEntities/SingleChoiceQuestion";
+import {ChoiceAnswer} from "../src/DataBaseEntities/ChoiceAnswer";
+import {OrderQuestion} from "../src/DataBaseEntities/OrderQuestion";
+import {OrderAnswer} from "../src/DataBaseEntities/OrderAnswer";
+import {TextQuestion} from "../src/DataBaseEntities/TextQuestion";
+import {TextAnswer} from "../src/DataBaseEntities/TextAnswer";
+import {SingleChoiceQuestion} from "../src/DataBaseEntities/SingleChoiceQuestion";
 import {MultipleChoiceQuestion} from "../src/DataBaseEntities/MultipleChoiceQuestion";
 
 const entityToGraphQLConverter: EntityToGraphQLConverter= new EntityToGraphQLConverter();
@@ -42,7 +42,7 @@ describe("Entity to GraphQL Converter Tests",()=>{
         expect(entityToGraphQLConverter.multipleChoiceQuestions.length).toBe(1);
     })
 
-    it("Convert Single Choice Question",()=>{
+    it("Convert Choice Question",()=>{
         let convertedQuestion= entityToGraphQLConverter.convertSingleChoiceQuestion(testSingleChoiceQuestion)
         expect(convertedQuestion.id).toBe(testSingleChoiceQuestion.id)
         expect(convertedQuestion.content).toBe(testSingleChoiceQuestion.content)
@@ -50,7 +50,7 @@ describe("Entity to GraphQL Converter Tests",()=>{
     })
 
     it("Convert Order Question",()=>{
-        let orderQuestion: OrderQuestionEntity= new OrderQuestionEntity();
+        let orderQuestion= new OrderQuestion();
         orderQuestion.id=1;
         orderQuestion.content="Arrange the following events in chronological order";
         orderQuestion.answers=[
@@ -64,7 +64,7 @@ describe("Entity to GraphQL Converter Tests",()=>{
     })
 
     it("Convert Text Question",()=>{
-        let textQuestion= new TextQuestionEntity();
+        let textQuestion= new TextQuestion();
         textQuestion.id=1;
         textQuestion.content= "What is the famous phrase from Star Wars";
         textQuestion.answers=[
@@ -77,7 +77,7 @@ describe("Entity to GraphQL Converter Tests",()=>{
     })
 
     it("Convert Choice Answer",()=>{
-        let choiceAnswer= new ChoiceAnswerEntity();
+        let choiceAnswer= new ChoiceAnswer();
         choiceAnswer.id=1;
         choiceAnswer.content="Amsterdam";
         choiceAnswer.correct=true;
@@ -88,18 +88,18 @@ describe("Entity to GraphQL Converter Tests",()=>{
     })
 
     it("Convert Order Answer",()=>{
-        let orderAnswer= new OrderAnswerEntity();
+        let orderAnswer= new OrderAnswer();
         orderAnswer.id= 1
         orderAnswer.content= "Declaration of Independence";
         orderAnswer.order=1;
         let convertedAnswer= entityToGraphQLConverter.convertOrderAnswer(orderAnswer)
         expect(convertedAnswer.id).toBe(orderAnswer.id);
         expect(convertedAnswer.content).toBe(orderAnswer.content);
-        expect(convertedAnswer.position).toBe(orderAnswer.order);
+        expect(convertedAnswer.order).toBe(orderAnswer.order);
     })
 
     it("Convert Text Answer",()=>{
-        let textAnswer= new TextAnswerEntity();
+        let textAnswer= new TextAnswer();
         textAnswer.id= 1;
         textAnswer.correct="May the force be with you";
         let convertedAnswer= entityToGraphQLConverter.convertTextAnswer(textAnswer)
