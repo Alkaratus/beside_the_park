@@ -1,8 +1,0 @@
-type Query{
-    tests: [Test!]
-}
-
-type Mutation{
-    createTest(newTest: NewTest):Test
-    submitAnswers(answers:TestAnswers):TestResults
-}
