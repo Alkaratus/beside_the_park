@@ -95,7 +95,7 @@ describe("Entity to GraphQL Converter Tests",()=>{
         let convertedAnswer= entityToGraphQLConverter.convertOrderAnswer(orderAnswer)
         expect(convertedAnswer.id).toBe(orderAnswer.id);
         expect(convertedAnswer.content).toBe(orderAnswer.content);
-        expect(convertedAnswer.position).toBe(orderAnswer.order);
+        expect(convertedAnswer.order).toBe(orderAnswer.order);
     })
 
     it("Convert Text Answer",()=>{

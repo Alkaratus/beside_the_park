@@ -1,7 +1,7 @@
-import {Field, Int, ObjectType} from "@nestjs/graphql";
+import {Field, Int, InterfaceType} from "@nestjs/graphql";
 
 
-@ObjectType()
+@InterfaceType()
 export abstract class QuestionResult{
     @Field(()=>Int)
     questionID: number

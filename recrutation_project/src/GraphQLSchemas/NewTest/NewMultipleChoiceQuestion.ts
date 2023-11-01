@@ -1,5 +1,6 @@
 import {Field, InputType} from "@nestjs/graphql";
-import {NewChoiceAnswer} from "../../graphql";
+import {NewChoiceAnswer} from "./NewChoiceAnswer";
+
 
 @InputType()
 export class NewMultipleChoiceQuestion{

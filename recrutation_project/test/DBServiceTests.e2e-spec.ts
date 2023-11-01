@@ -4,7 +4,10 @@ import {getRepositoryToken, TypeOrmModule} from "@nestjs/typeorm";
 import {Test as TestEntity} from "../src/DataBaseEntities/Test"
 import {Repository} from "typeorm";
 import {DATA_BASE_ENTITIES} from "../src/DataBaseEntities/database.entities";
-import {NewOrderQuestion, NewSingleChoiceQuestion, NewTest, NewTextQuestion} from "../src/graphql";
+import {NewTest} from "../src/GraphQLSchemas/NewTest/NewTest";
+import {NewSingleChoiceQuestion} from "../src/GraphQLSchemas/NewTest/NewSingleChoiceQuestion";
+import {NewTextQuestion} from "../src/GraphQLSchemas/NewTest/NewTextQuestion";
+import {NewOrderQuestion} from "../src/GraphQLSchemas/NewTest/NewOrderQuestion";
 
 const TypeORMMySqlTestingModule = TypeOrmModule.forRoot({
     type: 'mysql',

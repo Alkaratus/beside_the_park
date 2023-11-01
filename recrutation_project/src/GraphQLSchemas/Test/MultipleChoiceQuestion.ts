@@ -1,9 +1,10 @@
 import {ObjectType} from "@nestjs/graphql";
 import {ChoiceQuestion} from "./ChoiceQuestion";
-import {ChoiceAnswer} from "../../graphql";
+import {ChoiceAnswer} from "./ChoiceAnswer";
+import {Question} from "./Question";
 
 
-@ObjectType({implements:[ChoiceQuestion]})
+@ObjectType({implements:[Question, ChoiceQuestion]})
 export class MultipleChoiceQuestion implements ChoiceQuestion{
     id: number;
     content: string;

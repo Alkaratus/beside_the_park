@@ -1,11 +1,12 @@
 import {GraphQLInputToEntityConverter} from "../src/Converters/GraphQLInputToEntityConverter";
-import {
-    NewChoiceAnswer,
-    NewMultipleChoiceQuestion, NewOrderAnswer,
-    NewOrderQuestion,
-    NewSingleChoiceQuestion, NewTextAnswer,
-    NewTextQuestion
-} from "../src/graphql";
+import {NewSingleChoiceQuestion} from "../src/GraphQLSchemas/NewTest/NewSingleChoiceQuestion";
+import {NewMultipleChoiceQuestion} from "../src/GraphQLSchemas/NewTest/NewMultipleChoiceQuestion";
+import {NewOrderQuestion} from "../src/GraphQLSchemas/NewTest/NewOrderQuestion";
+import {NewTextQuestion} from "../src/GraphQLSchemas/NewTest/NewTextQuestion";
+import {NewChoiceAnswer} from "../src/GraphQLSchemas/NewTest/NewChoiceAnswer";
+import {NewOrderAnswer} from "../src/GraphQLSchemas/NewTest/NewOrderAnswer";
+import {NewTextAnswer} from "../src/GraphQLSchemas/NewTest/NewTextAnswer";
+
 
 const dtoToEntityConverter: GraphQLInputToEntityConverter= new GraphQLInputToEntityConverter();
 
