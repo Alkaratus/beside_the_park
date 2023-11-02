@@ -1,6 +1,4 @@
-import {TextAnswer} from "./TextAnswer";
+import {Question} from "./Question";
 
-export class TextQuestion{
-    content: string
-    answers: TextAnswer[]
+export abstract class TextQuestion extends Question{
 }

@@ -1,8 +1,6 @@
-import {ChoiceAnswer} from "./ChoiceAnswer";
+import {Question} from "./Question";
 
 
-export class ChoiceQuestion {
-    content: string
-    multiple: boolean
-    answers: ChoiceAnswer[]
+export abstract class ChoiceQuestion extends Question{
+
 }
