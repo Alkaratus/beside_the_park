@@ -1,11 +1,11 @@
 import {Column, Entity, ManyToOne, PrimaryGeneratedColumn} from "typeorm";
 import {OrderQuestion} from "./OrderQuestion";
-import {OrderAnswer as AbsractOrderAnswer} from "../Abstracts/OrderAnswer";
+import {OrderAnswer as AbstractOrderAnswer} from "../Abstracts/OrderAnswer";
 import {Visitor} from "../Abstracts/Visitor";
 
 
 @Entity()
-export class OrderAnswer implements AbsractOrderAnswer{
+export class OrderAnswer implements AbstractOrderAnswer{
 
     @PrimaryGeneratedColumn()
     id: number
