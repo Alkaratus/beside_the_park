@@ -3,10 +3,11 @@ import {SingleChoiceQuestion} from "./SingleChoiceQuestion";
 import {MultipleChoiceQuestion} from "./MultipleChoiceQuestion";
 import {OrderQuestion} from "./OrderQuestion";
 import {TextQuestion} from "./TextQuestion";
-
+import {Test as AbstractTest} from "../../Abstracts/Test"
+import {Visitor} from "../../Abstracts/Visitor";
 
 @ObjectType()
-export class Test{
+export class Test implements AbstractTest{
     @Field(()=>Int)
     id:number
 
@@ -24,4 +25,8 @@ export class Test{
 
     @Field(()=>[TextQuestion])
     textQuestions:TextQuestion[]
+
+    accept(visitor:Visitor){
+        visitor.visit(this);
+    }
 }

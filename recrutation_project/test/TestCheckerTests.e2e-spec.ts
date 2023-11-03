@@ -4,6 +4,9 @@ import {SingleChoiceQuestion} from "../src/GraphQLSchemas/Test/SingleChoiceQuest
 import {MultipleChoiceQuestion} from "../src/GraphQLSchemas/Test/MultipleChoiceQuestion";
 import {OrderQuestion} from "../src/GraphQLSchemas/Test/OrderQuestion";
 import {TextQuestion} from "../src/GraphQLSchemas/Test/TextQuestion";
+import {ChoiceAnswer} from "../src/GraphQLSchemas/Test/ChoiceAnswer";
+import {OrderAnswer} from "../src/GraphQLSchemas/Test/OrderAnswer";
+import {TextAnswer} from "../src/GraphQLSchemas/Test/TextAnswer";
 
 
 const testChecker= new TestChecker();
@@ -12,35 +15,35 @@ const testSingleChoiceQuestion=new SingleChoiceQuestion()
 testSingleChoiceQuestion.id=1;
 testSingleChoiceQuestion.content="";
 testSingleChoiceQuestion.choiceAnswers=[
-    {id:1, content:"", correct:true},
-    {id:2, content:"", correct:false}
+    new ChoiceAnswer(1,"",true),
+    new ChoiceAnswer(2,"",false),
 ];
 
 const testMultipleChoiceQuestion=new MultipleChoiceQuestion()
 testMultipleChoiceQuestion.id=1;
 testMultipleChoiceQuestion.content="";
 testMultipleChoiceQuestion.choiceAnswers=[
-    {id:1, content:"", correct:true},
-    {id:2, content:"", correct:false},
-    {id:3, content:"", correct:false},
-    {id:4, content:"", correct:true},
-    {id:5, content:"", correct:false}
+    new ChoiceAnswer(1,"",true),
+    new ChoiceAnswer(2,"",false),
+    new ChoiceAnswer(3,"",false),
+    new ChoiceAnswer(4,"",true),
+    new ChoiceAnswer(5,"",false),
 ];
 
 const testOrderQuestion= new OrderQuestion()
 testOrderQuestion.id=1;
 testOrderQuestion.content=""
 testOrderQuestion.orderAnswers=[
-    {id:1, content:"",order:1},
-    {id:2, content:"",order:2},
-    {id:3, content:"",order:3}
+    new OrderAnswer(1, "",1),
+    new OrderAnswer(2, "",2),
+    new OrderAnswer(3, "",3),
 ];
 
 const testTextQuestion= new TextQuestion();
 testTextQuestion.id=1;
 testTextQuestion.content="";
 testTextQuestion.textAnswers=[
-    {id:1,correct:"a"}
+    new TextAnswer(1,"a")
 ]
 
 describe("Test Checker Test",()=>{
