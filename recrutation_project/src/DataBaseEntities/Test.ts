@@ -2,10 +2,11 @@ import {Column, Entity, OneToMany, PrimaryGeneratedColumn,} from "typeorm";
 import {ChoiceQuestion} from "./ChoiceQuestion";
 import {OrderQuestion} from "./OrderQuestion";
 import {TextQuestion} from "./TextQuestion";
-
+import {Test as AbstractTest} from "../Abstracts/Test"
+import {Visitor} from "../Abstracts/Visitor";
 
 @Entity()
-export class Test {
+export class Test implements AbstractTest{
     @PrimaryGeneratedColumn()
     id: number
 
@@ -29,4 +30,9 @@ export class Test {
             cascade:["insert"]
         })
     textQuestions: TextQuestion[]
+
+
+    accept(visitor:Visitor){
+        visitor.visit(this);
+    }
 }

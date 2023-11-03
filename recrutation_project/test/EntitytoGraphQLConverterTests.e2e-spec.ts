@@ -14,18 +14,18 @@ const testSingleChoiceQuestion= new SingleChoiceQuestion();
 testSingleChoiceQuestion.id=1;
 testSingleChoiceQuestion.content="";
 testSingleChoiceQuestion.answers=[
-    {id:1, content:"", correct:false, question:null},
-    {id:2, content:"", correct:true, question:null}
+    new ChoiceAnswer(1,"",false),
+    new ChoiceAnswer(2, "", true)
 ]
 
 const testMultipleChoiceQuestion= new MultipleChoiceQuestion()
 testMultipleChoiceQuestion.id=1;
 testMultipleChoiceQuestion.content="";
 testMultipleChoiceQuestion.answers=[
-    {id:1, content:"", correct:true, question:null},
-    {id:2, content:"", correct:true, question:null},
-    {id:3, content:"", correct:false, question:null},
-    {id:4, content:"", correct:true, question:null}
+    new ChoiceAnswer(1,"",true),
+    new ChoiceAnswer(2, "", true),
+    new ChoiceAnswer(3,"",false),
+    new ChoiceAnswer(4, "", true)
 ]
 
 describe("Entity to GraphQL Converter Tests",()=>{
@@ -54,8 +54,8 @@ describe("Entity to GraphQL Converter Tests",()=>{
         orderQuestion.id=1;
         orderQuestion.content="Arrange the following events in chronological order";
         orderQuestion.answers=[
-            {id: 1, content: "Declaration of Independence", order: 1, question: null},
-            {id: 2, content: "World War II", order: 2, question: null}
+            new OrderAnswer(1,"",1),
+            new OrderAnswer(2,"",2),
         ]
         let convertedQuestion= entityToGraphQLConverter.convertOrderQuestion(orderQuestion)
         expect(convertedQuestion.id).toBe(orderQuestion.id)
@@ -68,7 +68,7 @@ describe("Entity to GraphQL Converter Tests",()=>{
         textQuestion.id=1;
         textQuestion.content= "What is the famous phrase from Star Wars";
         textQuestion.answers=[
-            {id:1, correct:"May the force be with you", question: null}
+            new TextAnswer(1,"May the force be with you")
         ]
         let convertedQuestion=entityToGraphQLConverter.convertTextQuestion(textQuestion)
         expect(convertedQuestion.id).toBe(textQuestion.id)
