@@ -1,6 +1,6 @@
 import {Field, InputType} from "@nestjs/graphql";
 import {NewTextAnswer} from "./NewTextAnswer";
-
+import {Visitor} from "../../Abstracts/Visitor";
 
 @InputType()
 export class NewTextQuestion{
@@ -9,4 +9,8 @@ export class NewTextQuestion{
 
     @Field(()=>[NewTextAnswer])
     answers:NewTextAnswer[]
+
+    accept(visitor: Visitor): void {
+        visitor.visit(this)
+    }
 }
