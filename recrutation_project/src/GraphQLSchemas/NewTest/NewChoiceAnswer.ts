@@ -10,6 +10,11 @@ export class NewChoiceAnswer implements AbstractChoiceAnswer{
     @Field()
     correct:boolean
 
+    constructor(content?:string,correct?:boolean){
+        this.content=content;
+        this.correct=correct;
+    }
+
     accept(visitor: Visitor) {
         visitor.visit(this)
     }

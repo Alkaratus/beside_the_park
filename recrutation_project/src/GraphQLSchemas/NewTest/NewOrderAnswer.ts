@@ -10,6 +10,11 @@ export class NewOrderAnswer implements AbstractOrderAnswer{
     @Field(()=>Int)
     order:number
 
+    constructor(content?:string,order?:number){
+        this.content=content;
+        this.order=order;
+    }
+
     accept(visitor: Visitor){
         visitor.visit(this)
     }

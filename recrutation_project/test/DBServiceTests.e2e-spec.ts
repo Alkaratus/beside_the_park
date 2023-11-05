@@ -8,6 +8,9 @@ import {NewTest} from "../src/GraphQLSchemas/NewTest/NewTest";
 import {NewSingleChoiceQuestion} from "../src/GraphQLSchemas/NewTest/NewSingleChoiceQuestion";
 import {NewTextQuestion} from "../src/GraphQLSchemas/NewTest/NewTextQuestion";
 import {NewOrderQuestion} from "../src/GraphQLSchemas/NewTest/NewOrderQuestion";
+import {NewChoiceAnswer} from "../src/GraphQLSchemas/NewTest/NewChoiceAnswer";
+import {NewTextAnswer} from "../src/GraphQLSchemas/NewTest/NewTextAnswer";
+import {NewOrderAnswer} from "../src/GraphQLSchemas/NewTest/NewOrderAnswer";
 
 const TypeORMMySqlTestingModule = TypeOrmModule.forRoot({
     type: 'mysql',
@@ -59,10 +62,10 @@ describe("DB tests",()=>{
         let choiceQuestion= new NewSingleChoiceQuestion();
         choiceQuestion.content="What is the capital of France?";
         choiceQuestion.answers=[
-            {content:"London",correct:false},
-            {content:"Paris",correct:true},
-            {content:"Rome",correct:false},
-            {content:"Madrid",correct:false}
+            new NewChoiceAnswer("London",false),
+            new NewChoiceAnswer("Paris",true),
+            new NewChoiceAnswer("Rome",false),
+            new NewChoiceAnswer("Madrid",false)
         ];
         newTest.singleChoiceQuestions=[choiceQuestion];
 
@@ -71,17 +74,17 @@ describe("DB tests",()=>{
         let textQuestion= new NewTextQuestion();
         textQuestion.content="What is the famous phrase from Star Wars";
         textQuestion.answers=[
-            {correct:"May the force be with you"},
-            {correct:"I have bad feelings about this"}
+            new NewTextAnswer("May the force be with you"),
+            new NewTextAnswer("I have bad feelings about this")
         ]
         newTest.textQuestions=[textQuestion];
 
         let orderQuestion= new NewOrderQuestion();
         orderQuestion.content="Arrange the following events in chronological order"
         orderQuestion.answers=[
-            {content:"Declaration of Independence",order:1},
-            {content:"World War II",order:2},
-            {content:"First Moon Landing",order:3},
+            new NewOrderAnswer("Declaration of Independence",1),
+            new NewOrderAnswer("World War II",2),
+            new NewOrderAnswer("First Moon Landing",3),
         ]
         newTest.orderQuestions=[orderQuestion];
 

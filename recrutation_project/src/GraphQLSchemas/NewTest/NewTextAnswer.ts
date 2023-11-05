@@ -7,6 +7,10 @@ export class NewTextAnswer implements AbstractTextAnswer{
     @Field()
     correct:string
 
+    constructor(correct?:string){
+        this.correct=correct;
+    }
+
     accept(visitor: Visitor) {
         visitor.visit(this)
     }

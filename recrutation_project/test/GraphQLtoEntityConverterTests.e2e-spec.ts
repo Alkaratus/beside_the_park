@@ -25,10 +25,10 @@ testTextQuestion.content="";
 describe("GraphQL to Entity Converter Tests",()=>{
     it("Convert Single Choice Question",()=>{
         testSingleChoiceQuestion.answers=[
-            {content:"",correct:false},
-            {content:"",correct:true},
-            {content:"",correct:false},
-            {content:"",correct:false}
+            new NewChoiceAnswer("",false),
+            new NewChoiceAnswer("",true),
+            new NewChoiceAnswer("",false),
+            new NewChoiceAnswer("",false),
         ];
         let convertedQuestion=dtoToEntityConverter.convertSingleChoiceQuestion(testSingleChoiceQuestion);
         expect(convertedQuestion.answers.length).toBe(testSingleChoiceQuestion.answers.length);
@@ -37,10 +37,10 @@ describe("GraphQL to Entity Converter Tests",()=>{
 
     it("Convert Multiple Choice Question",()=>{
         testMultipleChoiceQuestion.answers=[
-            {content:"",correct:true},
-            {content:"",correct:false},
-            {content:"",correct:true},
-            {content:"",correct:true}
+            new NewChoiceAnswer("",true),
+            new NewChoiceAnswer("",false),
+            new NewChoiceAnswer("",true),
+            new NewChoiceAnswer("",true),
         ];
         let convertedQuestion=dtoToEntityConverter.convertMultipleChoiceQuestion(testMultipleChoiceQuestion);
         expect(convertedQuestion.answers.length).toBe(testMultipleChoiceQuestion.answers.length);
@@ -49,9 +49,9 @@ describe("GraphQL to Entity Converter Tests",()=>{
 
     it("Convert order question",()=>{
         testOrderQuestion.answers=[
-            {content:"",order:1},
-            {content:"",order:2},
-            {content:"",order:3},
+            new NewOrderAnswer("",1),
+            new NewOrderAnswer("",2),
+            new NewOrderAnswer("",3),
         ]
         let convertedQuestion=dtoToEntityConverter.convertOrderQuestion(testOrderQuestion);
         expect(convertedQuestion.answers.length).toBe(testOrderQuestion.answers.length)
@@ -60,8 +60,7 @@ describe("GraphQL to Entity Converter Tests",()=>{
 
     it("Convert text question",()=>{
         testTextQuestion.answers=[
-            {correct:""},
-            {correct:""},
+            new NewTextAnswer(""),
         ]
         let convertedQuestion=dtoToEntityConverter.convertTextQuestion(testTextQuestion);
         expect(convertedQuestion.answers.length).toBe(testTextQuestion.answers.length)
@@ -70,7 +69,7 @@ describe("GraphQL to Entity Converter Tests",()=>{
 
     it("Not enough choice answers raise exception",()=>{
         testSingleChoiceQuestion.answers=[
-            {content:"Paris",correct:true},
+            new NewChoiceAnswer("",true),
         ];
         let properErrorRaised=false;
         try{
@@ -86,8 +85,8 @@ describe("GraphQL to Entity Converter Tests",()=>{
 
     it("Number of correct answers another than 1 for single choice questions raise exception",()=>{
         testSingleChoiceQuestion.answers=[
-            {content:"",correct:true},
-            {content:"",correct:true},
+            new NewChoiceAnswer("",true),
+            new NewChoiceAnswer("",true),
         ];
         let properErrorRaised=false;
         try{
@@ -103,7 +102,7 @@ describe("GraphQL to Entity Converter Tests",()=>{
 
     it("Not enough order choice answers raise exception",()=>{
         testOrderQuestion.answers=[
-            {content:"Declaration of Independence",order:1},
+            new NewOrderAnswer("Declaration of Independence",1)
         ]
         let properErrorRaised=false;
         try{
