@@ -1,159 +1,188 @@
-import {NewTest} from "../GraphQLSchemas/NewTest/NewTest";
 import {Test as TestEntity} from "../DataBaseEntities/Test";
+import {Test as TestQL} from "../GraphQLSchemas/Test/Test";
+import {SingleChoiceQuestion as SingleChoiceQuestionEntity} from "../DataBaseEntities/SingleChoiceQuestion";
+import {SingleChoiceQuestion as SingleChoiceQuestionQL} from "../GraphQLSchemas/Test/SingleChoiceQuestion";
+import {MultipleChoiceQuestion as MultipleChoiceQuestionEntity} from "../DataBaseEntities/MultipleChoiceQuestion";
+import {MultipleChoiceQuestion as MultipleChoiceQuestionQL} from "../GraphQLSchemas/Test/MultipleChoiceQuestion";
+import {ChoiceAnswer as ChoiceAnswerEntity} from "../DataBaseEntities/ChoiceAnswer";
+import {ChoiceAnswer as ChoiceAnswerQL} from "../GraphQLSchemas/Test/ChoiceAnswer";
+import {OrderQuestion as OrderQuestionEntity} from "../DataBaseEntities/OrderQuestion";
+import {OrderQuestion as OrderQuestionQL} from "../GraphQLSchemas/Test/OrderQuestion"
+import {OrderAnswer as OrderAnswerEntity} from "../DataBaseEntities/OrderAnswer";
+import {OrderAnswer as OrderAnswerQL} from "../GraphQLSchemas/Test/OrderAnswer";
+import {TextQuestion as TextQuestionEntity} from "../DataBaseEntities/TextQuestion";
+import {TextQuestion as TextQuestionQL} from "../GraphQLSchemas/Test/TextQuestion"
+import {TextAnswer as TextAnswerEntity} from "../DataBaseEntities/TextAnswer";
+import {TextAnswer as TextAnswerQL} from "../GraphQLSchemas/Test/TextAnswer";
+import {NewTest} from "../GraphQLSchemas/NewTest/NewTest";
 import {NewSingleChoiceQuestion} from "../GraphQLSchemas/NewTest/NewSingleChoiceQuestion";
 import {NewMultipleChoiceQuestion} from "../GraphQLSchemas/NewTest/NewMultipleChoiceQuestion";
 import {NewChoiceAnswer} from "../GraphQLSchemas/NewTest/NewChoiceAnswer";
-import {ChoiceAnswer as ChoiceAnswerEntity} from "../DataBaseEntities/ChoiceAnswer";
 import {NewOrderQuestion} from "../GraphQLSchemas/NewTest/NewOrderQuestion";
-import {OrderQuestion as OrderQuestionEntity} from "../DataBaseEntities/OrderQuestion";
 import {NewOrderAnswer} from "../GraphQLSchemas/NewTest/NewOrderAnswer";
-import {OrderAnswer as OrderAnswerEntity} from "../DataBaseEntities/OrderAnswer";
-import {NewTextQuestion} from "../GraphQLSchemas/NewTest/NewTextQuestion"
-import {TextQuestion as TextQuestionEntity} from "../DataBaseEntities/TextQuestion";
+import {NewTextQuestion} from "../GraphQLSchemas/NewTest/NewTextQuestion";
 import {NewTextAnswer} from "../GraphQLSchemas/NewTest/NewTextAnswer";
-import {TextAnswer as TextAnswerEntity} from "../DataBaseEntities/TextAnswer";
-import {SingleChoiceQuestion as SingleChoiceQuestionEntity} from "../DataBaseEntities/SingleChoiceQuestion";
-import {MultipleChoiceQuestion as MultipleChoiceQuestionEntity} from "../DataBaseEntities/MultipleChoiceQuestion";
+import {Visitor} from "../Abstracts/Visitor";
 
+export const NOT_APPLICABLE_ERROR= 1;
+export const NO_QUESTIONS_ERROR = 2;
+export const NOT_ENOUGH_ANSWERS_ERROR=3;
+export const NUMBER_OF_CORRECT_ANSWERS_OTHER_THAN_ONE_ERROR=4;
 
-export class GraphQLInputToEntityConverter {
+export class GraphQLInputToEntityConverter implements Visitor{
     numberOfQuestions: number;
+    convertedTest: TestEntity
+    convertedChoiceAnswers: ChoiceAnswerEntity[];
+    convertedOrderAnswers: OrderAnswerEntity[];
+    convertedTextAnswers: TextAnswerEntity[];
 
     convertTest(test:NewTest):TestEntity{
-        let convertedTest= new TestEntity();
-        convertedTest.name=test.name;
-        this.numberOfQuestions=0;
-        convertedTest.choiceQuestions=this.convertSingleChoiceQuestions(test.singleChoiceQuestions)
-        convertedTest.choiceQuestions.concat(this.convertMultipleChoiceQuestions(test.multipleChoiceQuestions));
-        convertedTest.orderQuestions=this.convertOrderQuestions(test.orderQuestions)
-        convertedTest.textQuestions=this.convertTextQuestions(test.textQuestions)
-        if (this.numberOfQuestions==0){
-            throw "Test have no questions";
-        }
-        return convertedTest;
+        this.convertedTest= new TestEntity();
+        this.convertedTest.choiceQuestions=[]
+        this.convertedTest.orderQuestions=[]
+        this.convertedTest.textQuestions=[]
+        test.accept(this)
+        return this.convertedTest;
     }
 
-    convertSingleChoiceQuestions(choiceQuestions: NewSingleChoiceQuestion[]):SingleChoiceQuestionEntity[]{
-        let convertedChoiceQuestions: SingleChoiceQuestionEntity[]=[];
-        choiceQuestions.forEach((choiceQuestion)=>{
-            convertedChoiceQuestions.push(this.convertSingleChoiceQuestion(choiceQuestion))
+    convertSingleChoiceQuestions(questions: NewSingleChoiceQuestion[]){
+        questions.forEach((question)=>{
+            question.accept(this);
         });
-        this.numberOfQuestions+=convertedChoiceQuestions.length;
-        return convertedChoiceQuestions;
+
     }
 
-    convertMultipleChoiceQuestions(choiceQuestions: NewMultipleChoiceQuestion[]):MultipleChoiceQuestionEntity[]{
-        let convertedChoiceQuestions: MultipleChoiceQuestionEntity[]=[];
-        choiceQuestions.forEach((choiceQuestion)=>{
-            convertedChoiceQuestions.push(this.convertMultipleChoiceQuestion(choiceQuestion))
+    convertMultipleChoiceQuestions(questions: NewMultipleChoiceQuestion[]){
+        questions.forEach((question)=>{
+            question.accept(this);
         });
-        this.numberOfQuestions+=convertedChoiceQuestions.length;
-        return convertedChoiceQuestions;
     }
 
-    convertSingleChoiceQuestion(choiceQuestion: NewMultipleChoiceQuestion):SingleChoiceQuestionEntity{
-        let convertedQuestion= new SingleChoiceQuestionEntity();
-        convertedQuestion.content = choiceQuestion.content;
-        convertedQuestion.answers = this.convertChoiceAnswers(choiceQuestion.answers);
-        return convertedQuestion;
-    }
-
-    convertMultipleChoiceQuestion(choiceQuestion: NewMultipleChoiceQuestion):MultipleChoiceQuestionEntity{
-        let convertedQuestion= new MultipleChoiceQuestionEntity();
-        convertedQuestion.content = choiceQuestion.content;
-        convertedQuestion.answers = this.convertChoiceAnswers(choiceQuestion.answers,true);
-        return convertedQuestion;
-    }
-
-    convertChoiceAnswers(choiceAnswers:NewChoiceAnswer[], multiple:boolean=false):ChoiceAnswerEntity[]{
-        let convertedChoiceAnswers: ChoiceAnswerEntity[]=[];
+    convertChoiceAnswers(answers:NewChoiceAnswer[], multiple:boolean=false):void{
+        this.convertedChoiceAnswers=[];
         let correctCounter=0;
-        if(choiceAnswers.length<2){
-            throw "Question have not enough answers";
+        if(answers.length<2){
+            throw NOT_ENOUGH_ANSWERS_ERROR;
         }
-        choiceAnswers.forEach((choiceAnswer)=>{
-            if (choiceAnswer.correct){
-                correctCounter++;
-            }
-            convertedChoiceAnswers.push(this.convertChoiceAnswer(choiceAnswer));
+        answers.forEach((answer)=>{
+            correctCounter+=answer.correct? 1:0;
+            answer.accept(this);
         });
         if(!multiple && correctCounter!=1){
-            throw "Single choice question didn't have exactly one correct answer";
+            throw NUMBER_OF_CORRECT_ANSWERS_OTHER_THAN_ONE_ERROR;
         }
-        return convertedChoiceAnswers;
-    }
-
-    convertChoiceAnswer(choiceAnswer:NewChoiceAnswer):ChoiceAnswerEntity{
-        let convertedAnswer: ChoiceAnswerEntity= new ChoiceAnswerEntity();
-        convertedAnswer.content= choiceAnswer.content;
-        convertedAnswer.correct= choiceAnswer.correct;
-        return convertedAnswer;
     }
 
     convertOrderQuestions(orderQuestions:NewOrderQuestion[]){
-        let convertedOrderQuestions: OrderQuestionEntity[]=[];
-        orderQuestions.forEach((orderQuestion)=>{
-            convertedOrderQuestions.push(this.convertOrderQuestion(orderQuestion))
+        orderQuestions.forEach((question)=>{
+            question.accept(this);
         });
-        this.numberOfQuestions+=convertedOrderQuestions.length;
-        return convertedOrderQuestions;
     }
 
-    convertOrderQuestion(orderQuestion: NewOrderQuestion):OrderQuestionEntity{
-        let convertedQuestion: OrderQuestionEntity= new OrderQuestionEntity();
-        convertedQuestion.content = orderQuestion.content
-        convertedQuestion.answers = this.convertOrderAnswers(orderQuestion.answers);
-        return convertedQuestion;
-    }
-
-    convertOrderAnswers(orderAnswers:NewOrderAnswer[]):OrderAnswerEntity[]{
-        let convertedOrderAnswers: OrderAnswerEntity[]=[];
+    convertOrderAnswers(orderAnswers:NewOrderAnswer[]){
+        this.convertedOrderAnswers=[]
         if(orderAnswers.length<2){
-            throw "Question have not enough answers";
+            throw NOT_ENOUGH_ANSWERS_ERROR;
         }
-        orderAnswers.forEach((orderAnswer)=>{
-            convertedOrderAnswers.push(this.convertOrderAnswer(orderAnswer))
+        orderAnswers.forEach((answer)=>{
+            answer.accept(this);
         })
-        return convertedOrderAnswers;
-    }
-
-    convertOrderAnswer(orderAnswer:NewOrderAnswer):OrderAnswerEntity{
-        let convertedAnswer: OrderAnswerEntity= new OrderAnswerEntity();
-        convertedAnswer.content= orderAnswer.content;
-        convertedAnswer.order= orderAnswer.order;
-        return convertedAnswer;
     }
 
     convertTextQuestions(textQuestions:NewTextQuestion[]){
-        let convertedTextQuestions: TextQuestionEntity[]=[];
-        textQuestions.forEach((textQuestion)=>{
-            convertedTextQuestions.push(this.convertTextQuestion(textQuestion))
+        textQuestions.forEach((question)=>{
+            question.accept(this);
         });
-        this.numberOfQuestions+=convertedTextQuestions.length;
-        return convertedTextQuestions;
     }
 
-    convertTextQuestion(textQuestion: NewTextQuestion):TextQuestionEntity{
+    convertTextAnswers(textAnswers:NewTextAnswer[]){
+        this.convertedTextAnswers=[]
+        if(textAnswers.length==0){
+            throw NOT_ENOUGH_ANSWERS_ERROR;
+        }
+        textAnswers.forEach((answer)=>{
+            answer.accept(this);
+        })
+    }
+
+    visitTestEntity(test: TestEntity):void{ throw NOT_APPLICABLE_ERROR}
+    visitSingleChoiceQuestionEntity(singleChoiceQuestion:SingleChoiceQuestionEntity):void{throw NOT_APPLICABLE_ERROR}
+    visitMultipleChoiceQuestionEntity(multipleChoiceQuestion:MultipleChoiceQuestionEntity):void{throw NOT_APPLICABLE_ERROR}
+    visitChoiceAnswerEntity(choiceAnswer:ChoiceAnswerEntity):void{throw NOT_APPLICABLE_ERROR}
+    visitOrderQuestionEntity(orderQuestion:OrderQuestionEntity):void{throw NOT_APPLICABLE_ERROR}
+    visitOrderAnswerEntity(orderAnswer:OrderAnswerEntity):void{throw NOT_APPLICABLE_ERROR}
+    visitTextQuestionEntity(textQuestion:TextQuestionEntity):void{throw NOT_APPLICABLE_ERROR}
+    visitTextAnswerEntity(textAnswer:TextAnswerEntity):void{throw NOT_APPLICABLE_ERROR}
+
+    visitTestQL(test: TestQL):void{throw NOT_APPLICABLE_ERROR}
+    visitSingleChoiceQuestionQL(singleChoiceQuestion:SingleChoiceQuestionQL):void{throw NOT_APPLICABLE_ERROR}
+    visitMultipleChoiceQuestionQL(multipleChoiceQuestion:MultipleChoiceQuestionQL):void{throw NOT_APPLICABLE_ERROR}
+    visitChoiceAnswerQL(choiceAnswer:ChoiceAnswerQL):void{throw NOT_APPLICABLE_ERROR}
+    visitOrderQuestionQL(orderQuestion:OrderQuestionQL):void{throw NOT_APPLICABLE_ERROR}
+    visitOrderAnswerQL(orderAnswer:OrderAnswerQL):void{throw NOT_APPLICABLE_ERROR}
+    visitTextQuestionQL(textQuestion:TextQuestionQL):void{throw NOT_APPLICABLE_ERROR}
+    visitTextAnswerQL(textAnswer:TextAnswerQL):void{throw NOT_APPLICABLE_ERROR}
+
+    visitNewTest(test: NewTest):void{
+        this.convertedTest.name=test.name;
+        this.numberOfQuestions=0;
+        this.convertSingleChoiceQuestions(test.singleChoiceQuestions)
+        this.convertMultipleChoiceQuestions(test.multipleChoiceQuestions)
+        this.convertOrderQuestions(test.orderQuestions)
+        this.convertTextQuestions(test.textQuestions)
+        this.numberOfQuestions+=this.convertedTest.choiceQuestions.length;
+        this.numberOfQuestions+=this.convertedTest.orderQuestions.length;
+        this.numberOfQuestions+=this.convertedTest.textQuestions.length;
+        if (this.numberOfQuestions==0){
+            throw NO_QUESTIONS_ERROR;
+        }
+    }
+
+    visitNewSingleChoiceQuestion(singleChoiceQuestion:NewSingleChoiceQuestion):void{
+        let convertedQuestion= new SingleChoiceQuestionEntity();
+        convertedQuestion.content = singleChoiceQuestion.content;
+        this.convertChoiceAnswers(singleChoiceQuestion.answers);
+        convertedQuestion.answers=this.convertedChoiceAnswers;
+        this.convertedTest.choiceQuestions.push(convertedQuestion);
+    }
+
+    visitNewMultipleChoiceQuestion(multipleChoiceQuestion:NewMultipleChoiceQuestion):void{
+        let convertedQuestion= new MultipleChoiceQuestionEntity();
+        convertedQuestion.content = multipleChoiceQuestion.content;
+        this.convertChoiceAnswers(multipleChoiceQuestion.answers,true);
+        convertedQuestion.answers=this.convertedChoiceAnswers;
+        this.convertedTest.choiceQuestions.push(convertedQuestion);
+    }
+
+    visitNewChoiceAnswer(choiceAnswer:NewChoiceAnswer):void{
+        let convertedAnswer: ChoiceAnswerEntity= new ChoiceAnswerEntity();
+        convertedAnswer.content= choiceAnswer.content;
+        convertedAnswer.correct= choiceAnswer.correct;
+        this.convertedChoiceAnswers.push(convertedAnswer)
+    }
+    visitNewOrderQuestion(question:NewOrderQuestion):void{
+        let convertedQuestion: OrderQuestionEntity= new OrderQuestionEntity();
+        convertedQuestion.content = question.content
+        this.convertOrderAnswers(question.answers);
+        convertedQuestion.answers = this.convertedOrderAnswers;
+        this.convertedTest.orderQuestions.push(convertedQuestion);
+    }
+    visitNewOrderAnswer(orderAnswer:NewOrderAnswer):void{
+        let convertedAnswer: OrderAnswerEntity= new OrderAnswerEntity();
+        convertedAnswer.content= orderAnswer.content;
+        convertedAnswer.order= orderAnswer.order;
+        this.convertedOrderAnswers.push(convertedAnswer);
+    }
+    visitNewTextQuestion(textQuestion:NewTextQuestion):void{
         let convertedQuestion: TextQuestionEntity= new TextQuestionEntity();
         convertedQuestion.content = textQuestion.content
-        convertedQuestion.answers = this.convertTextAnswers(textQuestion.answers);
-        return convertedQuestion;
+        this.convertTextAnswers(textQuestion.answers);
+        convertedQuestion.answers = this.convertedTextAnswers;
+        this.convertedTest.textQuestions.push(convertedQuestion);
     }
-
-    convertTextAnswers(textAnswers:NewTextAnswer[]):TextAnswerEntity[]{
-        let convertedTextAnswers: TextAnswerEntity[]=[];
-        if(textAnswers.length==0){
-            throw "Question have not enough answers";
-        }
-        textAnswers.forEach((textAnswer)=>{
-            convertedTextAnswers.push(this.convertTextAnswer(textAnswer))
-        })
-        return convertedTextAnswers;
-    }
-
-    convertTextAnswer(textAnswer:NewTextAnswer):TextAnswerEntity{
+    visitNewTextAnswer(textAnswer:NewTextAnswer):void{
         let convertedAnswer: TextAnswerEntity= new TextAnswerEntity();
         convertedAnswer.correct=textAnswer.correct;
-        return convertedAnswer;
+        this.convertedTextAnswers.push(convertedAnswer)
     }
 }
