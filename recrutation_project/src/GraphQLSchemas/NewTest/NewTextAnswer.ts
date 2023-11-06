@@ -12,6 +12,6 @@ export class NewTextAnswer implements AbstractTextAnswer{
     }
 
     accept(visitor: Visitor) {
-        visitor.visit(this)
+        visitor.visitNewTextAnswer(this)
     }
 }

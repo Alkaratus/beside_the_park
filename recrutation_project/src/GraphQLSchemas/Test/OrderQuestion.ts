@@ -12,7 +12,7 @@ export class OrderQuestion implements Question, AbstractOrderQuestion{
     orderAnswers: OrderAnswer[]
 
     accept(visitor: Visitor): void {
-        visitor.visit(this);
+        visitor.visitOrderQuestionQL(this);
     }
 
 }

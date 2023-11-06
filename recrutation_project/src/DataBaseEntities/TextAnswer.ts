@@ -21,6 +21,6 @@ export class TextAnswer implements AbstractTextAnswer{
     }
 
     accept(visitor: Visitor) {
-        visitor.visit(this);
+        visitor.visitTextAnswerEntity(this);
     }
 }

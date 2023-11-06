@@ -25,6 +25,6 @@ export class NewTest implements AbstractTest{
     textQuestions: NewTextQuestion[]
 
     accept(visitor:Visitor){
-        visitor.visit(this);
+        visitor.visitNewTest(this);
     }
 }

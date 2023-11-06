@@ -16,6 +16,6 @@ export class NewOrderAnswer implements AbstractOrderAnswer{
     }
 
     accept(visitor: Visitor){
-        visitor.visit(this)
+        visitor.visitNewOrderAnswer(this)
     }
 }

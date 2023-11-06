@@ -9,6 +9,6 @@ export class SingleChoiceQuestion extends ChoiceQuestion implements AbstractSing
     readonly multiple=false;
 
     accept(visitor: Visitor) {
-        visitor.visit(this);
+        visitor.visitSingleChoiceQuestionEntity(this);
     }
 }

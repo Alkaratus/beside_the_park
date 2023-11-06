@@ -11,6 +11,6 @@ export class NewTextQuestion{
     answers:NewTextAnswer[]
 
     accept(visitor: Visitor): void {
-        visitor.visit(this)
+        visitor.visitNewTextQuestion(this)
     }
 }

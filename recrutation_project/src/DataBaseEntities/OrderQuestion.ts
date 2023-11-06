@@ -18,6 +18,6 @@ export class OrderQuestion extends Question implements AbstractOrderQuestion{
     answers:OrderAnswer[]
 
     accept(visitor: Visitor): void{
-        visitor.visit(this)
+        visitor.visitOrderQuestionEntity(this)
     }
 }

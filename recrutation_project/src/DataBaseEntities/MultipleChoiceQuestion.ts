@@ -8,6 +8,6 @@ export class MultipleChoiceQuestion extends ChoiceQuestion implements AbstractMu
     readonly multiple=true;
 
     accept(visitor: Visitor) {
-        visitor.visit(this);
+        visitor.visitMultipleChoiceQuestionEntity(this);
     }
 }

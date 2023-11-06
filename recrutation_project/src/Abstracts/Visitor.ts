@@ -24,30 +24,30 @@ import {NewTextQuestion} from "../GraphQLSchemas/NewTest/NewTextQuestion";
 import {NewTextAnswer} from "../GraphQLSchemas/NewTest/NewTextAnswer";
 
 export abstract class Visitor{
-    abstract visit(test: TestEntity):void;
-    abstract visit(singleChoiceQuestion:SingleChoiceQuestionEntity):void
-    abstract visit(multipleChoiceQuestion:MultipleChoiceQuestionEntity):void
-    abstract visit(choiceAnswer:ChoiceAnswerEntity):void
-    abstract visit(orderQuestion:OrderQuestionEntity):void
-    abstract visit(orderAnswer:OrderAnswerEntity):void
-    abstract visit(textQuestion:TextQuestionEntity):void
-    abstract visit(textAnswer:TextAnswerEntity):void
+    abstract visitTestEntity(test: TestEntity):void;
+    abstract visitSingleChoiceQuestionEntity(singleChoiceQuestion:SingleChoiceQuestionEntity):void
+    abstract visitMultipleChoiceQuestionEntity(multipleChoiceQuestion:MultipleChoiceQuestionEntity):void
+    abstract visitChoiceAnswerEntity(choiceAnswer:ChoiceAnswerEntity):void
+    abstract visitOrderQuestionEntity(orderQuestion:OrderQuestionEntity):void
+    abstract visitOrderAnswerEntity(orderAnswer:OrderAnswerEntity):void
+    abstract visitTextQuestionEntity(textQuestion:TextQuestionEntity):void
+    abstract visitTextAnswerEntity(textAnswer:TextAnswerEntity):void
 
-    abstract visit(test: TestQL):void;
-    abstract visit(singleChoiceQuestion:SingleChoiceQuestionQL):void
-    abstract visit(multipleChoiceQuestion:MultipleChoiceQuestionQL):void
-    abstract visit(choiceAnswer:ChoiceAnswerQL):void
-    abstract visit(orderQuestion:OrderQuestionQL):void
-    abstract visit(orderAnswer:OrderAnswerQL):void
-    abstract visit(textQuestion:TextQuestionQL):void
-    abstract visit(textAnswer:TextAnswerQL):void
+    abstract visitTestQL(test: TestQL):void;
+    abstract visitSingleChoiceQuestionQL(singleChoiceQuestion:SingleChoiceQuestionQL):void
+    abstract visitMultipleChoiceQuestionQL(multipleChoiceQuestion:MultipleChoiceQuestionQL):void
+    abstract visitChoiceAnswerQL(choiceAnswer:ChoiceAnswerQL):void
+    abstract visitOrderQuestionQL(orderQuestion:OrderQuestionQL):void
+    abstract visitOrderAnswerQL(orderAnswer:OrderAnswerQL):void
+    abstract visitTextQuestionQL(textQuestion:TextQuestionQL):void
+    abstract visitTextAnswerQL(textAnswer:TextAnswerQL):void
 
-    abstract visit(test: NewTest):void;
-    abstract visit(singleChoiceQuestion:NewSingleChoiceQuestion):void;
-    abstract visit(multipleChoiceQuestion:NewMultipleChoiceQuestion):void;
-    abstract visit(choiceAnswer:NewChoiceAnswer):void;
-    abstract visit(orderChoiceQuestion:NewOrderQuestion):void;
-    abstract visit(orderAnswer:NewOrderAnswer):void;
-    abstract visit(textQuestion:NewTextQuestion):void;
-    abstract visit(textAnswer:NewTextAnswer):void;
+    abstract visitNewTest(test: NewTest):void;
+    abstract visitNewSingleChoiceQuestion(singleChoiceQuestion:NewSingleChoiceQuestion):void;
+    abstract visitNewMultipleChoiceQuestion(multipleChoiceQuestion:NewMultipleChoiceQuestion):void;
+    abstract visitNewChoiceAnswer(choiceAnswer:NewChoiceAnswer):void;
+    abstract visitNewOrderQuestion(orderChoiceQuestion:NewOrderQuestion):void;
+    abstract visitNewOrderAnswer(orderAnswer:NewOrderAnswer):void;
+    abstract visitNewTextQuestion(textQuestion:NewTextQuestion):void;
+    abstract visitNewTextAnswer(textAnswer:NewTextAnswer):void;
 }

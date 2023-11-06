@@ -12,6 +12,6 @@ export class NewSingleChoiceQuestion implements AbstractSingleChoiceQuestion{
     answers: NewChoiceAnswer[]
 
     accept(visitor:Visitor):void{
-        visitor.visit(this)
+        visitor.visitNewSingleChoiceQuestion(this)
     }
 }

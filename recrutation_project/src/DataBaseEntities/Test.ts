@@ -33,6 +33,6 @@ export class Test implements AbstractTest{
 
 
     accept(visitor:Visitor){
-        visitor.visit(this);
+        visitor.visitTestEntity(this);
     }
 }

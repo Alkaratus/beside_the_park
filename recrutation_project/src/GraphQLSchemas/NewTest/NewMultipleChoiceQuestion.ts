@@ -12,6 +12,6 @@ export class NewMultipleChoiceQuestion implements AbstractMultipleChoiceQuestion
     answers: NewChoiceAnswer[]
 
     accept(visitor: Visitor){
-        visitor.visit(this)
+        visitor.visitNewMultipleChoiceQuestion(this)
     }
 }

@@ -12,6 +12,6 @@ export class NewOrderQuestion implements AbstractOrderQuestion{
     answers:NewOrderAnswer[]
 
     accept(visitor: Visitor): void {
-        visitor.visit(this);
+        visitor.visitNewOrderQuestion(this);
     }
 }

@@ -13,6 +13,6 @@ export class MultipleChoiceQuestion implements ChoiceQuestion, AbstractMultipleC
     choiceAnswers: ChoiceAnswer[];
 
     accept(visitor: Visitor): void{
-        visitor.visit(this);
+        visitor.visitMultipleChoiceQuestionQL(this);
     }
 }

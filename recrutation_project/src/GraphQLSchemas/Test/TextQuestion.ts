@@ -14,6 +14,6 @@ export class TextQuestion implements Question, AbstractTextQuestion{
     textAnswers:TextAnswer[]
 
     accept(visitor: Visitor): void {
-        visitor.visit(this)
+        visitor.visitTextQuestionQL(this)
     }
 }

@@ -20,6 +20,6 @@ export class ChoiceAnswer implements AbstractChoiceAnswer{
     }
 
     accept(visitor: Visitor) {
-        visitor.visit(this)
+        visitor.visitChoiceAnswerQL(this)
     }
 }

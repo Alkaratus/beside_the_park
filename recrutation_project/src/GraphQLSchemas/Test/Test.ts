@@ -27,6 +27,6 @@ export class Test implements AbstractTest{
     textQuestions:TextQuestion[]
 
     accept(visitor:Visitor){
-        visitor.visit(this);
+        visitor.visitTestQL(this);
     }
 }

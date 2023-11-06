@@ -16,6 +16,6 @@ export class NewChoiceAnswer implements AbstractChoiceAnswer{
     }
 
     accept(visitor: Visitor) {
-        visitor.visit(this)
+        visitor.visitNewChoiceAnswer(this)
     }
 }

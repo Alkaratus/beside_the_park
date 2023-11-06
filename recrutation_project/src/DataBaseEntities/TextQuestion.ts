@@ -18,6 +18,6 @@ export class TextQuestion extends Question implements AbstractTextQuestion{
     answers: TextAnswer[]
 
     accept(visitor: Visitor) {
-        visitor.visit(this);
+        visitor.visitTextQuestionEntity(this);
     }
 }

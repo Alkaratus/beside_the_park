@@ -20,7 +20,7 @@ export class OrderAnswer implements AbstractOrderAnswer{
     }
 
     accept(visitor: Visitor){
-        visitor.visit(this)
+        visitor.visitOrderAnswerQL(this)
     }
 
 }

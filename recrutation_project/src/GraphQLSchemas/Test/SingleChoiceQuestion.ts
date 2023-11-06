@@ -12,6 +12,6 @@ export class SingleChoiceQuestion implements ChoiceQuestion, AbstractSingleChoic
     choiceAnswers: ChoiceAnswer[];
 
     accept(visitor:Visitor):void{
-        visitor.visit(this)
+        visitor.visitSingleChoiceQuestionQL(this)
     }
 }
