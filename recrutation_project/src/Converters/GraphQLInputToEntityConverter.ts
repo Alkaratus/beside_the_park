@@ -23,11 +23,14 @@ import {NewOrderAnswer} from "../GraphQLSchemas/NewTest/NewOrderAnswer";
 import {NewTextQuestion} from "../GraphQLSchemas/NewTest/NewTextQuestion";
 import {NewTextAnswer} from "../GraphQLSchemas/NewTest/NewTextAnswer";
 import {Visitor} from "../Abstracts/Visitor";
+import {
+    NO_QUESTIONS_ERROR,
+    NOT_APPLICABLE_ERROR,
+    NOT_ENOUGH_ANSWERS_ERROR,
+    NUMBER_OF_CORRECT_ANSWERS_OTHER_THAN_ONE_ERROR
+} from "../Errors/ErrorCodes";
 
-export const NOT_APPLICABLE_ERROR= 1;
-export const NO_QUESTIONS_ERROR = 2;
-export const NOT_ENOUGH_ANSWERS_ERROR=3;
-export const NUMBER_OF_CORRECT_ANSWERS_OTHER_THAN_ONE_ERROR=4;
+
 
 export class GraphQLInputToEntityConverter implements Visitor{
     numberOfQuestions: number;
@@ -87,6 +90,8 @@ export class GraphQLInputToEntityConverter implements Visitor{
         orderAnswers.forEach((answer)=>{
             answer.accept(this);
         })
+        // TODO: Trzeba dodać sprawdzenie czy pozycja odpowiedzi w porządu się nie powtarza
+        // TODO: Trzeba dodać sprawdzenie czy pozycje odpowiedzi są spójne
     }
 
     convertTextQuestions(textQuestions:NewTextQuestion[]){
