@@ -1,7 +1,5 @@
 import {
-    GraphQLInputToEntityConverter, NO_QUESTIONS_ERROR,
-    NOT_ENOUGH_ANSWERS_ERROR,
-    NUMBER_OF_CORRECT_ANSWERS_OTHER_THAN_ONE_ERROR
+    GraphQLInputToEntityConverter
 } from "../src/Converters/GraphQLInputToEntityConverter";
 import {NewSingleChoiceQuestion} from "../src/GraphQLSchemas/NewTest/NewSingleChoiceQuestion";
 import {NewMultipleChoiceQuestion} from "../src/GraphQLSchemas/NewTest/NewMultipleChoiceQuestion";
@@ -13,6 +11,11 @@ import {NewTextAnswer} from "../src/GraphQLSchemas/NewTest/NewTextAnswer";
 import {NewTest} from "../src/GraphQLSchemas/NewTest/NewTest";
 import {AbstractResolver} from "../src/AbstractsResolvers/AbstractResolver";
 import { Test } from "../src/DataBaseEntities/Test";
+import {
+    NO_QUESTIONS_ERROR,
+    NOT_ENOUGH_ANSWERS_ERROR,
+    NUMBER_OF_CORRECT_ANSWERS_OTHER_THAN_ONE_ERROR
+} from "../src/Errors/ErrorCodes";
 
 const graphQLInputToEntityConverter: GraphQLInputToEntityConverter= new GraphQLInputToEntityConverter();
 graphQLInputToEntityConverter.convertedTest= new Test();
@@ -39,6 +42,9 @@ describe("GraphQL to Entity Converter Tests",()=>{
         graphQLInputToEntityConverter.convertedTest.choiceQuestions=[]
         graphQLInputToEntityConverter.convertedTest.orderQuestions=[]
         graphQLInputToEntityConverter.convertedTest.textQuestions=[]
+        graphQLInputToEntityConverter.convertedChoiceAnswers=[]
+        graphQLInputToEntityConverter.convertedOrderAnswers=[]
+        graphQLInputToEntityConverter.convertedTextAnswers=[]
     });
 
     it("Convert Single Choice Question",()=>{

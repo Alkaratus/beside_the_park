@@ -7,8 +7,11 @@ import {TextQuestion} from "../src/DataBaseEntities/TextQuestion";
 import {TextAnswer} from "../src/DataBaseEntities/TextAnswer";
 import {SingleChoiceQuestion} from "../src/DataBaseEntities/SingleChoiceQuestion";
 import {MultipleChoiceQuestion} from "../src/DataBaseEntities/MultipleChoiceQuestion";
+import { Test } from "../src/GraphQLSchemas/Test/Test";
 
 const entityToGraphQLConverter: EntityToGraphQLConverter= new EntityToGraphQLConverter();
+entityToGraphQLConverter.convertedTest= new Test()
+
 
 const testSingleChoiceQuestion= new SingleChoiceQuestion();
 testSingleChoiceQuestion.id=1;
@@ -30,20 +33,29 @@ testMultipleChoiceQuestion.answers=[
 
 describe("Entity to GraphQL Converter Tests",()=>{
 
+    beforeEach(() => {
+        entityToGraphQLConverter.convertedTest.singleChoiceQuestions=[]
+        entityToGraphQLConverter.convertedTest.multipleChoiceQuestions=[]
+        entityToGraphQLConverter.convertedTest.orderQuestions=[]
+        entityToGraphQLConverter.convertedTest.textQuestions=[]
+        entityToGraphQLConverter.convertedChoiceAnswers=[]
+        entityToGraphQLConverter.convertedOrderAnswers=[]
+        entityToGraphQLConverter.convertedTextAnswers=[]
+    });
+
     it("Separation of Choice Questions",()=>{
-        entityToGraphQLConverter.singleChoiceQuestions=[];
-        entityToGraphQLConverter.multipleChoiceQuestions=[];
         let choiceQuestions:ChoiceQuestion[]=[
             testSingleChoiceQuestion,
             testMultipleChoiceQuestion
         ]
         entityToGraphQLConverter.convertChoiceQuestions(choiceQuestions);
-        expect(entityToGraphQLConverter.singleChoiceQuestions.length).toBe(1);
-        expect(entityToGraphQLConverter.multipleChoiceQuestions.length).toBe(1);
+        expect(entityToGraphQLConverter.convertedTest.singleChoiceQuestions.length).toBe(1);
+        expect(entityToGraphQLConverter.convertedTest.multipleChoiceQuestions.length).toBe(1);
     })
 
     it("Convert Choice Question",()=>{
-        let convertedQuestion= entityToGraphQLConverter.convertSingleChoiceQuestion(testSingleChoiceQuestion)
+        testSingleChoiceQuestion.accept(entityToGraphQLConverter);
+        let convertedQuestion= entityToGraphQLConverter.convertedTest.singleChoiceQuestions[0]
         expect(convertedQuestion.id).toBe(testSingleChoiceQuestion.id)
         expect(convertedQuestion.content).toBe(testSingleChoiceQuestion.content)
         expect(convertedQuestion.choiceAnswers.length).toBe(testSingleChoiceQuestion.answers.length)
@@ -57,7 +69,8 @@ describe("Entity to GraphQL Converter Tests",()=>{
             new OrderAnswer(1,"",1),
             new OrderAnswer(2,"",2),
         ]
-        let convertedQuestion= entityToGraphQLConverter.convertOrderQuestion(orderQuestion)
+        orderQuestion.accept(entityToGraphQLConverter);
+        let convertedQuestion= entityToGraphQLConverter.convertedTest.orderQuestions[0]
         expect(convertedQuestion.id).toBe(orderQuestion.id)
         expect(convertedQuestion.content).toBe(orderQuestion.content)
         expect(convertedQuestion.orderAnswers.length).toBe(orderQuestion.answers.length)
@@ -70,39 +83,35 @@ describe("Entity to GraphQL Converter Tests",()=>{
         textQuestion.answers=[
             new TextAnswer(1,"May the force be with you")
         ]
-        let convertedQuestion=entityToGraphQLConverter.convertTextQuestion(textQuestion)
+        textQuestion.accept(entityToGraphQLConverter)
+        let convertedQuestion=entityToGraphQLConverter.convertedTest.textQuestions[0];
         expect(convertedQuestion.id).toBe(textQuestion.id)
         expect(convertedQuestion.content).toBe(textQuestion.content)
         expect(convertedQuestion.textAnswers.length).toBe(textQuestion.answers.length)
     })
 
     it("Convert Choice Answer",()=>{
-        let choiceAnswer= new ChoiceAnswer();
-        choiceAnswer.id=1;
-        choiceAnswer.content="Amsterdam";
-        choiceAnswer.correct=true;
-        let convertedAnswer= entityToGraphQLConverter.convertChoiceAnswer(choiceAnswer)
+        let choiceAnswer= new ChoiceAnswer(1,"",true);
+        choiceAnswer.accept(entityToGraphQLConverter);
+        let convertedAnswer= entityToGraphQLConverter.convertedChoiceAnswers[0]
         expect(convertedAnswer.id).toBe(choiceAnswer.id);
         expect(convertedAnswer.content).toBe(choiceAnswer.content);
         expect(convertedAnswer.correct).toBe(choiceAnswer.correct);
     })
 
     it("Convert Order Answer",()=>{
-        let orderAnswer= new OrderAnswer();
-        orderAnswer.id= 1
-        orderAnswer.content= "Declaration of Independence";
-        orderAnswer.order=1;
-        let convertedAnswer= entityToGraphQLConverter.convertOrderAnswer(orderAnswer)
+        let orderAnswer= new OrderAnswer(1,"",1);
+        orderAnswer.accept(entityToGraphQLConverter);
+        let convertedAnswer= entityToGraphQLConverter.convertedOrderAnswers[0]
         expect(convertedAnswer.id).toBe(orderAnswer.id);
         expect(convertedAnswer.content).toBe(orderAnswer.content);
         expect(convertedAnswer.order).toBe(orderAnswer.order);
     })
 
     it("Convert Text Answer",()=>{
-        let textAnswer= new TextAnswer();
-        textAnswer.id= 1;
-        textAnswer.correct="May the force be with you";
-        let convertedAnswer= entityToGraphQLConverter.convertTextAnswer(textAnswer)
+        let textAnswer= new TextAnswer(1,"");
+        textAnswer.accept(entityToGraphQLConverter)
+        let convertedAnswer= entityToGraphQLConverter.convertedTextAnswers[0]
         expect(convertedAnswer.id).toBe(textAnswer.id);
         expect(convertedAnswer.correct).toBe(textAnswer.correct);
     })
