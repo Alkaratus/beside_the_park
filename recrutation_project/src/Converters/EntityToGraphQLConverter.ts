@@ -33,17 +33,37 @@ export class EntityToGraphQLConverter implements Visitor{
     convertedOrderAnswers: OrderAnswerQL[];
     convertedTextAnswers: TextAnswerQL[];
 
-    convertTest(test:TestEntity):TestQL{
+    constructor(){
+        this.setToDefault()
+    }
+
+    setToDefault(){
         this.convertedTest=new TestQL();
         this.convertedTest.singleChoiceQuestions=[]
         this.convertedTest.multipleChoiceQuestions=[]
         this.convertedTest.orderQuestions=[]
         this.convertedTest.textQuestions=[]
+    }
+
+    convertTest(test:TestEntity):TestQL{
+        this.setToDefault()
         test.accept(this);
         return this.convertedTest;
     }
 
+    resolveQuestions(choiceQuestions: ChoiceQuestionEntity[]):void{
+        choiceQuestions.forEach((question,index,questions)=>{
+            if(question.multiple){
+                questions[index]=new MultipleChoiceQuestionEntity(question.id,question.content,question.answers)
+            }
+            else{
+                questions[index]=new SingleChoiceQuestionEntity(question.id,question.content,question.answers)
+            }
+        })
+    }
+
     convertChoiceQuestions(choiceQuestions: ChoiceQuestionEntity[]):void{
+        this.resolveQuestions(choiceQuestions);
         choiceQuestions.forEach((question)=>{
             question.accept(this);
         });
@@ -90,22 +110,15 @@ export class EntityToGraphQLConverter implements Visitor{
         this.convertOrderQuestions(test.orderQuestions);
         this.convertTextQuestions(test.textQuestions);
     }
-    visitSingleChoiceQuestionEntity(singleChoiceQuestion:SingleChoiceQuestionEntity):void{
-        let convertedQuestion= new SingleChoiceQuestionQL();
-        convertedQuestion.id= singleChoiceQuestion.id;
-        convertedQuestion.content = singleChoiceQuestion.content;
-        this.convertChoiceAnswers(singleChoiceQuestion.answers)
-        convertedQuestion.choiceAnswers = this.convertedChoiceAnswers;
-        this.convertedTest.singleChoiceQuestions.push(convertedQuestion);
+
+    visitSingleChoiceQuestionEntity(question:SingleChoiceQuestionEntity):void{
+        this.convertChoiceAnswers(question.answers)
+        this.convertedTest.singleChoiceQuestions.push(new SingleChoiceQuestionQL(question.id,question.content,this.convertedChoiceAnswers));
     }
     
-    visitMultipleChoiceQuestionEntity(multipleChoiceQuestion:MultipleChoiceQuestionEntity):void{
-        let convertedQuestion= new MultipleChoiceQuestionQL();
-        convertedQuestion.id= multipleChoiceQuestion.id;
-        convertedQuestion.content = multipleChoiceQuestion.content;
-        this.convertChoiceAnswers(multipleChoiceQuestion.answers)
-        convertedQuestion.choiceAnswers = this.convertedChoiceAnswers;
-        this.convertedTest.multipleChoiceQuestions.push(convertedQuestion);
+    visitMultipleChoiceQuestionEntity(question:MultipleChoiceQuestionEntity):void{
+        this.convertChoiceAnswers(question.answers)
+        this.convertedTest.multipleChoiceQuestions.push(new MultipleChoiceQuestionQL(question.id,question.content,this.convertedChoiceAnswers));
     }
 
     visitChoiceAnswerEntity(answer:ChoiceAnswerEntity):void{
@@ -113,13 +126,9 @@ export class EntityToGraphQLConverter implements Visitor{
         this.convertedChoiceAnswers.push(convertedAnswer)
     }
 
-    visitOrderQuestionEntity(orderQuestion:OrderQuestionEntity):void{
-        let convertedQuestion: OrderQuestionQL= new OrderQuestionQL();
-        convertedQuestion.id= orderQuestion.id;
-        convertedQuestion.content = orderQuestion.content
-        this.convertOrderAnswers(orderQuestion.answers);
-        convertedQuestion.orderAnswers = this.convertedOrderAnswers
-        this.convertedTest.orderQuestions.push(convertedQuestion);
+    visitOrderQuestionEntity(question:OrderQuestionEntity):void{
+        this.convertOrderAnswers(question.answers);
+        this.convertedTest.orderQuestions.push(new OrderQuestionQL(question.id,question.content,this.convertedOrderAnswers));
     }
 
     visitOrderAnswerEntity(answer:OrderAnswerEntity):void{
@@ -127,13 +136,9 @@ export class EntityToGraphQLConverter implements Visitor{
         this.convertedOrderAnswers.push(convertedAnswer)
     }
 
-    visitTextQuestionEntity(textQuestion:TextQuestionEntity):void{
-        let convertedQuestion: TextQuestionQL= new TextQuestionQL();
-        convertedQuestion.id= textQuestion.id;
-        convertedQuestion.content = textQuestion.content
-        this.convertTextAnswers(textQuestion.answers);
-        convertedQuestion.textAnswers = this.convertedTextAnswers;
-        this.convertedTest.textQuestions.push(convertedQuestion);
+    visitTextQuestionEntity(question:TextQuestionEntity):void{
+        this.convertTextAnswers(question.answers);
+        this.convertedTest.textQuestions.push(new TextQuestionQL(question.id,question.content,this.convertedTextAnswers));
     }
 
     visitTextAnswerEntity(answer:TextAnswerEntity):void{
