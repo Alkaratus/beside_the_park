@@ -153,13 +153,11 @@ export class TestChecker implements Visitor{
     visitTextQuestionEntity(question:TextQuestionEntity):void{
         let result=new TextQuestionResult();
         result.questionID=question.id;
-        result.correctAnswersIDs=[];
-        question.answers.forEach((answer)=>{result.correctAnswersIDs.push(answer.id)})
+        result.correctAnswers=[];
         let questionAnswer=this.answers.textQuestionsAnswers.find((answer)=>answer.questionID=question.id)
         if(questionAnswer!=undefined){
-            let correctAnswers:string[]=[];
-            question.answers.forEach((answer)=>{correctAnswers.push(answer.correct)})
-            result.correct=this.checkTextQuestion(correctAnswers,questionAnswer.answer)
+            question.answers.forEach((answer)=>{result.correctAnswers.push(answer.correct)})
+            result.correct=this.checkTextQuestion(result.correctAnswers,questionAnswer.answer)
         }
         else{
             result.correct=false;
@@ -254,13 +252,11 @@ export class TestChecker implements Visitor{
     visitTextQuestionQL(question:TextQuestionQL):void{
         let result=new TextQuestionResult();
         result.questionID=question.id;
-        result.correctAnswersIDs=[];
-        question.textAnswers.forEach((answer)=>{result.correctAnswersIDs.push(answer.id)})
+        result.correctAnswers=[];
+        question.textAnswers.forEach((answer)=>{result.correctAnswers.push(answer.correct)})
         let questionAnswer=this.answers.textQuestionsAnswers.find((answer)=>answer.questionID=question.id)
         if(questionAnswer!=undefined){
-            let correctAnswers:string[]=[];
-            question.textAnswers.forEach((answer)=>{correctAnswers.push(answer.correct)})
-            result.correct=this.checkTextQuestion(correctAnswers,questionAnswer.answer)
+            result.correct=this.checkTextQuestion(result.correctAnswers,questionAnswer.answer)
         }
         else{
             result.correct=false;
