@@ -24,12 +24,12 @@ import {NewTextQuestion} from "../GraphQLSchemas/NewTest/NewTextQuestion";
 import {NewTextAnswer} from "../GraphQLSchemas/NewTest/NewTextAnswer";
 import {Visitor} from "../Abstracts/Visitor";
 import {
+    MULTIPLE_ANSWERS_WITH_SAME_ORDER_ERROR,
     NO_QUESTIONS_ERROR,
-    NOT_APPLICABLE_ERROR,
+    NOT_APPLICABLE_ERROR, NOT_CONSISTENT_ORDER_NUMBERS,
     NOT_ENOUGH_ANSWERS_ERROR,
     NUMBER_OF_CORRECT_ANSWERS_OTHER_THAN_ONE_ERROR
 } from "../Errors/ErrorCodes";
-
 
 
 export class GraphQLInputToEntityConverter implements Visitor{
@@ -39,25 +39,42 @@ export class GraphQLInputToEntityConverter implements Visitor{
     convertedOrderAnswers: OrderAnswerEntity[];
     convertedTextAnswers: TextAnswerEntity[];
 
+    private checkOrderAnswersUniqueOrder(){
+        this.convertedOrderAnswers.forEach((checkedQuestion)=>{
+            let questionsWithSpecificOrderNumber=0
+            this.convertedOrderAnswers.forEach((question)=>{
+                questionsWithSpecificOrderNumber+=checkedQuestion.order==question.order?1:0
+            })
+            if(questionsWithSpecificOrderNumber!=1){
+                throw MULTIPLE_ANSWERS_WITH_SAME_ORDER_ERROR;
+            }
+        })
+    }
+
+    private checkOrderAnswersConsistentOrder(){
+        for(let i=0; i<this.convertedOrderAnswers.length;i++){
+            if(!this.convertedOrderAnswers.some((answer)=> answer.order==i+1)){
+                throw NOT_CONSISTENT_ORDER_NUMBERS
+            }
+        }
+    }
+
     convertTest(test:NewTest):TestEntity{
         this.convertedTest= new TestEntity();
-        this.convertedTest.choiceQuestions=[]
-        this.convertedTest.orderQuestions=[]
-        this.convertedTest.textQuestions=[]
-        test.accept(this)
+        this.convertedTest.setToDefault()
+        this.visitNewTest(test)
         return this.convertedTest;
     }
 
     convertSingleChoiceQuestions(questions: NewSingleChoiceQuestion[]){
         questions.forEach((question)=>{
-            question.accept(this);
+            this.visitNewSingleChoiceQuestion(question)
         });
-
     }
 
     convertMultipleChoiceQuestions(questions: NewMultipleChoiceQuestion[]){
         questions.forEach((question)=>{
-            question.accept(this);
+            this.visitNewMultipleChoiceQuestion(question)
         });
     }
 
@@ -69,7 +86,7 @@ export class GraphQLInputToEntityConverter implements Visitor{
         }
         answers.forEach((answer)=>{
             correctCounter+=answer.correct? 1:0;
-            answer.accept(this);
+            this.visitNewChoiceAnswer(answer);
         });
         if(!multiple && correctCounter!=1){
             throw NUMBER_OF_CORRECT_ANSWERS_OTHER_THAN_ONE_ERROR;
@@ -78,7 +95,7 @@ export class GraphQLInputToEntityConverter implements Visitor{
 
     convertOrderQuestions(orderQuestions:NewOrderQuestion[]){
         orderQuestions.forEach((question)=>{
-            question.accept(this);
+            this.visitNewOrderQuestion(question)
         });
     }
 
@@ -88,15 +105,15 @@ export class GraphQLInputToEntityConverter implements Visitor{
             throw NOT_ENOUGH_ANSWERS_ERROR;
         }
         orderAnswers.forEach((answer)=>{
-            answer.accept(this);
+            this.visitNewOrderAnswer(answer)
         })
-        // TODO: Trzeba dodać sprawdzenie czy pozycja odpowiedzi w porządu się nie powtarza
-        // TODO: Trzeba dodać sprawdzenie czy pozycje odpowiedzi są spójne
+        this.checkOrderAnswersUniqueOrder()
+        this.checkOrderAnswersConsistentOrder()
     }
 
     convertTextQuestions(textQuestions:NewTextQuestion[]){
         textQuestions.forEach((question)=>{
-            question.accept(this);
+            this.visitNewTextQuestion(question)
         });
     }
 
@@ -106,7 +123,7 @@ export class GraphQLInputToEntityConverter implements Visitor{
             throw NOT_ENOUGH_ANSWERS_ERROR;
         }
         textAnswers.forEach((answer)=>{
-            answer.accept(this);
+            this.visitNewTextAnswer(answer)
         })
     }
 
@@ -130,12 +147,11 @@ export class GraphQLInputToEntityConverter implements Visitor{
 
     visitNewTest(test: NewTest):void{
         this.convertedTest.name=test.name;
-        this.numberOfQuestions=0;
         this.convertSingleChoiceQuestions(test.singleChoiceQuestions)
         this.convertMultipleChoiceQuestions(test.multipleChoiceQuestions)
         this.convertOrderQuestions(test.orderQuestions)
         this.convertTextQuestions(test.textQuestions)
-        this.numberOfQuestions+=this.convertedTest.choiceQuestions.length;
+        this.numberOfQuestions=this.convertedTest.choiceQuestions.length;
         this.numberOfQuestions+=this.convertedTest.orderQuestions.length;
         this.numberOfQuestions+=this.convertedTest.textQuestions.length;
         if (this.numberOfQuestions==0){
@@ -144,50 +160,34 @@ export class GraphQLInputToEntityConverter implements Visitor{
     }
 
     visitNewSingleChoiceQuestion(singleChoiceQuestion:NewSingleChoiceQuestion):void{
-        let convertedQuestion= new SingleChoiceQuestionEntity();
-        convertedQuestion.content = singleChoiceQuestion.content;
         this.convertChoiceAnswers(singleChoiceQuestion.answers);
-        convertedQuestion.answers=this.convertedChoiceAnswers;
-        this.convertedTest.choiceQuestions.push(convertedQuestion);
+        this.convertedTest.choiceQuestions.push(new SingleChoiceQuestionEntity(null,singleChoiceQuestion.content,this.convertedChoiceAnswers));
     }
 
     visitNewMultipleChoiceQuestion(multipleChoiceQuestion:NewMultipleChoiceQuestion):void{
-        let convertedQuestion= new MultipleChoiceQuestionEntity();
-        convertedQuestion.content = multipleChoiceQuestion.content;
         this.convertChoiceAnswers(multipleChoiceQuestion.answers,true);
-        convertedQuestion.answers=this.convertedChoiceAnswers;
-        this.convertedTest.choiceQuestions.push(convertedQuestion);
+        this.convertedTest.choiceQuestions.push(new MultipleChoiceQuestionEntity(null,multipleChoiceQuestion.content,this.convertedChoiceAnswers));
     }
 
     visitNewChoiceAnswer(choiceAnswer:NewChoiceAnswer):void{
-        let convertedAnswer: ChoiceAnswerEntity= new ChoiceAnswerEntity();
-        convertedAnswer.content= choiceAnswer.content;
-        convertedAnswer.correct= choiceAnswer.correct;
-        this.convertedChoiceAnswers.push(convertedAnswer)
+        this.convertedChoiceAnswers.push(new ChoiceAnswerEntity(null,choiceAnswer.content,choiceAnswer.correct))
     }
+
     visitNewOrderQuestion(question:NewOrderQuestion):void{
-        let convertedQuestion: OrderQuestionEntity= new OrderQuestionEntity();
-        convertedQuestion.content = question.content
         this.convertOrderAnswers(question.answers);
-        convertedQuestion.answers = this.convertedOrderAnswers;
-        this.convertedTest.orderQuestions.push(convertedQuestion);
+        this.convertedTest.orderQuestions.push(new OrderQuestionEntity(null,question.content,this.convertedOrderAnswers));
     }
+
     visitNewOrderAnswer(orderAnswer:NewOrderAnswer):void{
-        let convertedAnswer: OrderAnswerEntity= new OrderAnswerEntity();
-        convertedAnswer.content= orderAnswer.content;
-        convertedAnswer.order= orderAnswer.order;
-        this.convertedOrderAnswers.push(convertedAnswer);
+        this.convertedOrderAnswers.push(new OrderAnswerEntity(null,orderAnswer.content,orderAnswer.order));
     }
+
     visitNewTextQuestion(textQuestion:NewTextQuestion):void{
-        let convertedQuestion: TextQuestionEntity= new TextQuestionEntity();
-        convertedQuestion.content = textQuestion.content
         this.convertTextAnswers(textQuestion.answers);
-        convertedQuestion.answers = this.convertedTextAnswers;
-        this.convertedTest.textQuestions.push(convertedQuestion);
+        this.convertedTest.textQuestions.push(new TextQuestionEntity(null,textQuestion.content,this.convertedTextAnswers));
     }
+
     visitNewTextAnswer(textAnswer:NewTextAnswer):void{
-        let convertedAnswer: TextAnswerEntity= new TextAnswerEntity();
-        convertedAnswer.correct=textAnswer.correct;
-        this.convertedTextAnswers.push(convertedAnswer)
+        this.convertedTextAnswers.push(new TextAnswerEntity(null,textAnswer.correct))
     }
 }

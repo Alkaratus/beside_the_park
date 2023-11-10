@@ -23,13 +23,12 @@ testChecker.answers.multipleChoiceQuestionsAnswers=[]
 testChecker.answers.orderQuestionsAnswers=[]
 testChecker.answers.textQuestionsAnswers=[]
 
-const testSingleChoiceQuestion=new SingleChoiceQuestion()
-testSingleChoiceQuestion.id=1;
-testSingleChoiceQuestion.content="";
-testSingleChoiceQuestion.choiceAnswers=[
+const testSingleChoiceQuestion=new SingleChoiceQuestion(1,"",
+    [
     new ChoiceAnswer(1,"",true),
     new ChoiceAnswer(2,"",false),
-];
+    ]
+)
 
 const testMultipleChoiceQuestion=new MultipleChoiceQuestion()
 testMultipleChoiceQuestion.id=1;
@@ -64,7 +63,7 @@ describe("Test Checker Test",()=>{
         testSingleChoiceQuestion.accept(testChecker);
         let result= testChecker.testResults.singleChoiceQuestionResults[0]
         expect(result.correct)
-        //expect(result.correctAnswerID).toBeNull()
+        expect(result.correctAnswerID).toBe(1);
     })
 
     it("Check incorrect single question answer",()=>{
@@ -80,7 +79,7 @@ describe("Test Checker Test",()=>{
         testMultipleChoiceQuestion.accept(testChecker);
         let result= testChecker.testResults.multipleChoiceQuestionResults[0]
         expect(result.correct)
-        //expect(result.correctAnswersIDs).toBeNull()
+        expect(result.correctAnswersIDs.join()).toBe([1,4].join());
     })
 
     it("Check incorrect number multiple question answer",()=>{
@@ -105,7 +104,7 @@ describe("Test Checker Test",()=>{
         testOrderQuestion.accept(testChecker);
         let result= testChecker.testResults.orderQuestionResults[0]
         expect(result.correct)
-        //expect(result.correctAnswersIDsOrder).toBeNull()
+        expect(result.correctAnswersIDsOrder.join()).toBe([1,2,3].join())
     })
 
     it("Check incorrect order question answer",()=>{
@@ -121,15 +120,15 @@ describe("Test Checker Test",()=>{
         testTextQuestion.accept(testChecker);
         let result= testChecker.testResults.textQuestionResults[0]
         expect(result.correct)
-        //expect(result.correctAnswersIDs).toBeNull()
+        expect(result.correctAnswers.join()).toBe(["a"].join())
     })
 
     it("Check incorrect text question answer",()=>{
-        testChecker.answers.textQuestionsAnswers.push({questionID:1,answer:"a"});
+        testChecker.answers.textQuestionsAnswers.push({questionID:1,answer:"s"});
         testTextQuestion.accept(testChecker);
         let result= testChecker.testResults.textQuestionResults[0]
         expect(!result.correct)
-        expect(result.correctAnswersIDs.join()).toBe([1].join())
+        expect(result.correctAnswers.join()).toBe(["a"].join())
     })
 
 })

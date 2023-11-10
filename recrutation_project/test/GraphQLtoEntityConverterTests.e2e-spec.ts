@@ -12,7 +12,8 @@ import {NewTest} from "../src/GraphQLSchemas/NewTest/NewTest";
 import {AbstractResolver} from "../src/AbstractsResolvers/AbstractResolver";
 import { Test } from "../src/DataBaseEntities/Test";
 import {
-    NO_QUESTIONS_ERROR,
+    MULTIPLE_ANSWERS_WITH_SAME_ORDER_ERROR,
+    NO_QUESTIONS_ERROR, NOT_CONSISTENT_ORDER_NUMBERS,
     NOT_ENOUGH_ANSWERS_ERROR,
     NUMBER_OF_CORRECT_ANSWERS_OTHER_THAN_ONE_ERROR
 } from "../src/Errors/ErrorCodes";
@@ -24,24 +25,18 @@ const abstractResolver: AbstractResolver= new AbstractResolver();
 
 const test= new NewTest();
 
-const testSingleChoiceQuestion= new NewSingleChoiceQuestion();
-testSingleChoiceQuestion.content="";
+const testSingleChoiceQuestion= new NewSingleChoiceQuestion("");
 
-const testMultipleChoiceQuestion= new NewMultipleChoiceQuestion();
-testMultipleChoiceQuestion.content=""
+const testMultipleChoiceQuestion= new NewMultipleChoiceQuestion("");
 
-const testOrderQuestion= new NewOrderQuestion();
-testOrderQuestion.content="";
+const testOrderQuestion= new NewOrderQuestion("");
 
-const testTextQuestion= new NewTextQuestion();
-testTextQuestion.content="";
+const testTextQuestion= new NewTextQuestion("");
 
 describe("GraphQL to Entity Converter Tests",()=>{
 
     beforeEach(() => {
-        graphQLInputToEntityConverter.convertedTest.choiceQuestions=[]
-        graphQLInputToEntityConverter.convertedTest.orderQuestions=[]
-        graphQLInputToEntityConverter.convertedTest.textQuestions=[]
+        graphQLInputToEntityConverter.convertedTest.setToDefault()
         graphQLInputToEntityConverter.convertedChoiceAnswers=[]
         graphQLInputToEntityConverter.convertedOrderAnswers=[]
         graphQLInputToEntityConverter.convertedTextAnswers=[]
@@ -155,6 +150,38 @@ describe("GraphQL to Entity Converter Tests",()=>{
             errorCode=error;
         }
         expect(errorCode).toBe(NOT_ENOUGH_ANSWERS_ERROR);
+    })
+
+    it("Multiple questions with same order raise exception",()=>{
+        testOrderQuestion.answers=[
+            new NewOrderAnswer("",1),
+            new NewOrderAnswer("",2),
+            new NewOrderAnswer("",1),
+        ]
+        let errorCode=0;
+        try{
+            testOrderQuestion.accept(graphQLInputToEntityConverter);
+        }
+        catch(error){
+            errorCode=error;
+        }
+        expect(errorCode).toBe(MULTIPLE_ANSWERS_WITH_SAME_ORDER_ERROR);
+    })
+
+    it("Not consistent order of order answers raise exception",()=>{
+        testOrderQuestion.answers=[
+            new NewOrderAnswer("",1),
+            new NewOrderAnswer("",2),
+            new NewOrderAnswer("",4),
+        ]
+        let errorCode=0;
+        try{
+            testOrderQuestion.accept(graphQLInputToEntityConverter);
+        }
+        catch(error){
+            errorCode=error;
+        }
+        expect(errorCode).toBe(NOT_CONSISTENT_ORDER_NUMBERS);
     })
 
     it("Not enough text answers raise exception",()=>{

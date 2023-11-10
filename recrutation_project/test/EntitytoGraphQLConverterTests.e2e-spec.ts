@@ -13,23 +13,21 @@ const entityToGraphQLConverter: EntityToGraphQLConverter= new EntityToGraphQLCon
 entityToGraphQLConverter.convertedTest= new Test()
 
 
-const testSingleChoiceQuestion= new SingleChoiceQuestion();
-testSingleChoiceQuestion.id=1;
-testSingleChoiceQuestion.content="";
-testSingleChoiceQuestion.answers=[
-    new ChoiceAnswer(1,"",false),
-    new ChoiceAnswer(2, "", true)
-]
+const testSingleChoiceQuestion= new SingleChoiceQuestion(1,"",
+    [
+        new ChoiceAnswer(1,"",false),
+        new ChoiceAnswer(2, "", true)
+    ]
+);
 
-const testMultipleChoiceQuestion= new MultipleChoiceQuestion()
-testMultipleChoiceQuestion.id=1;
-testMultipleChoiceQuestion.content="";
-testMultipleChoiceQuestion.answers=[
-    new ChoiceAnswer(1,"",true),
-    new ChoiceAnswer(2, "", true),
-    new ChoiceAnswer(3,"",false),
-    new ChoiceAnswer(4, "", true)
-]
+const testMultipleChoiceQuestion= new MultipleChoiceQuestion(1,"",
+    [
+        new ChoiceAnswer(1,"",true),
+        new ChoiceAnswer(2, "", true),
+        new ChoiceAnswer(3,"",false),
+        new ChoiceAnswer(4, "", true)
+    ]
+);
 
 describe("Entity to GraphQL Converter Tests",()=>{
 
@@ -62,13 +60,12 @@ describe("Entity to GraphQL Converter Tests",()=>{
     })
 
     it("Convert Order Question",()=>{
-        let orderQuestion= new OrderQuestion();
-        orderQuestion.id=1;
-        orderQuestion.content="Arrange the following events in chronological order";
-        orderQuestion.answers=[
+        let orderQuestion= new OrderQuestion(1,"",
+            [
             new OrderAnswer(1,"",1),
             new OrderAnswer(2,"",2),
-        ]
+            ]
+        );
         orderQuestion.accept(entityToGraphQLConverter);
         let convertedQuestion= entityToGraphQLConverter.convertedTest.orderQuestions[0]
         expect(convertedQuestion.id).toBe(orderQuestion.id)
@@ -77,12 +74,11 @@ describe("Entity to GraphQL Converter Tests",()=>{
     })
 
     it("Convert Text Question",()=>{
-        let textQuestion= new TextQuestion();
-        textQuestion.id=1;
-        textQuestion.content= "What is the famous phrase from Star Wars";
-        textQuestion.answers=[
-            new TextAnswer(1,"May the force be with you")
-        ]
+        let textQuestion= new TextQuestion(1,"",
+            [
+                new TextAnswer(1,"May the force be with you")
+            ]
+        );
         textQuestion.accept(entityToGraphQLConverter)
         let convertedQuestion=entityToGraphQLConverter.convertedTest.textQuestions[0];
         expect(convertedQuestion.id).toBe(textQuestion.id)
