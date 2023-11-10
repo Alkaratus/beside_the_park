@@ -4,6 +4,8 @@ import {OrderQuestion} from "./OrderQuestion";
 import {TextQuestion} from "./TextQuestion";
 import {Test as AbstractTest} from "../Abstracts/Test"
 import {Visitor} from "../Abstracts/Visitor";
+//import {MultipleChoiceQuestion} from "./MultipleChoiceQuestion";
+//import {SingleChoiceQuestion} from "./SingleChoiceQuestion";
 
 @Entity()
 export class Test implements AbstractTest{
@@ -31,6 +33,21 @@ export class Test implements AbstractTest{
         })
     textQuestions: TextQuestion[]
 
+    constructor(id:number=0,name:string="",choiceQuestions?:ChoiceQuestion[],orderQuestions?:OrderQuestion[],textQuestions?:TextQuestion[]){
+        this.id=id;
+        this.name=name;
+        this.choiceQuestions=choiceQuestions
+        this.orderQuestions=orderQuestions;
+        this.textQuestions=textQuestions;
+    }
+
+    setToDefault():void{
+        this.id=0;
+        this.name="";
+        this.choiceQuestions=[]
+        this.orderQuestions=[];
+        this.textQuestions=[];
+    }
 
     accept(visitor:Visitor){
         visitor.visitTestEntity(this);

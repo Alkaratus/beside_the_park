@@ -24,6 +24,22 @@ export class NewTest implements AbstractTest{
     @Field(()=>[NewTextQuestion])
     textQuestions: NewTextQuestion[]
 
+    constructor(name:string="",singleChoiceQuestions?:NewSingleChoiceQuestion[],multipleChoiceQuestions?: NewMultipleChoiceQuestion[],orderQuestions?: NewOrderQuestion[],textQuestions?: NewTextQuestion[]){
+        this.name=name;
+        this.singleChoiceQuestions=singleChoiceQuestions;
+        this.multipleChoiceQuestions=multipleChoiceQuestions;
+        this.orderQuestions=orderQuestions;
+        this.textQuestions=textQuestions;
+    }
+
+    setToDefault(){
+        this.name="";
+        this.singleChoiceQuestions=[];
+        this.multipleChoiceQuestions=[];
+        this.orderQuestions=[];
+        this.textQuestions=[];
+    }
+
     accept(visitor:Visitor){
         visitor.visitNewTest(this);
     }

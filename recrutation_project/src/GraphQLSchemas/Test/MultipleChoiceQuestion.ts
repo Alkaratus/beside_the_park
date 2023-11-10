@@ -12,6 +12,12 @@ export class MultipleChoiceQuestion implements ChoiceQuestion, AbstractMultipleC
     content: string;
     choiceAnswers: ChoiceAnswer[];
 
+    constructor(id?: number, content?: string, choiceAnswers?:ChoiceAnswer[]){
+        this.id=id;
+        this.content=content;
+        this.choiceAnswers=choiceAnswers;
+    }
+    
     accept(visitor: Visitor): void{
         visitor.visitMultipleChoiceQuestionQL(this);
     }

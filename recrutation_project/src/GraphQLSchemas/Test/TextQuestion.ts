@@ -13,6 +13,12 @@ export class TextQuestion implements Question, AbstractTextQuestion{
     @Field(()=>[TextAnswer])
     textAnswers:TextAnswer[]
 
+    constructor(id?: number, content?: string, textAnswers?: TextAnswer[]){
+        this.id=id;
+        this.content=content;
+        this.textAnswers=textAnswers;
+    }
+
     accept(visitor: Visitor): void {
         visitor.visitTextQuestionQL(this)
     }

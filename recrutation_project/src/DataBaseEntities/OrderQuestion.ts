@@ -17,6 +17,11 @@ export class OrderQuestion extends Question implements AbstractOrderQuestion{
         })
     answers:OrderAnswer[]
 
+    constructor(id?:number,content?:string,answers?:OrderAnswer[]) {
+        super(id,content);
+        this.answers=answers;
+    }
+
     accept(visitor: Visitor): void{
         visitor.visitOrderQuestionEntity(this)
     }

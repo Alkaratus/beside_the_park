@@ -11,5 +11,11 @@ export abstract class ChoiceQuestion implements Question{
     @Field(()=>[ChoiceAnswer])
     choiceAnswers:ChoiceAnswer[]
 
+    protected constructor(id?: number, content?: string, choiceAnswers?:ChoiceAnswer[]){
+        this.id=id;
+        this.content=content;
+        this.choiceAnswers=choiceAnswers;
+    }
+
     abstract accept(visitor: Visitor): void;
 }

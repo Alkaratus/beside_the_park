@@ -11,6 +11,11 @@ export class NewOrderQuestion implements AbstractOrderQuestion{
     @Field(()=>[NewOrderAnswer])
     answers:NewOrderAnswer[]
 
+    constructor(content?:string,answers?: NewOrderAnswer[]) {
+        this.content=content;
+        this.answers=answers;
+    }
+
     accept(visitor: Visitor): void {
         visitor.visitNewOrderQuestion(this);
     }

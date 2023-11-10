@@ -11,6 +11,12 @@ export class SingleChoiceQuestion implements ChoiceQuestion, AbstractSingleChoic
     content: string;
     choiceAnswers: ChoiceAnswer[];
 
+    constructor(id?: number, content?: string, choiceAnswers?:ChoiceAnswer[]){
+        this.id=id;
+        this.content=content;
+        this.choiceAnswers=choiceAnswers;
+    }
+
     accept(visitor:Visitor):void{
         visitor.visitSingleChoiceQuestionQL(this)
     }

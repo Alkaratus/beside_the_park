@@ -11,6 +11,12 @@ export class OrderQuestion implements Question, AbstractOrderQuestion{
     @Field(()=>[OrderAnswer])
     orderAnswers: OrderAnswer[]
 
+    constructor(id?: number, content?: string, orderAnswers?: OrderAnswer[]){
+        this.id=id;
+        this.content=content;
+        this.orderAnswers=orderAnswers;
+    }
+
     accept(visitor: Visitor): void {
         visitor.visitOrderQuestionQL(this);
     }

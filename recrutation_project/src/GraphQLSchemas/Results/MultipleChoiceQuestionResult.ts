@@ -9,4 +9,10 @@ export class MultipleChoiceQuestionResult{
 
     @Field(()=>[Int],{nullable:true})
     correctAnswersIDs: number[]
+
+    constructor(questionID?: number,correct?: boolean,correctAnswersIDs?: number[]) {
+        this.questionID=questionID;
+        this.correct=correct;
+        this.correctAnswersIDs=correctAnswersIDs;
+    }
 }

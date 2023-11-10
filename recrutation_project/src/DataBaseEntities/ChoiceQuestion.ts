@@ -21,5 +21,12 @@ export abstract class ChoiceQuestion extends Question implements AbstractChoiceQ
         })
     answers: ChoiceAnswer[]
 
+    protected constructor(id:number,content:string,answers:ChoiceAnswer[]) {
+        super(id,content);
+        this.answers=answers;
+    }
+
     abstract accept(visitor: Visitor):void;
 }
+
+

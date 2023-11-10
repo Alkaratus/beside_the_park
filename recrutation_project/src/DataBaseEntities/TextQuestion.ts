@@ -17,6 +17,11 @@ export class TextQuestion extends Question implements AbstractTextQuestion{
         })
     answers: TextAnswer[]
 
+    constructor(id?:number,content?:string,answers?:TextAnswer[]) {
+        super(id,content);
+        this.answers=answers;
+    }
+
     accept(visitor: Visitor) {
         visitor.visitTextQuestionEntity(this);
     }
