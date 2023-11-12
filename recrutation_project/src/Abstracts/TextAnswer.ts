@@ -1,11 +1,8 @@
-import {TextQuestion} from "./TextQuestion";
+import {Visitor} from "./Visitor";
 
 
-export class TextAnswer{
+export abstract class TextAnswer{
     correct: string
 
-    constructor(correct: string){
-        this.correct=correct;
-    }
-
+    abstract accept(visitor:Visitor)
 }

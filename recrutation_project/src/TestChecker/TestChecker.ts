@@ -1,152 +1,281 @@
-import {Test as TestQL} from "../GraphQLSchemas/Test/Test"
-import {MultipleChoiceQuestion} from "../GraphQLSchemas/Test/MultipleChoiceQuestion";
-import {MultipleChoiceQuestionAnswer} from "../GraphQLSchemas/QuestionAnswers/MultipleChoiceQuestionAnswer";
+import {Test as TestEntity} from "../DataBaseEntities/Test";
+import {Test as AbstractTest} from "../Abstracts/Test"
+import {Test as TestQL} from "../GraphQLSchemas/Test/Test";
+import {SingleChoiceQuestion as SingleChoiceQuestionEntity} from "../DataBaseEntities/SingleChoiceQuestion";
+import {SingleChoiceQuestion as SingleChoiceQuestionQL} from "../GraphQLSchemas/Test/SingleChoiceQuestion";
+import {MultipleChoiceQuestion as MultipleChoiceQuestionEntity} from "../DataBaseEntities/MultipleChoiceQuestion";
+import {MultipleChoiceQuestion as MultipleChoiceQuestionQL} from "../GraphQLSchemas/Test/MultipleChoiceQuestion";
+import {ChoiceAnswer as ChoiceAnswerEntity} from "../DataBaseEntities/ChoiceAnswer";
+import {ChoiceAnswer as ChoiceAnswerQL} from "../GraphQLSchemas/Test/ChoiceAnswer";
+import {OrderQuestion as OrderQuestionEntity} from "../DataBaseEntities/OrderQuestion";
+import {OrderQuestion as OrderQuestionQL} from "../GraphQLSchemas/Test/OrderQuestion"
+import {OrderAnswer as OrderAnswerEntity} from "../DataBaseEntities/OrderAnswer";
+import {OrderAnswer as OrderAnswerQL} from "../GraphQLSchemas/Test/OrderAnswer";
+import {TextQuestion as TextQuestionEntity} from "../DataBaseEntities/TextQuestion";
+import {TextQuestion as TextQuestionQL} from "../GraphQLSchemas/Test/TextQuestion"
+import {TextAnswer as TextAnswerEntity} from "../DataBaseEntities/TextAnswer";
+import {TextAnswer as TextAnswerQL} from "../GraphQLSchemas/Test/TextAnswer";
+import {NewTest} from "../GraphQLSchemas/NewTest/NewTest";
+import {NewSingleChoiceQuestion} from "../GraphQLSchemas/NewTest/NewSingleChoiceQuestion";
+import {NewMultipleChoiceQuestion} from "../GraphQLSchemas/NewTest/NewMultipleChoiceQuestion";
+import {NewChoiceAnswer} from "../GraphQLSchemas/NewTest/NewChoiceAnswer";
+import {NewOrderQuestion} from "../GraphQLSchemas/NewTest/NewOrderQuestion";
+import {NewOrderAnswer} from "../GraphQLSchemas/NewTest/NewOrderAnswer";
+import {NewTextQuestion} from "../GraphQLSchemas/NewTest/NewTextQuestion";
+import {NewTextAnswer} from "../GraphQLSchemas/NewTest/NewTextAnswer";
+import {Visitor} from "../Abstracts/Visitor";
+import {NOT_APPLICABLE_ERROR} from "../Errors/ErrorCodes";
 import {MultipleChoiceQuestionResult} from "../GraphQLSchemas/Results/MultipleChoiceQuestionResult";
-import {OrderQuestion} from "../GraphQLSchemas/Test/OrderQuestion";
-import {OrderQuestionAnswer} from "../GraphQLSchemas/QuestionAnswers/OrderQuestionAnswer";
 import {OrderQuestionResult} from "../GraphQLSchemas/Results/OrderQuestionResult";
-import {SingleChoiceQuestion} from "../GraphQLSchemas/Test/SingleChoiceQuestion";
-import {SingleChoiceQuestionAnswer} from "../GraphQLSchemas/QuestionAnswers/SingleChoiceQuestionAnswer";
 import {SingleChoiceQuestionResult} from "../GraphQLSchemas/Results/SingleChoiceQuestionResult";
 import {TestAnswers} from "../GraphQLSchemas/QuestionAnswers/TestAnswers";
 import {TestResults} from "../GraphQLSchemas/Results/TestResults";
-import {TextQuestion} from "../GraphQLSchemas/Test/TextQuestion";
-import {TextQuestionAnswer} from "../GraphQLSchemas/QuestionAnswers/TextQuestionAnswer";
 import {TextQuestionResult} from "../GraphQLSchemas/Results/TextQuestionResult";
 
 
-export class TestChecker{
-    correctAnswers: number;
-    checkTestAnswers(test:TestQL,answers:TestAnswers):TestResults{
-        this.correctAnswers=0;
-        let testResults= new TestResults();
-        testResults.testID=test.id;
-        testResults.singleChoiceQuestionResults=[]
-        testResults.multipleChoiceQuestionResults=[]
-        testResults.orderQuestionResults=[]
-        testResults.textQuestionResults=[]
-
-
-        test.singleChoiceQuestions.forEach((question)=>{
-            let questionAnswer=answers.singleChoiceQuestionsAnswers.find((answer)=>answer.questionID==question.id)
-            if(questionAnswer!=undefined){
-                this.checkSingleChoiceQuestionAnswer(question,questionAnswer)
-            }
-        })
-
-        test.multipleChoiceQuestions.forEach((question)=>{
-            let questionAnswer=answers.multipleChoiceQuestionsAnswers.find((answer)=> {
-                answer.questionID = question.id;
-            })
-            if(questionAnswer!=undefined){
-                this.checkMultipleChoiceQuestionAnswer(question,questionAnswer)
-            }
-        })
-
-        test.orderQuestions.forEach((question)=>{
-            let questionAnswer=answers.orderQuestionsAnswers.find((answer)=>{
-                answer.questionID=question.id;
-            })
-            if(questionAnswer!=undefined){
-                this.checkOrderQuestionAnswer(question,questionAnswer)
-            }
-        })
-
-        test.textQuestions.forEach((question)=>{
-            let questionAnswer=answers.textQuestionsAnswers.find((answer)=>{
-                answer.questionID=question.id;
-            })
-            if(questionAnswer!=undefined){
-                this.checkTextQuestionAnswer(question,questionAnswer)
-            }
-        })
-        testResults.numberOfCorrect=this.correctAnswers;
-        return testResults;
+export class TestChecker implements Visitor{
+    testResults: TestResults;
+    answers: TestAnswers
+    checkTestAnswers(test:AbstractTest,answers:TestAnswers):TestResults{
+        this.testResults.numberOfCorrect=0;
+        this.testResults.singleChoiceQuestionResults=[]
+        this.testResults.multipleChoiceQuestionResults=[]
+        this.testResults.orderQuestionResults=[]
+        this.testResults.textQuestionResults=[]
+        this.answers=answers;
+        test.accept(this);
+        return this.testResults;
     }
 
-    checkSingleChoiceQuestionAnswer(question:SingleChoiceQuestion,answer:SingleChoiceQuestionAnswer):SingleChoiceQuestionResult{
-        let correctAnswer=question.choiceAnswers.find((answer)=>answer.correct)
-        let result= new SingleChoiceQuestionResult();
-        result.questionID=question.id;
-        if(correctAnswer.id==answer.answerID){
-            this.correctAnswers++;
-            result.correct=true;
-            result.correctAnswerID=null;
-        }
-        else{
-            result.correct=false;
-            result.correctAnswerID=correctAnswer.id;
-        }
-        return result;
-
-    }
-
-    checkMultipleChoiceQuestionAnswer(question:MultipleChoiceQuestion,answer:MultipleChoiceQuestionAnswer):MultipleChoiceQuestionResult{
-        let correctAnswers= question.choiceAnswers.filter(answer=>answer.correct==true)
-        let numberOfCorrectAnswers= correctAnswers.length;
-        let result= new MultipleChoiceQuestionResult();
-        result.questionID=question.id;
-        let correct=answer.answersIDs.length==numberOfCorrectAnswers
+    checkMultipleChoiceQuestion(correctAnswersIDs:number[],questionAnswersIDs:number[]):boolean{
+        let correct=questionAnswersIDs.length==correctAnswersIDs.length
         if (correct){
+            correctAnswersIDs.sort();
+            questionAnswersIDs.sort();
             let i=0;
-            while(correct && i<answer.answersIDs.length){
-                correct= correctAnswers.find(questionAnswer=>questionAnswer.id==answer.answersIDs[i])!=undefined;
+            while(correct && i<questionAnswersIDs.length){
+                correct=correctAnswersIDs[i]==questionAnswersIDs[i];
                 i++;
             }
         }
-        if(correct){
-            result.correct=true;
-            result.correctAnswersIDs=null;
+        return correct;
+    }
+
+    checkOrderQuestion(correctIDsOrder:number[],questionAnswerIDsOrder:number[]):boolean{
+        let correct=true;
+        let i=0;
+        while (correct && i<correctIDsOrder.length){
+            correct= correctIDsOrder[i]!=questionAnswerIDsOrder[i]
+        }
+        return correct
+    }
+
+    checkTextQuestion(correctAnswers:string[],questionAnswer:string):boolean{
+        return correctAnswers.find((answer)=>questionAnswer==answer)!=undefined;
+    }
+
+    visitTestEntity(test: TestEntity):void{
+        test.choiceQuestions.forEach((question)=>{
+            question.accept(this);
+        })
+
+        test.orderQuestions.forEach((question)=>{
+            question.accept(this);
+        })
+
+        test.textQuestions.forEach((question)=>{
+            question.accept(this);
+        })
+    }
+
+    visitSingleChoiceQuestionEntity(question:SingleChoiceQuestionEntity):void{
+        let questionAnswer=this.answers.singleChoiceQuestionsAnswers.find((answer)=>answer.questionID==question.id)
+        let result= new SingleChoiceQuestionResult();
+        result.questionID=question.id;
+        result.correctAnswerID=question.answers.find((answer)=>answer.correct).id;
+        if(questionAnswer!=undefined){
+            result.correct=result.correctAnswerID==questionAnswer.answerID;
         }
         else{
             result.correct=false;
-            result.correctAnswersIDs=[]
-            correctAnswers.forEach((answer)=>{
-                result.correctAnswersIDs.push(answer.id);
-            })
         }
-        return result;
+        if(result.correct){
+            this.testResults.numberOfCorrect++;
+        }
+        this.testResults.singleChoiceQuestionResults.push(result);
     }
 
-    checkOrderQuestionAnswer(question:OrderQuestion,answer:OrderQuestionAnswer):OrderQuestionResult{
+    visitMultipleChoiceQuestionEntity(question:MultipleChoiceQuestionEntity):void{
+        let result= new MultipleChoiceQuestionResult();
+        result.questionID=question.id;
+        result.correctAnswersIDs=[]
+        question.answers
+            .filter(answer=>answer.correct==true)
+            .forEach(correctAnswer=>{result.correctAnswersIDs.push(correctAnswer.id)})
+        let questionAnswer=this.answers.multipleChoiceQuestionsAnswers.find((answer)=> answer.questionID = question.id)
+        if(questionAnswer!=undefined){
+            result.correct=this.checkMultipleChoiceQuestion(result.correctAnswersIDs,questionAnswer.answersIDs)
+        }
+        else{
+            result.correct=false;
+        }
+        if(result.correct){
+            this.testResults.numberOfCorrect++;
+        }
+        this.testResults.multipleChoiceQuestionResults.push(result);
+    }
+
+    visitChoiceAnswerEntity(choiceAnswer:ChoiceAnswerEntity):void{
+
+    }
+
+    visitOrderQuestionEntity(question:OrderQuestionEntity):void{
         let result= new OrderQuestionResult();
         result.questionID=question.id;
-        let correct=true;
-        for (let i=0; i<answer.answersIDsOrder.length;i++){
-            if(answer.answersIDsOrder[i]!=question.orderAnswers[i].id){
-                correct=false;
-            }
-        }
-        if(correct){
-            result.correct=true;
-            result.correctAnswersIDsOrder=null;
-        }
-        else{
-            result.correct=false
-            result.correctAnswersIDsOrder=[]
-            question.orderAnswers.forEach((answer)=>{
-                result.correctAnswersIDsOrder.push(answer.id);
-            })
-        }
-        return result;
-    }
-
-    checkTextQuestionAnswer(question:TextQuestion,answer:TextQuestionAnswer):TextQuestionResult{
-        let result=new TextQuestionResult();
-        result.questionID=question.id;
-        let correct= question.textAnswers.find((questionAnswer)=>questionAnswer.correct==answer.answer)!=undefined;
-        if(correct){
-            result.correct=true;
-            result.correctAnswersIDs =null;
+        result.correctAnswersIDsOrder=[]
+        question.answers
+            .forEach(correctAnswer=>{result.correctAnswersIDsOrder.push(correctAnswer.id)})
+        let questionAnswer=this.answers.orderQuestionsAnswers.find((answer)=>answer.questionID=question.id)
+        if(questionAnswer!=undefined){
+            result.correct=this.checkOrderQuestion(result.correctAnswersIDsOrder,questionAnswer.answersIDsOrder)
         }
         else{
             result.correct=false;
-            result.correctAnswersIDs=[];
-            question.textAnswers.forEach((answer)=>{
-                result.correctAnswersIDs.push(answer.id);
-            })
         }
-        return result;
+        this.testResults.numberOfCorrect+=result.correct? 1:0;
+        this.testResults.orderQuestionResults.push(result);
     }
+
+    visitOrderAnswerEntity(orderAnswer:OrderAnswerEntity):void{
+
+    }
+
+    visitTextQuestionEntity(question:TextQuestionEntity):void{
+        let result=new TextQuestionResult();
+        result.questionID=question.id;
+        result.correctAnswers=[];
+        let questionAnswer=this.answers.textQuestionsAnswers.find((answer)=>answer.questionID=question.id)
+        if(questionAnswer!=undefined){
+            question.answers.forEach((answer)=>{result.correctAnswers.push(answer.correct)})
+            result.correct=this.checkTextQuestion(result.correctAnswers,questionAnswer.answer)
+        }
+        else{
+            result.correct=false;
+        }
+        if(result.correct){
+            this.testResults.numberOfCorrect++;
+        }
+        this.testResults.textQuestionResults.push(result);
+    }
+
+    visitTextAnswerEntity(textAnswer:TextAnswerEntity):void{
+
+    }
+
+    visitTestQL(test: TestQL):void{
+        test.singleChoiceQuestions.forEach((question)=>{
+            question.accept(this);
+        })
+
+        test.multipleChoiceQuestions.forEach((question)=>{
+            question.accept(this);
+        })
+
+        test.orderQuestions.forEach((question)=>{
+            question.accept(this);
+        })
+
+        test.textQuestions.forEach((question)=>{
+            question.accept(this);
+        })
+    };
+
+    visitSingleChoiceQuestionQL(question:SingleChoiceQuestionQL):void{
+        let questionAnswer=this.answers.singleChoiceQuestionsAnswers.find((answer)=>answer.questionID==question.id)
+        let result= new SingleChoiceQuestionResult();
+        result.questionID=question.id;
+        result.correctAnswerID=question.choiceAnswers.find((answer)=>answer.correct).id;
+        if(questionAnswer!=undefined){
+            result.correct=result.correctAnswerID==questionAnswer.answerID;
+        }
+        else{
+            result.correct=false;
+        }
+        if(result.correct){
+            this.testResults.numberOfCorrect++;
+        }
+        this.testResults.singleChoiceQuestionResults.push(result);
+    }
+
+    visitMultipleChoiceQuestionQL(question:MultipleChoiceQuestionQL):void{
+        let result= new MultipleChoiceQuestionResult();
+        result.questionID=question.id;
+        result.correctAnswersIDs=[]
+        question.choiceAnswers
+            .filter(answer=>answer.correct==true)
+            .forEach(correctAnswer=>{result.correctAnswersIDs.push(correctAnswer.id)})
+        let questionAnswer=this.answers.multipleChoiceQuestionsAnswers.find((answer)=> answer.questionID = question.id)
+        if(questionAnswer!=undefined){
+            result.correct=this.checkMultipleChoiceQuestion(result.correctAnswersIDs,questionAnswer.answersIDs)
+        }
+        else{
+            result.correct=false;
+        }
+        if(result.correct){
+            this.testResults.numberOfCorrect++;
+        }
+        this.testResults.multipleChoiceQuestionResults.push(result);
+    }
+
+    visitChoiceAnswerQL(choiceAnswer:ChoiceAnswerQL):void{}
+
+    visitOrderQuestionQL(question:OrderQuestionQL):void{
+        let result= new OrderQuestionResult();
+        result.questionID=question.id;
+        result.correctAnswersIDsOrder=[]
+        question.orderAnswers
+            .forEach(correctAnswer=>{result.correctAnswersIDsOrder.push(correctAnswer.id)})
+        let questionAnswer=this.answers.orderQuestionsAnswers.find((answer)=>answer.questionID=question.id)
+        if(questionAnswer!=undefined){
+            result.correct=this.checkOrderQuestion(result.correctAnswersIDsOrder,questionAnswer.answersIDsOrder)
+        }
+        else{
+            result.correct=false;
+        }
+        if(result.correct){
+            this.testResults.numberOfCorrect++;
+        }
+        this.testResults.orderQuestionResults.push(result);
+    }
+    visitOrderAnswerQL(orderAnswer:OrderAnswerQL):void{}
+
+    visitTextQuestionQL(question:TextQuestionQL):void{
+        let result=new TextQuestionResult();
+        result.questionID=question.id;
+        result.correctAnswers=[];
+        question.textAnswers.forEach((answer)=>{result.correctAnswers.push(answer.correct)})
+        let questionAnswer=this.answers.textQuestionsAnswers.find((answer)=>answer.questionID=question.id)
+        if(questionAnswer!=undefined){
+            result.correct=this.checkTextQuestion(result.correctAnswers,questionAnswer.answer)
+        }
+        else{
+            result.correct=false;
+        }
+        if(result.correct){
+            this.testResults.numberOfCorrect++;
+        }
+        this.testResults.textQuestionResults.push(result);
+    }
+
+    visitTextAnswerQL(textAnswer:TextAnswerQL):void{}
+
+    visitNewTest(test: NewTest):void{throw NOT_APPLICABLE_ERROR};
+    visitNewSingleChoiceQuestion(singleChoiceQuestion:NewSingleChoiceQuestion):void{throw NOT_APPLICABLE_ERROR};
+    visitNewMultipleChoiceQuestion(multipleChoiceQuestion:NewMultipleChoiceQuestion):void{throw NOT_APPLICABLE_ERROR};
+    visitNewChoiceAnswer(choiceAnswer:NewChoiceAnswer):void{throw NOT_APPLICABLE_ERROR};
+    visitNewOrderQuestion(orderChoiceQuestion:NewOrderQuestion):void{throw NOT_APPLICABLE_ERROR};
+    visitNewOrderAnswer(orderAnswer:NewOrderAnswer):void{throw NOT_APPLICABLE_ERROR};
+    visitNewTextQuestion(textQuestion:NewTextQuestion):void{throw NOT_APPLICABLE_ERROR};
+    visitNewTextAnswer(textAnswer:NewTextAnswer):void{throw NOT_APPLICABLE_ERROR};
 
 }

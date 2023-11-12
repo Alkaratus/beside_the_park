@@ -1,11 +1,7 @@
-import {ChoiceQuestion} from "./ChoiceQuestion";
-import {OrderQuestion} from "./OrderQuestion";
-import {TextQuestion} from "./TextQuestion";
+import {Visitor} from "./Visitor";
 
 
-export class Test{
+export abstract class Test{
     name: string;
-    choiceQuestions: ChoiceQuestion[]
-    orderQuestions: OrderQuestion[]
-    textQuestions: TextQuestion[]
+    abstract accept(visitor:Visitor)
 }

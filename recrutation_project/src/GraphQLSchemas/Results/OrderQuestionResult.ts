@@ -8,4 +8,10 @@ export class OrderQuestionResult implements QuestionResult{
 
     @Field(()=>[Int],{nullable:true})
     correctAnswersIDsOrder: number[]
+
+    constructor(questionID?: number,correct?: boolean,correctAnswersIDsOrder?: number[]){
+        this.questionID=questionID;
+        this.correct=correct;
+        this.correctAnswersIDsOrder=correctAnswersIDsOrder;
+    }
 }

@@ -9,4 +9,10 @@ export class SingleChoiceQuestionResult implements QuestionResult{
 
     @Field(()=>Int,{nullable:true})
     correctAnswerID: number
+
+    constructor(questionID?: number,correct?: boolean,correctAnswerID?: number){
+        this.questionID=questionID
+        this.correct=correct;
+        this.correctAnswerID=correctAnswerID;
+    }
 }

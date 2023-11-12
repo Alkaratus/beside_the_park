@@ -1,7 +1,5 @@
-import {Test} from "./Test";
-import {OrderAnswer} from "./OrderAnswer";
+import {Question} from "./Question";
 
-export class OrderQuestion {
-    content: string;
-    answers:OrderAnswer[]
+
+export abstract class OrderQuestion extends Question{
 }

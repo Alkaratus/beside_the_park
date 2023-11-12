@@ -1,9 +1,7 @@
+import {Visitor} from "./Visitor";
 
-export class ChoiceAnswer{
+export abstract class ChoiceAnswer{
     content: string
     correct: boolean
-    constructor(content: string, correct:boolean){
-        this.content=content;
-        this.correct=correct;
-    }
+    abstract accept(visitor:Visitor)
 }

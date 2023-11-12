@@ -1,10 +1,7 @@
+import {Visitor} from "./Visitor";
 
-export class OrderAnswer{
+export abstract class OrderAnswer{
     content: string
     order: number
-
-    constructor(content: string, order: number){
-        this.content=content;
-        this.order=order;
-    }
+    abstract accept(visitor:Visitor)
 }
