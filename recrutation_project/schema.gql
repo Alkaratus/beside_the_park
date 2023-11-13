@@ -89,7 +89,7 @@ type SingleChoiceQuestionResult implements QuestionResult {
 type TextQuestionResult implements QuestionResult {
   questionID: Int!
   correct: Boolean!
-  correctAnswersIDs: [Int!]
+  correctAnswers: [String!]
 }
 
 type TestResults {
@@ -111,7 +111,7 @@ type Mutation {
 }
 
 input NewTest {
-  name: String!
+  name: String! = ""
   singleChoiceQuestions: [NewSingleChoiceQuestion!]!
   multipleChoiceQuestions: [NewMultipleChoiceQuestion!]!
   orderQuestions: [NewOrderQuestion!]!
