@@ -57,27 +57,25 @@ describe("DB tests",()=>{
     })
 
     it("New test should be add to database",async ()=>{
-        let newTest= new NewTest();
-        newTest.name="Test test";
-        let choiceQuestion= new NewSingleChoiceQuestion();
-        choiceQuestion.content="What is the capital of France?";
-        choiceQuestion.answers=[
-            new NewChoiceAnswer("London",false),
-            new NewChoiceAnswer("Paris",true),
-            new NewChoiceAnswer("Rome",false),
-            new NewChoiceAnswer("Madrid",false)
-        ];
-        newTest.singleChoiceQuestions=[choiceQuestion];
+        let newTest= new NewTest("Test test");
+        newTest.setToDefault();
+        newTest.singleChoiceQuestions.push(new NewSingleChoiceQuestion(
+            "What is the capital of France?",[
+                new NewChoiceAnswer("London",false),
+                new NewChoiceAnswer("Paris",true),
+                new NewChoiceAnswer("Rome",false),
+                new NewChoiceAnswer("Madrid",false)
+            ]
+        ));
 
         newTest.multipleChoiceQuestions=[];
 
-        let textQuestion= new NewTextQuestion();
-        textQuestion.content="What is the famous phrase from Star Wars";
-        textQuestion.answers=[
+        let textQuestion= new NewTextQuestion("What is the famous phrase from Star Wars",[
             new NewTextAnswer("May the force be with you"),
             new NewTextAnswer("I have bad feelings about this")
-        ]
-        newTest.textQuestions=[textQuestion];
+        ]);
+
+        newTest.textQuestions.push(textQuestion);
 
         let orderQuestion= new NewOrderQuestion();
         orderQuestion.content="Arrange the following events in chronological order"
@@ -86,7 +84,7 @@ describe("DB tests",()=>{
             new NewOrderAnswer("World War II",2),
             new NewOrderAnswer("First Moon Landing",3),
         ]
-        newTest.orderQuestions=[orderQuestion];
+        newTest.orderQuestions.push(orderQuestion);
 
         let createdTest=await service.addNewTest(newTest);
 

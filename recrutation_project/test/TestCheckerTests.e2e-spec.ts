@@ -75,7 +75,7 @@ describe("Test Checker Test",()=>{
     })
 
     it("Check correct multiple question answer",()=>{
-        testChecker.answers.multipleChoiceQuestionsAnswers.push({questionID:1,answersIDs:[1,4]})
+        testChecker.answers.multipleChoiceQuestionsAnswers.push({questionID:1,answersIDs:[4,1]})
         testMultipleChoiceQuestion.accept(testChecker);
         let result= testChecker.testResults.multipleChoiceQuestionResults[0]
         expect(result.correct)
@@ -91,7 +91,7 @@ describe("Test Checker Test",()=>{
     })
 
     it("Check incorrect answers multiple question answer",()=>{
-        testChecker.answers.multipleChoiceQuestionsAnswers.push({questionID:1,answersIDs:[1,2]})
+        testChecker.answers.multipleChoiceQuestionsAnswers.push({questionID:1,answersIDs:[2,1]})
         testMultipleChoiceQuestion.accept(testChecker);
         let result= testChecker.testResults.multipleChoiceQuestionResults[0]
         expect(!result.correct)
