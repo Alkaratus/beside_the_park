@@ -37,11 +37,8 @@ export class TestChecker implements Visitor{
     testResults: TestResults;
     answers: TestAnswers
     checkTestAnswers(test:AbstractTest,answers:TestAnswers):TestResults{
-        this.testResults.numberOfCorrect=0;
-        this.testResults.singleChoiceQuestionResults=[]
-        this.testResults.multipleChoiceQuestionResults=[]
-        this.testResults.orderQuestionResults=[]
-        this.testResults.textQuestionResults=[]
+        this.testResults= new TestResults()
+        this.testResults.setToDefault();
         this.answers=answers;
         test.accept(this);
         return this.testResults;
@@ -66,6 +63,7 @@ export class TestChecker implements Visitor{
         let i=0;
         while (correct && i<correctIDsOrder.length){
             correct= correctIDsOrder[i]!=questionAnswerIDsOrder[i]
+            i++;
         }
         return correct
     }

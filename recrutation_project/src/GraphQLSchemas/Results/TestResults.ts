@@ -28,4 +28,13 @@ export class TestResults{
         this.orderQuestionResults=orderQuestionResults;
         this.textQuestionResults=textQuestionResults;
     }
+
+    setToDefault(){
+        this.testID=0
+        this.numberOfCorrect=0;
+        this.singleChoiceQuestionResults=[];
+        this.multipleChoiceQuestionResults=[];
+        this.orderQuestionResults=[];
+        this.textQuestionResults=[];
+    }
 }
