@@ -4,14 +4,17 @@ import {Repository} from "typeorm";
 import {Test as TestEntity} from "../DataBaseEntities/Test";
 import {GraphQLInputToEntityConverter} from "../Converters/GraphQLInputToEntityConverter";
 import {NewTest} from "../GraphQLSchemas/NewTest/NewTest";
+import {ChoiceQuestion as ChoiceQuestionEntity} from "../DataBaseEntities/ChoiceQuestion";
+import {MultipleChoiceQuestion as MultipleChoiceQuestionEntity} from "../DataBaseEntities/MultipleChoiceQuestion";
+import {SingleChoiceQuestion as SingleChoiceQuestionEntity} from "../DataBaseEntities/SingleChoiceQuestion";
 
 
 @Injectable()
 export class DataBaseServiceService{
     constructor( @InjectRepository(TestEntity)private readonly testsRepository: Repository<TestEntity>){}
 
-    getAllTests():Promise<TestEntity[]>{
-        return this.testsRepository.find({
+    async getAllTests():Promise<TestEntity[]>{
+        let tests=await this.testsRepository.find({
             relations: {
                 choiceQuestions:{
                     answers:true
@@ -24,6 +27,33 @@ export class DataBaseServiceService{
                 }
             },
         });
+        tests.forEach((test)=>{
+            this.resolveQuestions(test.choiceQuestions);
+        })
+        return tests;
+    }
+
+    async getTestById(id:number){
+        let test=await this.testsRepository.findOne({
+            relations: {
+                choiceQuestions:{
+                    answers:true
+                },
+                orderQuestions:{
+                    answers:true
+                },
+                textQuestions:{
+                    answers:true
+                }
+            },
+            where:{
+                id:id
+            }
+        });
+        if(test!=null){
+            this.resolveQuestions(test.choiceQuestions);
+        }
+        return test;
     }
 
     async addNewTest(newTest: NewTest): Promise<TestEntity> {
@@ -33,6 +63,15 @@ export class DataBaseServiceService{
         return createdTest;
     }
 
-
+    resolveQuestions(choiceQuestions: ChoiceQuestionEntity[]):void{
+        choiceQuestions.forEach((question,index,questions)=>{
+            if(question.multiple){
+                questions[index]=new MultipleChoiceQuestionEntity(question.id,question.content,question.answers)
+            }
+            else{
+                questions[index]=new SingleChoiceQuestionEntity(question.id,question.content,question.answers)
+            }
+        })
+    }
 
 }

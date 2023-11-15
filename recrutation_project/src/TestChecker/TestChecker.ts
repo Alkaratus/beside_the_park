@@ -37,11 +37,8 @@ export class TestChecker implements Visitor{
     testResults: TestResults;
     answers: TestAnswers
     checkTestAnswers(test:AbstractTest,answers:TestAnswers):TestResults{
-        this.testResults.numberOfCorrect=0;
-        this.testResults.singleChoiceQuestionResults=[]
-        this.testResults.multipleChoiceQuestionResults=[]
-        this.testResults.orderQuestionResults=[]
-        this.testResults.textQuestionResults=[]
+        this.testResults= new TestResults()
+        this.testResults.setToDefault();
         this.answers=answers;
         test.accept(this);
         return this.testResults;
@@ -66,6 +63,7 @@ export class TestChecker implements Visitor{
         let i=0;
         while (correct && i<correctIDsOrder.length){
             correct= correctIDsOrder[i]!=questionAnswerIDsOrder[i]
+            i++;
         }
         return correct
     }
@@ -90,14 +88,9 @@ export class TestChecker implements Visitor{
 
     visitSingleChoiceQuestionEntity(question:SingleChoiceQuestionEntity):void{
         let questionAnswer=this.answers.singleChoiceQuestionsAnswers.find((answer)=>answer.questionID==question.id)
-        let result= new SingleChoiceQuestionResult();
-        result.questionID=question.id;
-        result.correctAnswerID=question.answers.find((answer)=>answer.correct).id;
+        let result= new SingleChoiceQuestionResult(question.id,false,question.answers.find((answer)=>answer.correct).id);
         if(questionAnswer!=undefined){
             result.correct=result.correctAnswerID==questionAnswer.answerID;
-        }
-        else{
-            result.correct=false;
         }
         if(result.correct){
             this.testResults.numberOfCorrect++;
@@ -106,18 +99,13 @@ export class TestChecker implements Visitor{
     }
 
     visitMultipleChoiceQuestionEntity(question:MultipleChoiceQuestionEntity):void{
-        let result= new MultipleChoiceQuestionResult();
-        result.questionID=question.id;
-        result.correctAnswersIDs=[]
+        let result= new MultipleChoiceQuestionResult(question.id,false,[]);
         question.answers
             .filter(answer=>answer.correct==true)
             .forEach(correctAnswer=>{result.correctAnswersIDs.push(correctAnswer.id)})
         let questionAnswer=this.answers.multipleChoiceQuestionsAnswers.find((answer)=> answer.questionID = question.id)
         if(questionAnswer!=undefined){
             result.correct=this.checkMultipleChoiceQuestion(result.correctAnswersIDs,questionAnswer.answersIDs)
-        }
-        else{
-            result.correct=false;
         }
         if(result.correct){
             this.testResults.numberOfCorrect++;
@@ -151,16 +139,11 @@ export class TestChecker implements Visitor{
     }
 
     visitTextQuestionEntity(question:TextQuestionEntity):void{
-        let result=new TextQuestionResult();
-        result.questionID=question.id;
-        result.correctAnswers=[];
+        let result=new TextQuestionResult(question.id,false,[]);
         let questionAnswer=this.answers.textQuestionsAnswers.find((answer)=>answer.questionID=question.id)
         if(questionAnswer!=undefined){
             question.answers.forEach((answer)=>{result.correctAnswers.push(answer.correct)})
             result.correct=this.checkTextQuestion(result.correctAnswers,questionAnswer.answer)
-        }
-        else{
-            result.correct=false;
         }
         if(result.correct){
             this.testResults.numberOfCorrect++;
@@ -192,14 +175,9 @@ export class TestChecker implements Visitor{
 
     visitSingleChoiceQuestionQL(question:SingleChoiceQuestionQL):void{
         let questionAnswer=this.answers.singleChoiceQuestionsAnswers.find((answer)=>answer.questionID==question.id)
-        let result= new SingleChoiceQuestionResult();
-        result.questionID=question.id;
-        result.correctAnswerID=question.choiceAnswers.find((answer)=>answer.correct).id;
+        let result= new SingleChoiceQuestionResult(question.id,false,question.choiceAnswers.find((answer)=>answer.correct).id);
         if(questionAnswer!=undefined){
             result.correct=result.correctAnswerID==questionAnswer.answerID;
-        }
-        else{
-            result.correct=false;
         }
         if(result.correct){
             this.testResults.numberOfCorrect++;
@@ -208,18 +186,13 @@ export class TestChecker implements Visitor{
     }
 
     visitMultipleChoiceQuestionQL(question:MultipleChoiceQuestionQL):void{
-        let result= new MultipleChoiceQuestionResult();
-        result.questionID=question.id;
-        result.correctAnswersIDs=[]
+        let result= new MultipleChoiceQuestionResult(question.id,false,[]);
         question.choiceAnswers
             .filter(answer=>answer.correct==true)
             .forEach(correctAnswer=>{result.correctAnswersIDs.push(correctAnswer.id)})
         let questionAnswer=this.answers.multipleChoiceQuestionsAnswers.find((answer)=> answer.questionID = question.id)
         if(questionAnswer!=undefined){
             result.correct=this.checkMultipleChoiceQuestion(result.correctAnswersIDs,questionAnswer.answersIDs)
-        }
-        else{
-            result.correct=false;
         }
         if(result.correct){
             this.testResults.numberOfCorrect++;
@@ -230,17 +203,12 @@ export class TestChecker implements Visitor{
     visitChoiceAnswerQL(choiceAnswer:ChoiceAnswerQL):void{}
 
     visitOrderQuestionQL(question:OrderQuestionQL):void{
-        let result= new OrderQuestionResult();
-        result.questionID=question.id;
-        result.correctAnswersIDsOrder=[]
+        let result= new OrderQuestionResult(question.id,false,[]);
         question.orderAnswers
             .forEach(correctAnswer=>{result.correctAnswersIDsOrder.push(correctAnswer.id)})
         let questionAnswer=this.answers.orderQuestionsAnswers.find((answer)=>answer.questionID=question.id)
         if(questionAnswer!=undefined){
             result.correct=this.checkOrderQuestion(result.correctAnswersIDsOrder,questionAnswer.answersIDsOrder)
-        }
-        else{
-            result.correct=false;
         }
         if(result.correct){
             this.testResults.numberOfCorrect++;
@@ -250,16 +218,11 @@ export class TestChecker implements Visitor{
     visitOrderAnswerQL(orderAnswer:OrderAnswerQL):void{}
 
     visitTextQuestionQL(question:TextQuestionQL):void{
-        let result=new TextQuestionResult();
-        result.questionID=question.id;
-        result.correctAnswers=[];
+        let result=new TextQuestionResult(question.id,false,[]);
         question.textAnswers.forEach((answer)=>{result.correctAnswers.push(answer.correct)})
         let questionAnswer=this.answers.textQuestionsAnswers.find((answer)=>answer.questionID=question.id)
         if(questionAnswer!=undefined){
             result.correct=this.checkTextQuestion(result.correctAnswers,questionAnswer.answer)
-        }
-        else{
-            result.correct=false;
         }
         if(result.correct){
             this.testResults.numberOfCorrect++;

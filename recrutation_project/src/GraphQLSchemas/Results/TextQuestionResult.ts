@@ -7,7 +7,7 @@ export class TextQuestionResult implements QuestionResult{
     questionID: number;
     correct: boolean;
 
-    @Field({nullable:true})
+    @Field(()=>[String],{nullable:true})
     correctAnswers: string[]
 
     constructor(questionID?:number,correct?: boolean,correctAnswers?: string[]) {

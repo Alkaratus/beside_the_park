@@ -25,6 +25,7 @@ export class NewTest implements AbstractTest{
     textQuestions: NewTextQuestion[]
 
     constructor(name:string="",singleChoiceQuestions?:NewSingleChoiceQuestion[],multipleChoiceQuestions?: NewMultipleChoiceQuestion[],orderQuestions?: NewOrderQuestion[],textQuestions?: NewTextQuestion[]){
+        this.setToDefault()
         this.name=name;
         this.singleChoiceQuestions=singleChoiceQuestions;
         this.multipleChoiceQuestions=multipleChoiceQuestions;

@@ -51,19 +51,9 @@ export class EntityToGraphQLConverter implements Visitor{
         return this.convertedTest;
     }
 
-    resolveQuestions(choiceQuestions: ChoiceQuestionEntity[]):void{
-        choiceQuestions.forEach((question,index,questions)=>{
-            if(question.multiple){
-                questions[index]=new MultipleChoiceQuestionEntity(question.id,question.content,question.answers)
-            }
-            else{
-                questions[index]=new SingleChoiceQuestionEntity(question.id,question.content,question.answers)
-            }
-        })
-    }
+
 
     convertChoiceQuestions(choiceQuestions: ChoiceQuestionEntity[]):void{
-        this.resolveQuestions(choiceQuestions);
         choiceQuestions.forEach((question)=>{
             question.accept(this);
         });
