@@ -1,0 +1,181 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type ChoiceAnswer {
+  id: Int!
+  content: String!
+  correct: Boolean!
+}
+
+type SingleChoiceQuestion implements Question & ChoiceQuestion {
+  id: Int!
+  content: String!
+  choiceAnswers: [ChoiceAnswer!]!
+}
+
+interface Question {
+  id: Int!
+  content: String!
+}
+
+interface ChoiceQuestion implements Question {
+  id: Int!
+  content: String!
+  choiceAnswers: [ChoiceAnswer!]!
+}
+
+type MultipleChoiceQuestion implements Question & ChoiceQuestion {
+  id: Int!
+  content: String!
+  choiceAnswers: [ChoiceAnswer!]!
+}
+
+type OrderAnswer {
+  id: Int!
+  content: String!
+  order: Int!
+}
+
+type OrderQuestion implements Question {
+  id: Int!
+  content: String!
+  orderAnswers: [OrderAnswer!]!
+}
+
+type TextAnswer {
+  id: Int!
+  correct: String!
+}
+
+type TextQuestion implements Question {
+  id: Int!
+  content: String!
+  textAnswers: [TextAnswer!]!
+}
+
+type Test {
+  id: Int!
+  name: String!
+  singleChoiceQuestions: [SingleChoiceQuestion!]!
+  multipleChoiceQuestions: [MultipleChoiceQuestion!]!
+  orderQuestions: [OrderQuestion!]!
+  textQuestions: [TextQuestion!]!
+}
+
+type MultipleChoiceQuestionResult implements QuestionResult {
+  questionID: Int!
+  correct: Boolean!
+  correctAnswersIDs: [Int!]
+}
+
+interface QuestionResult {
+  questionID: Int!
+  correct: Boolean!
+}
+
+type OrderQuestionResult implements QuestionResult {
+  questionID: Int!
+  correct: Boolean!
+  correctAnswersIDsOrder: [Int!]
+}
+
+type SingleChoiceQuestionResult implements QuestionResult {
+  questionID: Int!
+  correct: Boolean!
+  correctAnswerID: Int
+}
+
+type TextQuestionResult implements QuestionResult {
+  questionID: Int!
+  correct: Boolean!
+  correctAnswers: [String!]
+}
+
+type TestResults {
+  testID: Int!
+  numberOfCorrect: Int!
+  singleChoiceQuestionResults: [SingleChoiceQuestionResult!]!
+  multipleChoiceQuestionResults: [MultipleChoiceQuestionResult!]!
+  orderQuestionResults: [OrderQuestionResult!]!
+  textQuestionResults: [TextQuestionResult!]!
+}
+
+type Query {
+  getTests: [Test!]!
+}
+
+type Mutation {
+  createTest(newTest: NewTest!): Test!
+  submitAnswers(answers: TestAnswers!): TestResults!
+}
+
+input NewTest {
+  name: String! = ""
+  singleChoiceQuestions: [NewSingleChoiceQuestion!]!
+  multipleChoiceQuestions: [NewMultipleChoiceQuestion!]!
+  orderQuestions: [NewOrderQuestion!]!
+  textQuestions: [NewTextQuestion!]!
+}
+
+input NewSingleChoiceQuestion {
+  content: String!
+  answers: [NewChoiceAnswer!]!
+}
+
+input NewChoiceAnswer {
+  content: String!
+  correct: Boolean!
+}
+
+input NewMultipleChoiceQuestion {
+  content: String!
+  answers: [NewChoiceAnswer!]!
+}
+
+input NewOrderQuestion {
+  content: String!
+  answers: [NewOrderAnswer!]!
+}
+
+input NewOrderAnswer {
+  content: String!
+  order: Int!
+}
+
+input NewTextQuestion {
+  content: String!
+  answers: [NewTextAnswer!]!
+}
+
+input NewTextAnswer {
+  correct: String!
+}
+
+input TestAnswers {
+  testID: Int!
+  singleChoiceQuestionsAnswers: [SingleChoiceQuestionAnswer!]!
+  multipleChoiceQuestionsAnswers: [MultipleChoiceQuestionAnswer!]!
+  orderQuestionsAnswers: [OrderQuestionAnswer!]!
+  textQuestionsAnswers: [TextQuestionAnswer!]!
+}
+
+input SingleChoiceQuestionAnswer {
+  questionID: Int!
+  answerID: Int!
+}
+
+input MultipleChoiceQuestionAnswer {
+  questionID: Int!
+  answersIDs: [Int!]!
+}
+
+input OrderQuestionAnswer {
+  questionID: Int!
+  answersIDsOrder: [Int!]!
+}
+
+input TextQuestionAnswer {
+  questionID: Int!
+  answer: String!
+}
