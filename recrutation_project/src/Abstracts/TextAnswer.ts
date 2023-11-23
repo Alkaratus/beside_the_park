@@ -1,8 +1,7 @@
-import {Visitor} from "./Visitor";
+import { Visitor } from './Visitor';
 
+export abstract class TextAnswer {
+  correct: string;
 
-export abstract class TextAnswer{
-    correct: string
-
-    abstract accept(visitor:Visitor)
+  abstract accept(visitor: Visitor);
 }

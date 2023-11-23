@@ -1,32 +1,30 @@
-import {Column, Entity, ManyToOne, OneToMany} from "typeorm";
-import {Test} from "./Test";
-import {ChoiceAnswer} from "./ChoiceAnswer";
-import {Question} from "./Question";
-import {ChoiceQuestion as AbstractChoiceQuestion} from "../Abstracts/ChoiceQuestion";
-import {Visitor} from "../Abstracts/Visitor";
-
+import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
+import { Test } from './Test';
+import { ChoiceAnswer } from './ChoiceAnswer';
+import { Question } from './Question';
+import { ChoiceQuestion as AbstractChoiceQuestion } from '../Abstracts/ChoiceQuestion';
+import { Visitor } from '../Abstracts/Visitor';
 
 @Entity()
-export abstract class ChoiceQuestion extends Question implements AbstractChoiceQuestion{
+export abstract class ChoiceQuestion
+  extends Question
+  implements AbstractChoiceQuestion
+{
+  @Column()
+  multiple: boolean;
 
-    @Column()
-    multiple: boolean
+  @ManyToOne(() => Test, (test) => test.choiceQuestions)
+  test: Test;
 
-    @ManyToOne(()=>Test,(test)=>test.choiceQuestions)
-    test: Test
+  @OneToMany(() => ChoiceAnswer, (choiceAnswer) => choiceAnswer.question, {
+    cascade: ['insert'],
+  })
+  answers: ChoiceAnswer[];
 
-    @OneToMany(()=>ChoiceAnswer, (choiceAnswer)=>choiceAnswer.question,
-        {
-            cascade:["insert"]
-        })
-    answers: ChoiceAnswer[]
+  protected constructor(id: number, content: string, answers: ChoiceAnswer[]) {
+    super(id, content);
+    this.answers = answers;
+  }
 
-    protected constructor(id:number,content:string,answers:ChoiceAnswer[]) {
-        super(id,content);
-        this.answers=answers;
-    }
-
-    abstract accept(visitor: Visitor):void;
+  abstract accept(visitor: Visitor): void;
 }
-
-

@@ -1,22 +1,22 @@
-import {Field, InputType} from "@nestjs/graphql";
-import {NewOrderAnswer} from "./NewOrderAnswer";
-import {OrderQuestion as AbstractOrderQuestion} from "../../Abstracts/OrderQuestion";
-import {Visitor} from "../../Abstracts/Visitor";
+import { Field, InputType } from '@nestjs/graphql';
+import { NewOrderAnswer } from './NewOrderAnswer';
+import { OrderQuestion as AbstractOrderQuestion } from '../../Abstracts/OrderQuestion';
+import { Visitor } from '../../Abstracts/Visitor';
 
 @InputType()
-export class NewOrderQuestion implements AbstractOrderQuestion{
-    @Field()
-    content:string
+export class NewOrderQuestion implements AbstractOrderQuestion {
+  @Field()
+  content: string;
 
-    @Field(()=>[NewOrderAnswer])
-    answers:NewOrderAnswer[]
+  @Field(() => [NewOrderAnswer])
+  answers: NewOrderAnswer[];
 
-    constructor(content?:string,answers?: NewOrderAnswer[]) {
-        this.content=content;
-        this.answers=answers;
-    }
+  constructor(content?: string, answers?: NewOrderAnswer[]) {
+    this.content = content;
+    this.answers = answers;
+  }
 
-    accept(visitor: Visitor): void {
-        visitor.visitNewOrderQuestion(this);
-    }
+  accept(visitor: Visitor): void {
+    visitor.visitNewOrderQuestion(this);
+  }
 }

@@ -1,21 +1,21 @@
-import {Field, InputType} from "@nestjs/graphql";
-import {ChoiceAnswer as AbstractChoiceAnswer} from "../../Abstracts/ChoiceAnswer";
-import {Visitor} from "../../Abstracts/Visitor";
+import { Field, InputType } from '@nestjs/graphql';
+import { ChoiceAnswer as AbstractChoiceAnswer } from '../../Abstracts/ChoiceAnswer';
+import { Visitor } from '../../Abstracts/Visitor';
 
 @InputType()
-export class NewChoiceAnswer implements AbstractChoiceAnswer{
-    @Field()
-    content:string
+export class NewChoiceAnswer implements AbstractChoiceAnswer {
+  @Field()
+  content: string;
 
-    @Field()
-    correct:boolean
+  @Field()
+  correct: boolean;
 
-    constructor(content?:string,correct?:boolean){
-        this.content=content;
-        this.correct=correct;
-    }
+  constructor(content?: string, correct?: boolean) {
+    this.content = content;
+    this.correct = correct;
+  }
 
-    accept(visitor: Visitor) {
-        visitor.visitNewChoiceAnswer(this)
-    }
+  accept(visitor: Visitor) {
+    visitor.visitNewChoiceAnswer(this);
+  }
 }

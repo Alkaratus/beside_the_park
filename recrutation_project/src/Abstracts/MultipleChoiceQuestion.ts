@@ -1,6 +1,3 @@
-import {ChoiceQuestion} from "./ChoiceQuestion";
+import { ChoiceQuestion } from './ChoiceQuestion';
 
-
-export abstract class MultipleChoiceQuestion extends ChoiceQuestion{
-
-}
+export abstract class MultipleChoiceQuestion extends ChoiceQuestion {}

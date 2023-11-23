@@ -1,17 +1,17 @@
-import {Field, InputType} from "@nestjs/graphql";
-import {TextAnswer as AbstractTextAnswer} from "../../Abstracts/TextAnswer";
-import {Visitor} from "../../Abstracts/Visitor";
+import { Field, InputType } from '@nestjs/graphql';
+import { TextAnswer as AbstractTextAnswer } from '../../Abstracts/TextAnswer';
+import { Visitor } from '../../Abstracts/Visitor';
 
 @InputType()
-export class NewTextAnswer implements AbstractTextAnswer{
-    @Field()
-    correct:string
+export class NewTextAnswer implements AbstractTextAnswer {
+  @Field()
+  correct: string;
 
-    constructor(correct?:string){
-        this.correct=correct;
-    }
+  constructor(correct?: string) {
+    this.correct = correct;
+  }
 
-    accept(visitor: Visitor) {
-        visitor.visitNewTextAnswer(this)
-    }
+  accept(visitor: Visitor) {
+    visitor.visitNewTextAnswer(this);
+  }
 }

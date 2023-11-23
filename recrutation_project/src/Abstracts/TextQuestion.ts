@@ -1,4 +1,3 @@
-import {Question} from "./Question";
+import { Question } from './Question';
 
-export abstract class TextQuestion extends Question{
-}
+export abstract class TextQuestion extends Question {}

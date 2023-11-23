@@ -1,7 +1,6 @@
-import {Visitor} from "./Visitor";
+import { Visitor } from './Visitor';
 
-
-export abstract class Test{
-    name: string;
-    abstract accept(visitor:Visitor)
+export abstract class Test {
+  name: string;
+  abstract accept(visitor: Visitor);
 }
