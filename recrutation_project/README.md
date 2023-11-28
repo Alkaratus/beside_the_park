@@ -29,6 +29,19 @@ At first launch docker-compose.yml for database
 
 After launch of MySQL docker, you have to execute FirstUsage.sql file
 to make database work, and for creating databases or execute this lines
+
+There is credentials for the DB:
+
+driver: mysql
+
+server: localhost
+
+login: root 
+
+password: password
+
+
+
 ```mysql
     create schema beside_the_park;
     create schema beside_the_park_test;

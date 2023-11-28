@@ -1,9 +1,7 @@
 import { Field, InputType, Int } from '@nestjs/graphql';
-import { OrderAnswer as AbstractOrderAnswer } from '../../Abstracts/OrderAnswer';
-import { Visitor } from '../../Abstracts/Visitor';
 
 @InputType()
-export class NewOrderAnswer implements AbstractOrderAnswer {
+export class NewOrderAnswer {
   @Field()
   content: string;
 
@@ -13,9 +11,5 @@ export class NewOrderAnswer implements AbstractOrderAnswer {
   constructor(content?: string, order?: number) {
     this.content = content;
     this.order = order;
-  }
-
-  accept(visitor: Visitor) {
-    visitor.visitNewOrderAnswer(this);
   }
 }

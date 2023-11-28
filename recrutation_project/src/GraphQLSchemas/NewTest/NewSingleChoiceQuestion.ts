@@ -1,10 +1,8 @@
 import { Field, InputType } from '@nestjs/graphql';
 import { NewChoiceAnswer } from './NewChoiceAnswer';
-import { SingleChoiceQuestion as AbstractSingleChoiceQuestion } from '../../Abstracts/SingleChoiceQuestion';
-import { Visitor } from '../../Abstracts/Visitor';
 
 @InputType()
-export class NewSingleChoiceQuestion implements AbstractSingleChoiceQuestion {
+export class NewSingleChoiceQuestion {
   @Field()
   content: string;
 
@@ -14,9 +12,5 @@ export class NewSingleChoiceQuestion implements AbstractSingleChoiceQuestion {
   constructor(content?: string, answers?: NewChoiceAnswer[]) {
     this.content = content;
     this.answers = answers;
-  }
-
-  accept(visitor: Visitor): void {
-    visitor.visitNewSingleChoiceQuestion(this);
   }
 }

@@ -1,10 +1,8 @@
 import { Field, InputType } from '@nestjs/graphql';
 import { NewTextAnswer } from './NewTextAnswer';
-import { Visitor } from '../../Abstracts/Visitor';
-import { TextQuestion as AbstractTextQuestion } from '../../Abstracts/TextQuestion';
 
 @InputType()
-export class NewTextQuestion implements AbstractTextQuestion {
+export class NewTextQuestion {
   @Field()
   content: string;
 
@@ -14,9 +12,5 @@ export class NewTextQuestion implements AbstractTextQuestion {
   constructor(content?: string, answers?: NewTextAnswer[]) {
     this.content = content;
     this.answers = answers;
-  }
-
-  accept(visitor: Visitor): void {
-    visitor.visitNewTextQuestion(this);
   }
 }
