@@ -1,10 +1,10 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
-import { SingleChoiceQuestion } from './SingleChoiceQuestion';
-import { MultipleChoiceQuestion } from './MultipleChoiceQuestion';
-import { OrderQuestion } from './OrderQuestion';
+import { TestSingleChoiceQuestion } from './Test.SingleChoiceQuestion';
+import { TestMultipleChoiceQuestion } from './Test.MultipleChoiceQuestion';
+import { TestOrderQuestion } from './Test.OrderQuestion';
 import { TextQuestion } from './TextQuestion';
-import { Test as AbstractTest } from '../../Abstracts/Test';
-import { Visitor } from '../../Abstracts/Visitor';
+import { AbstractTest as AbstractTest } from '../../Abstracts/Abstract.Test';
+import { AbstractVisitor } from '../../Abstracts/Abstract.Visitor';
 
 @ObjectType()
 export class Test implements AbstractTest {
@@ -14,14 +14,14 @@ export class Test implements AbstractTest {
   @Field()
   name: string;
 
-  @Field(() => [SingleChoiceQuestion])
-  singleChoiceQuestions: SingleChoiceQuestion[];
+  @Field(() => [TestSingleChoiceQuestion])
+  singleChoiceQuestions: TestSingleChoiceQuestion[];
 
-  @Field(() => [MultipleChoiceQuestion])
-  multipleChoiceQuestions: MultipleChoiceQuestion[];
+  @Field(() => [TestMultipleChoiceQuestion])
+  multipleChoiceQuestions: TestMultipleChoiceQuestion[];
 
-  @Field(() => [OrderQuestion])
-  orderQuestions: OrderQuestion[];
+  @Field(() => [TestOrderQuestion])
+  orderQuestions: TestOrderQuestion[];
 
   @Field(() => [TextQuestion])
   textQuestions: TextQuestion[];
@@ -29,9 +29,9 @@ export class Test implements AbstractTest {
   constructor(
     id: number = 0,
     name: string = '',
-    singleChoiceQuestions?: SingleChoiceQuestion[],
-    multipleChoiceQuestions?: MultipleChoiceQuestion[],
-    orderQuestions?: OrderQuestion[],
+    singleChoiceQuestions?: TestSingleChoiceQuestion[],
+    multipleChoiceQuestions?: TestMultipleChoiceQuestion[],
+    orderQuestions?: TestOrderQuestion[],
     textQuestions?: TextQuestion[],
   ) {
     this.id = id;
@@ -51,7 +51,7 @@ export class Test implements AbstractTest {
     this.textQuestions = [];
   }
 
-  accept(visitor: Visitor) {
+  accept(visitor: AbstractVisitor) {
     visitor.visitTestQL(this);
   }
 }

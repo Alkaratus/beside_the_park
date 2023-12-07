@@ -1,25 +1,25 @@
-import { GraphQLInputToEntityConverter } from '../src/Converters/GraphQLInputToEntityConverter';
-import { NewSingleChoiceQuestion } from '../src/GraphQLSchemas/NewTest/NewSingleChoiceQuestion';
-import { NewMultipleChoiceQuestion } from '../src/GraphQLSchemas/NewTest/NewMultipleChoiceQuestion';
-import { NewOrderQuestion } from '../src/GraphQLSchemas/NewTest/NewOrderQuestion';
-import { NewTextQuestion } from '../src/GraphQLSchemas/NewTest/NewTextQuestion';
-import { NewChoiceAnswer } from '../src/GraphQLSchemas/NewTest/NewChoiceAnswer';
-import { NewOrderAnswer } from '../src/GraphQLSchemas/NewTest/NewOrderAnswer';
-import { NewTextAnswer } from '../src/GraphQLSchemas/NewTest/NewTextAnswer';
-import { NewTest } from '../src/GraphQLSchemas/NewTest/NewTest';
-import { AbstractResolver } from '../src/AbstractsResolvers/AbstractResolver';
-import { Test } from '../src/DataBaseEntities/Test';
+import { ConverterGraphQLInputToEntity } from '../src/Converters/Converter.GraphQLInputToEntity';
+import { NewSingleChoiceQuestion } from '../src/GraphQLSchemas/NewTest/New.SingleChoiceQuestion';
+import { NewMultipleChoiceQuestion } from '../src/GraphQLSchemas/NewTest/New.MultipleChoiceQuestion';
+import { NewOrderQuestion } from '../src/GraphQLSchemas/NewTest/New.OrderQuestion';
+import { NewTextQuestion } from '../src/GraphQLSchemas/NewTest/New.TextQuestion';
+import { NewChoiceAnswer } from '../src/GraphQLSchemas/NewTest/New.ChoiceAnswer';
+import { NewOrderAnswer } from '../src/GraphQLSchemas/NewTest/New.OrderAnswer';
+import { NewTextAnswer } from '../src/GraphQLSchemas/NewTest/New.TextAnswer';
+import { NewTest } from '../src/GraphQLSchemas/NewTest/New.Test';
+import { AbstractResolver } from '../src/AbstractsResolvers/Abstract.Resolver';
+import { DatabaseTest } from '../src/DataBase/Database.Test';
 import {
   MULTIPLE_ANSWERS_WITH_SAME_ORDER_ERROR,
   NO_QUESTIONS_ERROR,
-  NOT_CONSISTENT_ORDER_NUMBERS,
+  NOT_CONSISTENT_ORDER_NUMBERS_ERROR,
   NOT_ENOUGH_ANSWERS_ERROR,
   NUMBER_OF_CORRECT_ANSWERS_OTHER_THAN_ONE_ERROR,
-} from '../src/Errors/ErrorCodes';
+} from '../src/Errors/Error.Codes';
 
-const graphQLInputToEntityConverter: GraphQLInputToEntityConverter =
-  new GraphQLInputToEntityConverter();
-graphQLInputToEntityConverter.convertedTest = new Test();
+const graphQLInputToEntityConverter: ConverterGraphQLInputToEntity =
+  new ConverterGraphQLInputToEntity();
+graphQLInputToEntityConverter.convertedTest = new DatabaseTest();
 
 const abstractResolver: AbstractResolver = new AbstractResolver();
 
@@ -41,7 +41,7 @@ describe('GraphQL to Entity Converter Tests', () => {
     graphQLInputToEntityConverter.convertedTextAnswers = [];
   });
 
-  it('Convert Single Choice Question', () => {
+  it('Convert Single Choice AbstractQuestion', () => {
     testSingleChoiceQuestion.answers = [
       new NewChoiceAnswer('', false),
       new NewChoiceAnswer('', true),
@@ -61,7 +61,7 @@ describe('GraphQL to Entity Converter Tests', () => {
     expect(convertedQuestion.content).toBe(testSingleChoiceQuestion.content);
   });
 
-  it('Convert Multiple Choice Question', () => {
+  it('Convert Multiple Choice AbstractQuestion', () => {
     testMultipleChoiceQuestion.answers = [
       new NewChoiceAnswer('', true),
       new NewChoiceAnswer('', false),
@@ -194,7 +194,7 @@ describe('GraphQL to Entity Converter Tests', () => {
     } catch (error) {
       errorCode = error;
     }
-    expect(errorCode).toBe(NOT_CONSISTENT_ORDER_NUMBERS);
+    expect(errorCode).toBe(NOT_CONSISTENT_ORDER_NUMBERS_ERROR);
   });
 
   it('Not enough text answers raise exception', () => {

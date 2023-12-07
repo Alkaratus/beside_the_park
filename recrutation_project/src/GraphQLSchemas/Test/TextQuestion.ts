@@ -1,11 +1,11 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 import { TextAnswer } from './TextAnswer';
-import { Question } from './Question';
-import { TextQuestion as AbstractTextQuestion } from '../../Abstracts/TextQuestion';
-import { Visitor } from '../../Abstracts/Visitor';
+import { TestQuestion } from './Test.Question';
+import { AbstractTextQuestion as AbstractTextQuestion } from '../../Abstracts/Abstract.TextQuestion';
+import { AbstractVisitor } from '../../Abstracts/Abstract.Visitor';
 
-@ObjectType({ implements: Question })
-export class TextQuestion implements Question, AbstractTextQuestion {
+@ObjectType({ implements: TestQuestion })
+export class TextQuestion implements TestQuestion, AbstractTextQuestion {
   id: number;
   content: string;
 
@@ -18,7 +18,7 @@ export class TextQuestion implements Question, AbstractTextQuestion {
     this.textAnswers = textAnswers;
   }
 
-  accept(visitor: Visitor): void {
+  accept(visitor: AbstractVisitor): void {
     visitor.visitTextQuestionQL(this);
   }
 }

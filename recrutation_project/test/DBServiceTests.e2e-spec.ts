@@ -1,16 +1,16 @@
-import {DataBaseServiceService} from "../src/DataBaseService/DataBaseService.service";
+import {DataBaseService} from "../src/DataBase/DataBase.Service";
 import {Test, TestingModule} from "@nestjs/testing";
 import {getRepositoryToken, TypeOrmModule} from "@nestjs/typeorm";
-import {Test as TestEntity} from "../src/DataBaseEntities/Test"
+import {DatabaseTest as TestEntity} from "../src/DataBase/Database.Test"
 import {Repository} from "typeorm";
-import {DATA_BASE_ENTITIES} from "../src/DataBaseEntities/database.entities";
-import {NewTest} from "../src/GraphQLSchemas/NewTest/NewTest";
-import {NewSingleChoiceQuestion} from "../src/GraphQLSchemas/NewTest/NewSingleChoiceQuestion";
-import {NewTextQuestion} from "../src/GraphQLSchemas/NewTest/NewTextQuestion";
-import {NewOrderQuestion} from "../src/GraphQLSchemas/NewTest/NewOrderQuestion";
-import {NewChoiceAnswer} from "../src/GraphQLSchemas/NewTest/NewChoiceAnswer";
-import {NewTextAnswer} from "../src/GraphQLSchemas/NewTest/NewTextAnswer";
-import {NewOrderAnswer} from "../src/GraphQLSchemas/NewTest/NewOrderAnswer";
+import {DATA_BASE_ENTITIES} from "../src/DataBase/Database.Entities";
+import {NewTest} from "../src/GraphQLSchemas/NewTest/New.Test";
+import {NewSingleChoiceQuestion} from "../src/GraphQLSchemas/NewTest/New.SingleChoiceQuestion";
+import {NewTextQuestion} from "../src/GraphQLSchemas/NewTest/New.TextQuestion";
+import {NewOrderQuestion} from "../src/GraphQLSchemas/NewTest/New.OrderQuestion";
+import {NewChoiceAnswer} from "../src/GraphQLSchemas/NewTest/New.ChoiceAnswer";
+import {NewTextAnswer} from "../src/GraphQLSchemas/NewTest/New.TextAnswer";
+import {NewOrderAnswer} from "../src/GraphQLSchemas/NewTest/New.OrderAnswer";
 
 const TypeORMMySqlTestingModule = TypeOrmModule.forRoot({
     type: 'mysql',
@@ -25,7 +25,7 @@ const TypeORMMySqlTestingModule = TypeOrmModule.forRoot({
 
 
 describe("DB tests",()=>{
-    let service:DataBaseServiceService;
+    let service:DataBaseService;
     let testRepository: Repository<TestEntity>;
     let testingModule: TestingModule;
 
@@ -37,9 +37,9 @@ describe("DB tests",()=>{
                 TypeORMMySqlTestingModule,
                 TypeOrmModule.forFeature([TestEntity]),
             ],
-            providers:[DataBaseServiceService]
+            providers:[DataBaseService]
         }).compile();
-        service= testingModule.get<DataBaseServiceService>(DataBaseServiceService);
+        service= testingModule.get<DataBaseService>(DataBaseService);
         testRepository= testingModule.get<Repository<TestEntity>>(TEST_REPOSITORY_TOKEN)
     });
 
@@ -57,7 +57,7 @@ describe("DB tests",()=>{
     })
 
     it("New test should be add to database",async ()=>{
-        let newTest= new NewTest("Test test");
+        let newTest= new NewTest("AbstractTest test");
         newTest.setToDefault();
         newTest.singleChoiceQuestions.push(new NewSingleChoiceQuestion(
             "What is the capital of France?",[

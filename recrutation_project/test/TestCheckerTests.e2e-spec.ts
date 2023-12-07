@@ -1,53 +1,53 @@
-import {TestChecker} from "../src/TestChecker/TestChecker";
-import {SingleChoiceQuestion} from "../src/GraphQLSchemas/Test/SingleChoiceQuestion";
-import {MultipleChoiceQuestion} from "../src/GraphQLSchemas/Test/MultipleChoiceQuestion";
-import {OrderQuestion} from "../src/GraphQLSchemas/Test/OrderQuestion";
+import {CheckerTest} from "../src/TestChecker/Checker.Test";
+import {TestSingleChoiceQuestion} from "../src/GraphQLSchemas/Test/Test.SingleChoiceQuestion";
+import {TestMultipleChoiceQuestion} from "../src/GraphQLSchemas/Test/Test.MultipleChoiceQuestion";
+import {TestOrderQuestion} from "../src/GraphQLSchemas/Test/Test.OrderQuestion";
 import {TextQuestion} from "../src/GraphQLSchemas/Test/TextQuestion";
-import {ChoiceAnswer} from "../src/GraphQLSchemas/Test/ChoiceAnswer";
-import {OrderAnswer} from "../src/GraphQLSchemas/Test/OrderAnswer";
+import {TestChoiceAnswer} from "../src/GraphQLSchemas/Test/Test.ChoiceAnswer";
+import {TestOrderAnswer} from "../src/GraphQLSchemas/Test/Test.OrderAnswer";
 import {TextAnswer} from "../src/GraphQLSchemas/Test/TextAnswer";
-import {TestAnswers} from "../src/GraphQLSchemas/QuestionAnswers/TestAnswers";
-import {TestResults} from "../src/GraphQLSchemas/Results/TestResults";
+import {QuestionAnswerTestAnswers} from "../src/GraphQLSchemas/QuestionAnswers/QuestionAnswer.TestAnswers";
+import {ResultTest} from "../src/GraphQLSchemas/Results/Result.Test";
 
 
-const testChecker= new TestChecker();
-testChecker.testResults= new TestResults();
+const testChecker= new CheckerTest();
+testChecker.testResults= new ResultTest();
 testChecker.testResults.numberOfCorrect=0;
 testChecker.testResults.singleChoiceQuestionResults=[]
 testChecker.testResults.multipleChoiceQuestionResults=[]
 testChecker.testResults.orderQuestionResults=[]
 testChecker.testResults.textQuestionResults=[]
-testChecker.answers=new TestAnswers()
+testChecker.answers=new QuestionAnswerTestAnswers()
 testChecker.answers.singleChoiceQuestionsAnswers=[]
 testChecker.answers.multipleChoiceQuestionsAnswers=[]
 testChecker.answers.orderQuestionsAnswers=[]
 testChecker.answers.textQuestionsAnswers=[]
 
-const testSingleChoiceQuestion=new SingleChoiceQuestion(1,"",
+const testSingleChoiceQuestion=new TestSingleChoiceQuestion(1,"",
     [
-    new ChoiceAnswer(1,"",true),
-    new ChoiceAnswer(2,"",false),
+    new TestChoiceAnswer(1,"",true),
+    new TestChoiceAnswer(2,"",false),
     ]
 )
 
-const testMultipleChoiceQuestion=new MultipleChoiceQuestion()
+const testMultipleChoiceQuestion=new TestMultipleChoiceQuestion()
 testMultipleChoiceQuestion.id=1;
 testMultipleChoiceQuestion.content="";
 testMultipleChoiceQuestion.choiceAnswers=[
-    new ChoiceAnswer(1,"",true),
-    new ChoiceAnswer(2,"",false),
-    new ChoiceAnswer(3,"",false),
-    new ChoiceAnswer(4,"",true),
-    new ChoiceAnswer(5,"",false),
+    new TestChoiceAnswer(1,"",true),
+    new TestChoiceAnswer(2,"",false),
+    new TestChoiceAnswer(3,"",false),
+    new TestChoiceAnswer(4,"",true),
+    new TestChoiceAnswer(5,"",false),
 ];
 
-const testOrderQuestion= new OrderQuestion()
+const testOrderQuestion= new TestOrderQuestion()
 testOrderQuestion.id=1;
 testOrderQuestion.content=""
 testOrderQuestion.orderAnswers=[
-    new OrderAnswer(1, "",1),
-    new OrderAnswer(2, "",2),
-    new OrderAnswer(3, "",3),
+    new TestOrderAnswer(1, "",1),
+    new TestOrderAnswer(2, "",2),
+    new TestOrderAnswer(3, "",3),
 ];
 
 const testTextQuestion= new TextQuestion();
@@ -57,7 +57,7 @@ testTextQuestion.textAnswers=[
     new TextAnswer(1,"a")
 ]
 
-describe("Test Checker Test",()=>{
+describe("AbstractTest Checker AbstractTest",()=>{
     it("Check correct single question answer",()=>{
         testChecker.answers.singleChoiceQuestionsAnswers.push({questionID:1,answerID:1})
         testSingleChoiceQuestion.accept(testChecker);
