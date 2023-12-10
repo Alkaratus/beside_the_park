@@ -1,0 +1,35 @@
+mutation CheckAnswers{
+    submitAnswers(answers:{
+        testID:1,
+        singleChoiceQuestionsAnswers:[
+            {
+                questionID:1
+                answerID:2
+            }
+        ]
+        multipleChoiceQuestionsAnswers:[{
+            questionID:2
+            answersIDs:[5,7,8]
+        }]
+        orderQuestionsAnswers:[{
+            questionID:1
+            answersIDsOrder:[1,2,3]
+        }]
+        textQuestionsAnswers:[
+            {
+                questionID:1
+                answer:"May the force be with you"
+            }
+        ]
+    }){
+        testID,
+        singleChoiceQuestionResults{
+            questionID
+            correct
+        },
+        multipleChoiceQuestionResults{
+            questionID
+            correct
+        }
+    }
+}

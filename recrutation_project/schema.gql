@@ -2,45 +2,45 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type ChoiceAnswer {
+type TestChoiceAnswer {
   id: Int!
   content: String!
   correct: Boolean!
 }
 
-type SingleChoiceQuestion implements Question & ChoiceQuestion {
+type TestSingleChoiceQuestion implements TestQuestion & TestChoiceQuestion {
   id: Int!
   content: String!
-  choiceAnswers: [ChoiceAnswer!]!
+  choiceAnswers: [TestChoiceAnswer!]!
 }
 
-interface Question {
+interface TestQuestion {
   id: Int!
   content: String!
 }
 
-interface ChoiceQuestion implements Question {
+interface TestChoiceQuestion implements TestQuestion {
   id: Int!
   content: String!
-  choiceAnswers: [ChoiceAnswer!]!
+  choiceAnswers: [TestChoiceAnswer!]!
 }
 
-type MultipleChoiceQuestion implements Question & ChoiceQuestion {
+type TestMultipleChoiceQuestion implements TestQuestion & TestChoiceQuestion {
   id: Int!
   content: String!
-  choiceAnswers: [ChoiceAnswer!]!
+  choiceAnswers: [TestChoiceAnswer!]!
 }
 
-type OrderAnswer {
+type TestOrderAnswer {
   id: Int!
   content: String!
   order: Int!
 }
 
-type OrderQuestion implements Question {
+type TestOrderQuestion implements TestQuestion {
   id: Int!
   content: String!
-  orderAnswers: [OrderAnswer!]!
+  orderAnswers: [TestOrderAnswer!]!
 }
 
 type TextAnswer {
@@ -48,7 +48,7 @@ type TextAnswer {
   correct: String!
 }
 
-type TextQuestion implements Question {
+type TextQuestion implements TestQuestion {
   id: Int!
   content: String!
   textAnswers: [TextAnswer!]!
@@ -57,48 +57,48 @@ type TextQuestion implements Question {
 type Test {
   id: Int!
   name: String!
-  singleChoiceQuestions: [SingleChoiceQuestion!]!
-  multipleChoiceQuestions: [MultipleChoiceQuestion!]!
-  orderQuestions: [OrderQuestion!]!
+  singleChoiceQuestions: [TestSingleChoiceQuestion!]!
+  multipleChoiceQuestions: [TestMultipleChoiceQuestion!]!
+  orderQuestions: [TestOrderQuestion!]!
   textQuestions: [TextQuestion!]!
 }
 
-type MultipleChoiceQuestionResult implements QuestionResult {
+type ResultMultipleChoiceQuestion implements ResultQuestion {
   questionID: Int!
   correct: Boolean!
   correctAnswersIDs: [Int!]
 }
 
-interface QuestionResult {
+interface ResultQuestion {
   questionID: Int!
   correct: Boolean!
 }
 
-type OrderQuestionResult implements QuestionResult {
+type ResultOrderQuestion implements ResultQuestion {
   questionID: Int!
   correct: Boolean!
   correctAnswersIDsOrder: [Int!]
 }
 
-type SingleChoiceQuestionResult implements QuestionResult {
+type ResultSingleChoiceQuestion implements ResultQuestion {
   questionID: Int!
   correct: Boolean!
   correctAnswerID: Int
 }
 
-type TextQuestionResult implements QuestionResult {
+type ResultTextQuestion implements ResultQuestion {
   questionID: Int!
   correct: Boolean!
   correctAnswers: [String!]
 }
 
-type TestResults {
+type ResultTest {
   testID: Int!
   numberOfCorrect: Int!
-  singleChoiceQuestionResults: [SingleChoiceQuestionResult!]!
-  multipleChoiceQuestionResults: [MultipleChoiceQuestionResult!]!
-  orderQuestionResults: [OrderQuestionResult!]!
-  textQuestionResults: [TextQuestionResult!]!
+  singleChoiceQuestionResults: [ResultSingleChoiceQuestion!]!
+  multipleChoiceQuestionResults: [ResultMultipleChoiceQuestion!]!
+  orderQuestionResults: [ResultOrderQuestion!]!
+  textQuestionResults: [ResultTextQuestion!]!
 }
 
 type Query {
@@ -107,7 +107,7 @@ type Query {
 
 type Mutation {
   createTest(newTest: NewTest!): Test!
-  submitAnswers(answers: TestAnswers!): TestResults!
+  submitAnswers(answers: QuestionAnswerTestAnswers!): ResultTest!
 }
 
 input NewTest {
@@ -152,30 +152,30 @@ input NewTextAnswer {
   correct: String!
 }
 
-input TestAnswers {
+input QuestionAnswerTestAnswers {
   testID: Int!
-  singleChoiceQuestionsAnswers: [SingleChoiceQuestionAnswer!]!
-  multipleChoiceQuestionsAnswers: [MultipleChoiceQuestionAnswer!]!
-  orderQuestionsAnswers: [OrderQuestionAnswer!]!
-  textQuestionsAnswers: [TextQuestionAnswer!]!
+  singleChoiceQuestionsAnswers: [QuestionAnswerSingleChoice!]!
+  multipleChoiceQuestionsAnswers: [QuestionAnswerMultipleChoice!]!
+  orderQuestionsAnswers: [QuestionAnswerOrder!]!
+  textQuestionsAnswers: [QuestionAnswerText!]!
 }
 
-input SingleChoiceQuestionAnswer {
+input QuestionAnswerSingleChoice {
   questionID: Int!
   answerID: Int!
 }
 
-input MultipleChoiceQuestionAnswer {
+input QuestionAnswerMultipleChoice {
   questionID: Int!
   answersIDs: [Int!]!
 }
 
-input OrderQuestionAnswer {
+input QuestionAnswerOrder {
   questionID: Int!
   answersIDsOrder: [Int!]!
 }
 
-input TextQuestionAnswer {
+input QuestionAnswerText {
   questionID: Int!
   answer: String!
 }
