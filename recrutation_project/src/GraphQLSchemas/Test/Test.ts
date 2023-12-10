@@ -1,50 +1,57 @@
-import {Field, Int, ObjectType} from "@nestjs/graphql";
-import {SingleChoiceQuestion} from "./SingleChoiceQuestion";
-import {MultipleChoiceQuestion} from "./MultipleChoiceQuestion";
-import {OrderQuestion} from "./OrderQuestion";
-import {TextQuestion} from "./TextQuestion";
-import {Test as AbstractTest} from "../../Abstracts/Test"
-import {Visitor} from "../../Abstracts/Visitor";
+import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { TestSingleChoiceQuestion } from './Test.SingleChoiceQuestion';
+import { TestMultipleChoiceQuestion } from './Test.MultipleChoiceQuestion';
+import { TestOrderQuestion } from './Test.OrderQuestion';
+import { TextQuestion } from './TextQuestion';
+import { AbstractTest as AbstractTest } from '../../Abstracts/Abstract.Test';
+import { AbstractVisitor } from '../../Abstracts/Abstract.Visitor';
 
 @ObjectType()
-export class Test implements AbstractTest{
-    @Field(()=>Int)
-    id:number
+export class Test implements AbstractTest {
+  @Field(() => Int)
+  id: number;
 
-    @Field()
-    name:string
+  @Field()
+  name: string;
 
-    @Field(()=>[SingleChoiceQuestion])
-    singleChoiceQuestions:SingleChoiceQuestion[]
+  @Field(() => [TestSingleChoiceQuestion])
+  singleChoiceQuestions: TestSingleChoiceQuestion[];
 
-    @Field(()=>[MultipleChoiceQuestion])
-    multipleChoiceQuestions:MultipleChoiceQuestion[]
+  @Field(() => [TestMultipleChoiceQuestion])
+  multipleChoiceQuestions: TestMultipleChoiceQuestion[];
 
-    @Field(()=>[OrderQuestion])
-    orderQuestions:OrderQuestion[]
+  @Field(() => [TestOrderQuestion])
+  orderQuestions: TestOrderQuestion[];
 
-    @Field(()=>[TextQuestion])
-    textQuestions:TextQuestion[]
+  @Field(() => [TextQuestion])
+  textQuestions: TextQuestion[];
 
-    constructor(id:number=0,name:string="", singleChoiceQuestions?:SingleChoiceQuestion[],multipleChoiceQuestions?:MultipleChoiceQuestion[],orderQuestions?:OrderQuestion[],textQuestions?:TextQuestion[]) {
-        this.id=id;
-        this.name=name;
-        this.singleChoiceQuestions=singleChoiceQuestions
-        this.multipleChoiceQuestions=multipleChoiceQuestions;
-        this.orderQuestions=orderQuestions;
-        this.textQuestions=textQuestions;
-    }
+  constructor(
+    id: number = 0,
+    name: string = '',
+    singleChoiceQuestions?: TestSingleChoiceQuestion[],
+    multipleChoiceQuestions?: TestMultipleChoiceQuestion[],
+    orderQuestions?: TestOrderQuestion[],
+    textQuestions?: TextQuestion[],
+  ) {
+    this.id = id;
+    this.name = name;
+    this.singleChoiceQuestions = singleChoiceQuestions;
+    this.multipleChoiceQuestions = multipleChoiceQuestions;
+    this.orderQuestions = orderQuestions;
+    this.textQuestions = textQuestions;
+  }
 
-    setToDefault(){
-        this.id=0;
-        this.name="";
-        this.singleChoiceQuestions=[]
-        this.multipleChoiceQuestions=[];
-        this.orderQuestions=[];
-        this.textQuestions=[];
-    }
+  setToDefault() {
+    this.id = 0;
+    this.name = '';
+    this.singleChoiceQuestions = [];
+    this.multipleChoiceQuestions = [];
+    this.orderQuestions = [];
+    this.textQuestions = [];
+  }
 
-    accept(visitor:Visitor){
-        visitor.visitTestQL(this);
-    }
+  accept(visitor: AbstractVisitor) {
+    visitor.visitTestQL(this);
+  }
 }

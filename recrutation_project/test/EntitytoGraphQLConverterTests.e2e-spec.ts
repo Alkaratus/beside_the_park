@@ -1,31 +1,31 @@
-import {EntityToGraphQLConverter} from "../src/Converters/EntityToGraphQLConverter";
-import {ChoiceQuestion} from "../src/DataBaseEntities/ChoiceQuestion";
-import {ChoiceAnswer} from "../src/DataBaseEntities/ChoiceAnswer";
-import {OrderQuestion} from "../src/DataBaseEntities/OrderQuestion";
-import {OrderAnswer} from "../src/DataBaseEntities/OrderAnswer";
-import {TextQuestion} from "../src/DataBaseEntities/TextQuestion";
-import {TextAnswer} from "../src/DataBaseEntities/TextAnswer";
-import {SingleChoiceQuestion} from "../src/DataBaseEntities/SingleChoiceQuestion";
-import {MultipleChoiceQuestion} from "../src/DataBaseEntities/MultipleChoiceQuestion";
+import {ConverterEntityToGraphQL} from "../src/Converters/Converter.EntityToGraphQL";
+import {DatabaseChoiceQuestion} from "../src/DataBase/Database.ChoiceQuestion";
+import {DatabaseChoiceAnswer} from "../src/DataBase/Database.ChoiceAnswer";
+import {DatabaseOrderQuestion} from "../src/DataBase/Database.OrderQuestion";
+import {DatabaseOrderAnswer} from "../src/DataBase/Database.OrderAnswer";
+import {DatabaseTextQuestion} from "../src/DataBase/Database.TextQuestion";
+import {DatabaseTextAnswer} from "../src/DataBase/Database.TextAnswer";
+import {DatabaseSingleChoiceQuestion} from "../src/DataBase/Database.SingleChoiceQuestion";
+import {DatabaseMultipleChoiceQuestion} from "../src/DataBase/Database.MultipleChoiceQuestion";
 import { Test } from "../src/GraphQLSchemas/Test/Test";
 
-const entityToGraphQLConverter: EntityToGraphQLConverter= new EntityToGraphQLConverter();
+const entityToGraphQLConverter: ConverterEntityToGraphQL= new ConverterEntityToGraphQL();
 entityToGraphQLConverter.convertedTest= new Test()
 
 
-const testSingleChoiceQuestion= new SingleChoiceQuestion(1,"",
+const testSingleChoiceQuestion= new DatabaseSingleChoiceQuestion(1,"",
     [
-        new ChoiceAnswer(1,"",false),
-        new ChoiceAnswer(2, "", true)
+        new DatabaseChoiceAnswer(1,"",false),
+        new DatabaseChoiceAnswer(2, "", true)
     ]
 );
 
-const testMultipleChoiceQuestion= new MultipleChoiceQuestion(1,"",
+const testMultipleChoiceQuestion= new DatabaseMultipleChoiceQuestion(1,"",
     [
-        new ChoiceAnswer(1,"",true),
-        new ChoiceAnswer(2, "", true),
-        new ChoiceAnswer(3,"",false),
-        new ChoiceAnswer(4, "", true)
+        new DatabaseChoiceAnswer(1,"",true),
+        new DatabaseChoiceAnswer(2, "", true),
+        new DatabaseChoiceAnswer(3,"",false),
+        new DatabaseChoiceAnswer(4, "", true)
     ]
 );
 
@@ -42,7 +42,7 @@ describe("Entity to GraphQL Converter Tests",()=>{
     });
 
     it("Separation of Choice Questions",()=>{
-        let choiceQuestions:ChoiceQuestion[]=[
+        let choiceQuestions:DatabaseChoiceQuestion[]=[
             testSingleChoiceQuestion,
             testMultipleChoiceQuestion
         ]
@@ -51,7 +51,7 @@ describe("Entity to GraphQL Converter Tests",()=>{
         expect(entityToGraphQLConverter.convertedTest.multipleChoiceQuestions.length).toBe(1);
     })
 
-    it("Convert Choice Question",()=>{
+    it("Convert Choice AbstractQuestion",()=>{
         testSingleChoiceQuestion.accept(entityToGraphQLConverter);
         let convertedQuestion= entityToGraphQLConverter.convertedTest.singleChoiceQuestions[0]
         expect(convertedQuestion.id).toBe(testSingleChoiceQuestion.id)
@@ -59,11 +59,11 @@ describe("Entity to GraphQL Converter Tests",()=>{
         expect(convertedQuestion.choiceAnswers.length).toBe(testSingleChoiceQuestion.answers.length)
     })
 
-    it("Convert Order Question",()=>{
-        let orderQuestion= new OrderQuestion(1,"",
+    it("Convert Order AbstractQuestion",()=>{
+        let orderQuestion= new DatabaseOrderQuestion(1,"",
             [
-            new OrderAnswer(1,"",1),
-            new OrderAnswer(2,"",2),
+            new DatabaseOrderAnswer(1,"",1),
+            new DatabaseOrderAnswer(2,"",2),
             ]
         );
         orderQuestion.accept(entityToGraphQLConverter);
@@ -73,10 +73,10 @@ describe("Entity to GraphQL Converter Tests",()=>{
         expect(convertedQuestion.orderAnswers.length).toBe(orderQuestion.answers.length)
     })
 
-    it("Convert Text Question",()=>{
-        let textQuestion= new TextQuestion(1,"",
+    it("Convert Text AbstractQuestion",()=>{
+        let textQuestion= new DatabaseTextQuestion(1,"",
             [
-                new TextAnswer(1,"May the force be with you")
+                new DatabaseTextAnswer(1,"May the force be with you")
             ]
         );
         textQuestion.accept(entityToGraphQLConverter)
@@ -87,7 +87,7 @@ describe("Entity to GraphQL Converter Tests",()=>{
     })
 
     it("Convert Choice Answer",()=>{
-        let choiceAnswer= new ChoiceAnswer(1,"",true);
+        let choiceAnswer= new DatabaseChoiceAnswer(1,"",true);
         choiceAnswer.accept(entityToGraphQLConverter);
         let convertedAnswer= entityToGraphQLConverter.convertedChoiceAnswers[0]
         expect(convertedAnswer.id).toBe(choiceAnswer.id);
@@ -96,7 +96,7 @@ describe("Entity to GraphQL Converter Tests",()=>{
     })
 
     it("Convert Order Answer",()=>{
-        let orderAnswer= new OrderAnswer(1,"",1);
+        let orderAnswer= new DatabaseOrderAnswer(1,"",1);
         orderAnswer.accept(entityToGraphQLConverter);
         let convertedAnswer= entityToGraphQLConverter.convertedOrderAnswers[0]
         expect(convertedAnswer.id).toBe(orderAnswer.id);
@@ -105,7 +105,7 @@ describe("Entity to GraphQL Converter Tests",()=>{
     })
 
     it("Convert Text Answer",()=>{
-        let textAnswer= new TextAnswer(1,"");
+        let textAnswer= new DatabaseTextAnswer(1,"");
         textAnswer.accept(entityToGraphQLConverter)
         let convertedAnswer= entityToGraphQLConverter.convertedTextAnswers[0]
         expect(convertedAnswer.id).toBe(textAnswer.id);
