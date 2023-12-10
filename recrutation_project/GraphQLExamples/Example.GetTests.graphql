@@ -1,0 +1,25 @@
+{
+    getTests{
+        id
+        name
+        singleChoiceQuestions{
+            id
+            choiceAnswers{
+                id
+            }
+        }
+        multipleChoiceQuestions{
+            id
+            choiceAnswers{
+                id
+            }
+        }
+        orderQuestions{
+            id
+
+        }
+        textQuestions{
+            id
+        }
+    }
+}

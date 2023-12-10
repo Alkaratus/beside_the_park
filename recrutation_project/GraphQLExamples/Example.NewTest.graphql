@@ -1,0 +1,48 @@
+mutation createTest{
+    createTest(newTest:{
+        name:"Test 2"
+        singleChoiceQuestions:[
+            {
+                content:"What is the capital of France?",
+                answers:[
+                    {content: "London", correct: false},
+                    {content: "Paris", correct:true},
+                    {content: "Rome", correct: false},
+                    {content: "Madrid", correct: false},
+                ],
+            }
+        ]
+        multipleChoiceQuestions:[
+            {
+                content: "Which of the following programming languages are object-oriented?",
+                answers:[
+                    {content: "Java", correct: true},
+                    {content: "C", correct: false},
+                    {content: "Python", correct: true},
+                    {content: "Ruby", correct: true},
+                ]
+            }
+        ]
+        orderQuestions:[
+            {
+                content:"Arrange the following events in chronological order",
+                answers:[
+                    {content:"Declaration of Independence", order:1}
+                    {content:"World War II", order:2}
+                    {content:"First Moon Landing", order:3}
+                ]
+            }
+        ]
+        textQuestions:[
+            {
+                content:"What is the famous phrase from Star Wars?",
+                answers:[
+                    {correct:"May the force be with you"}
+                    {correct:"I have bad feeling about this"}
+                ]
+            }
+        ]
+    }){
+        id
+    }
+}

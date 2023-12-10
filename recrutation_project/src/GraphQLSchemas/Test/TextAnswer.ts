@@ -1,22 +1,21 @@
-import {Field, Int, ObjectType} from "@nestjs/graphql";
-import {TextAnswer as AbstractTextAnswer} from "../../Abstracts/TextAnswer";
-import {Visitor} from "../../Abstracts/Visitor";
+import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { AbstractTextAnswer as AbstractTextAnswer } from '../../Abstracts/Abstract.TextAnswer';
+import { AbstractVisitor } from '../../Abstracts/Abstract.Visitor';
 
 @ObjectType()
-export class TextAnswer implements AbstractTextAnswer{
-    @Field(()=>Int)
-    id:number
+export class TextAnswer implements AbstractTextAnswer {
+  @Field(() => Int)
+  id: number;
 
-    @Field()
-    correct:string
+  @Field()
+  correct: string;
 
-    constructor(id?: number,correct?: string) {
-        this.id=id;
-        this.correct=correct;
-    }
+  constructor(id?: number, correct?: string) {
+    this.id = id;
+    this.correct = correct;
+  }
 
-    accept(visitor: Visitor) {
-        visitor.visitTextAnswerQL(this)
-    }
-
+  accept(visitor: AbstractVisitor) {
+    visitor.visitTextAnswerQL(this);
+  }
 }
