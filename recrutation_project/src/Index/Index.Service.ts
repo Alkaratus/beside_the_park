@@ -23,6 +23,10 @@ export class IndexService {
     });
   }
 
+  private async getTestFromDB(id: number) {
+    return await this.databaseService.getTestById(id);
+  }
+
   async getTests() {
     await this.importDataFromDB();
     return this.tests;
@@ -37,11 +41,8 @@ export class IndexService {
   }
 
   async checkAnswers(testAnswers: QuestionAnswerTestAnswers) {
-    await this.importDataFromDB();
-    const checkedTest = this.tests.find(
-      (test) => test.id == testAnswers.testID,
-    );
+    const test = await this.getTestFromDB(testAnswers.testID);
     const testChecker = new CheckerTest();
-    return testChecker.checkTestAnswers(checkedTest, testAnswers);
+    return testChecker.checkTestAnswers(test, testAnswers);
   }
 }
